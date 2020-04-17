@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+  ~ @author     Sashas IT Support <support@sashas.org>
+  ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+  ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="msp_securitysuite_twofactorauth">
+            <group id="general">
+                <field id="enabled_customer" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Enable Two Factor Auth for Customers</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field canRestore="1" id="force_providers_customer" translate="label" type="multiselect" sortOrder="70"
+                       showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Force providers</label>
+                    <source_model>Magetarian\CustomerTwoFactorAuth\Model\Config\Source\Provider</source_model>
+                    <comment>Force providers to be used by all customers in the website. Leave empty to allow individual
+                        selection.
+                    </comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
