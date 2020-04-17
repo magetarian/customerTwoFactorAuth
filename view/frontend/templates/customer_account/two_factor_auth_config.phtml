@@ -1,0 +1,49 @@
+<?php
+/**
+ * @author     Sashas IT Support <support@sashas.org>
+ * @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+ * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+ */
+?>
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Configuration $viewModel */
+$viewModel = $block->getViewModel();
+?>
+<?php if ($viewModel->isEnabled()):?>
+    <div class="block block-two-factor-auth">
+        <div class="block-title">
+            <strong><?= $block->escapeHtml(__('Two Factor Authentication Providers')) ?></strong>
+        </div>
+        <div class="block-content">
+            <div class="box box-providers">
+                <form
+                    class="form"
+                    action="<?= $block->escapeUrl($block->getUrl('twoFactorAuth/customer/configurationPost')) ?>"
+                    method="post">
+                    <?= $block->getBlockHtml('formkey') ?>
+                    <div class="box-content">
+                        <select name="providers" size="4"  multiple="multiple" id="providers-field" class="multiselect">
+                            <option value=""><?= $block->escapeHtml(__('None')) ?></option>
+                            <?php foreach ($viewModel->getAvailableProviders() as $providerCode => $providerName): ?>
+                                <option value="<?=$block->escapeHtmlAttr($providerCode);?>">
+                                    <?= $block->escapeHtml($providerName) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="box-actions">
+                        <div class="primary">
+                            <button type="submit" title="<?= $block->escapeHtmlAttr(__('Save')) ?>"
+                                    class="action primary">
+                                <span><?= $block->escapeHtml(__('Save')) ?></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php else:?>
+    <?= $block->escapeHtml(__('There are no two factor authroization providers configured.'));?>
+<?php endif; ?>
