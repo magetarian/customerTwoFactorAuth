@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  ~ @author     Sashas IT Support <support@sashas.org>
+  ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+  ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+  -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="customer_account_navigation">
+            <block class="Magento\Customer\Block\Account\SortLinkInterface"
+                   name="customer-account-navigation-two-factor-auth-link"
+                   ifconfig="msp_securitysuite_twofactorauth/general/enabled_customer">
+                <arguments>
+                    <argument name="path" xsi:type="string">twoFactorAuth/customer/configuration</argument>
+                    <argument name="label" xsi:type="string" translate="true">2FA Configuration</argument>
+                    <argument name="sortOrder" xsi:type="number">150</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>
