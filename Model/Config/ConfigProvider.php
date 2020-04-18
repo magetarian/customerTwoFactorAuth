@@ -16,7 +16,7 @@ use Magento\Store\Model\ScopeInterface;
  */
 class ConfigProvider
 {
-    const XML_PATH_ENABLED = 'msp_securitysuite_twofactorauth/general/enabled_customer';
+    const XML_PATH_ENABLED         = 'msp_securitysuite_twofactorauth/general/enabled_customer';
     const XML_PATH_FORCE_PROVIDERS = 'msp_securitysuite_twofactorauth/general/force_providers_customer';
 
     /**
@@ -40,7 +40,7 @@ class ConfigProvider
      */
     public function isEnabled(): bool
     {
-        return !!$this->scopeConfig->getValue(static::XML_PATH_ENABLED, ScopeInterface::SCOPE_WEBSITE);
+        return $this->scopeConfig->isSetFlag(static::XML_PATH_ENABLED, ScopeInterface::SCOPE_WEBSITE);
     }
 
     /**
