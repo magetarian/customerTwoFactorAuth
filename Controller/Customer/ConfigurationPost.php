@@ -10,6 +10,7 @@ namespace Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
@@ -18,19 +19,14 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 
 /**
  * Class Configuration
  */
-class ConfigurationPost extends Action
+class ConfigurationPost extends Customer implements HttpPostActionInterface
 {
-
-    /**
-     * @var Session
-     */
-    private $customerSession;
-
     /**
      * @var Validator
      */
@@ -40,6 +36,7 @@ class ConfigurationPost extends Action
      * @var CustomerRepositoryInterface
      */
     private $customerRepository;
+
 
     /**
      * ConfigurationPost constructor.
@@ -55,34 +52,21 @@ class ConfigurationPost extends Action
         Validator $formKeyValidator,
         CustomerRepositoryInterface $customerRepository
     ) {
-        parent::__construct($context);
-        $this->customerSession = $customerSession;
-        $this->formKeyValidator = $formKeyValidator;
+        parent::__construct($context, $customerSession);
+        $this->formKeyValidator   = $formKeyValidator;
         $this->customerRepository = $customerRepository;
     }
 
-    /**
-     * @param RequestInterface $request
-     *
-     * @return \Magento\Framework\App\ResponseInterface|null
-     * @throws \Magento\Framework\Exception\NotFoundException
-     */
-    public function dispatch(RequestInterface $request)
-    {
-        if (!$this->customerSession->authenticate()) {
-            $this->_actionFlag->set('', 'no-dispatch', true);
-        }
-        return parent::dispatch($request);
-    }
 
     /**
-     * @return ResponseInterface|Redirect|ResultInterface
+     * Save 2FA Authentication Configuration
+     *
+     * @return ResponseInterface|ResultInterface|\Magento\Framework\View\Result\Layout
      */
     public function execute()
     {
-        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
-        if ($validFormKey && $this->getRequest()->isPost()) {
+        if ($validFormKey) {
             try {
                 $providers = $this->_request->getParam('providers');
                 $customer = $this->customerSession->getCustomer()->getDataModel();
@@ -93,7 +77,7 @@ class ConfigurationPost extends Action
                 $this->messageManager->addExceptionMessage($e, __('We can\'t save the 2FA providers.'));
             }
         }
-        $resultRedirect = $this->resultRedirectFactory->create();
+        $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath('*/*/configuration');
         return $resultRedirect;
     }

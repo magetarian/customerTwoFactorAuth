@@ -8,54 +8,16 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 
-use Magento\Customer\Model\Session;
-use Magento\Framework\App\Action\Context;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Exception\NotFoundException;
-use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
+use Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 
 /**
  * Class Configuration
  * Front controller for customer account 2FA settings
  */
-class Configuration extends Action
+class Configuration extends Customer
 {
-    /**
-     * @var Session
-     */
-    private $customerSession;
-
-    /**
-     * Configuration constructor.
-     *
-     * @param Context $context
-     * @param Session $customerSession
-     */
-    public function __construct(
-        Context $context,
-        Session $customerSession
-    ) {
-        parent::__construct($context);
-        $this->customerSession = $customerSession;
-    }
-
-    /**
-     * Dispatch request
-     *
-     * @param RequestInterface $request
-     * @return ResponseInterface
-     * @throws NotFoundException
-     */
-    public function dispatch(RequestInterface $request)
-    {
-        if (!$this->customerSession->authenticate()) {
-            $this->_actionFlag->set('', 'no-dispatch', true);
-        }
-        return parent::dispatch($request);
-    }
-
     /**
      * Dispatch request
      *
