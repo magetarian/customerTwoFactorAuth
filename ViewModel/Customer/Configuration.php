@@ -8,26 +8,58 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\ViewModel\Customer;
 
+use Magento\Customer\Model\Session;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use MSP\TwoFactorAuth\Model\ProviderPool;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 
+/**
+ * Class Configuration
+ * ViewModel for customer account
+ */
 class Configuration implements ArgumentInterface
 {
+    /**
+     * @var ProviderPool
+     */
     private $providerPool;
 
+    /**
+     * @var ConfigProvider
+     */
     private $configProvider;
 
+    /**
+     * @var Session
+     */
+    private $customerSession;
+
+    /**
+     * @var array
+     */
     private $enabledProviders = [];
 
+    /**
+     * Configuration constructor.
+     *
+     * @param ProviderPool $providerPool
+     * @param ConfigProvider $configProvider
+     * @param Session $customerSession
+     */
     public function __construct(
         ProviderPool $providerPool,
-        ConfigProvider $configProvider
+        ConfigProvider $configProvider,
+        Session $customerSession
     ) {
         $this->providerPool = $providerPool;
         $this->configProvider = $configProvider;
+        $this->customerSession = $customerSession;
     }
 
+    /**
+     * @return bool
+     */
     public function isEnabled(): bool
     {
         $enabled = false;
@@ -42,6 +74,9 @@ class Configuration implements ArgumentInterface
         return !$enabled;
     }
 
+    /**
+     * @return array
+     */
     private function getEnabledProviders(): array
     {
         if (!count($this->enabledProviders)) {
@@ -54,6 +89,9 @@ class Configuration implements ArgumentInterface
         return $this->enabledProviders;
     }
 
+    /**
+     * @return array
+     */
     public function getAvailableProviders(): array
     {
         $forcedProviders = $this->configProvider->getForcedProviders();
@@ -62,5 +100,21 @@ class Configuration implements ArgumentInterface
             return $providers;
         }
         return array_intersect_key($providers, array_flip($forcedProviders));
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelectedProviders(): array
+    {
+        $selectedProviders = $this->customerSession
+            ->getCustomer()
+            ->getDataModel()
+            ->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS);
+        if (!$selectedProviders) {
+            return [];
+        }
+        $selectedProvidersValue = $selectedProviders->getValue();
+        return explode(',', $selectedProvidersValue);
     }
 }

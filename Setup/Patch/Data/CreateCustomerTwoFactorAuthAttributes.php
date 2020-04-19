@@ -16,8 +16,7 @@ use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\Provider;
 
 /**
  * Class CreateCustomerTwoFactorAuthAttributes
- *
- * @package Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data
+ * Customer attributes for 2FA
  */
 class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, PatchRevertableInterface
 {
@@ -127,7 +126,7 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
             Customer::ENTITY,
             self::PROVIDERS,
             [
-                'label'    => 'Auth Providers',
+                'label'    => 'Two Factor Auth Providers',
                 'input'    => 'multiselect',
                 'type'     => 'varchar',
                 'source'   => Provider::class,
@@ -203,7 +202,6 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
 
         $attribute->save();
     }
-
 
     private function createDefaultProviderAttribute()
     {

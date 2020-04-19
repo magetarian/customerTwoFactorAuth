@@ -13,6 +13,7 @@ use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class ConfigProvider
+ * Configuration values provider
  */
 class ConfigProvider
 {
