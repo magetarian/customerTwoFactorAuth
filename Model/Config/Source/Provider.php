@@ -8,13 +8,14 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\Model\Config\Source;
 
-use Magento\Framework\Option\ArrayInterface;
+use Magento\Framework\Data\OptionSourceInterface;
 use MSP\TwoFactorAuth\Model\ProviderPool;
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 /**
  * Class Provider
  */
-class Provider implements ArrayInterface
+class Provider extends AbstractSource implements OptionSourceInterface
 {
     /**
      * @var ProviderPool
@@ -33,38 +34,35 @@ class Provider implements ArrayInterface
     }
 
     /**
-     * Options getter
-     *
-     * @return array
-     */
-    public function toOptionArray()
-    {
-        $providers = $this->providerPool->getProviders();
-        $res = [];
-        foreach ($providers as $provider) {
-            $res[] = [
-                'value' => $provider->getCode(),
-                'label' => $provider->getName(),
-            ];
-        }
-
-        return $res;
-    }
-
-    /**
      * Get options in "key-value" format
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $options = $this->toOptionArray();
-        $return = [];
+        $return  = [];
 
         foreach ($options as $option) {
             $return[$option['value']] = $option['label'];
         }
 
         return $return;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllOptions(): array
+    {
+        $result = [];
+        foreach ($this->providerPool->getProviders() ?? [] as $provider) {
+            $result[] = [
+                'value' => $provider->getCode(),
+                'label' => $provider->getName(),
+            ];
+        }
+
+        return $result;
     }
 }
