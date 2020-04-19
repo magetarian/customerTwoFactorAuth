@@ -23,10 +23,12 @@ $viewModel = $block->getViewModel();
                     method="post">
                     <?= $block->getBlockHtml('formkey') ?>
                     <div class="box-content">
-                        <select name="providers" size="4"  multiple="multiple" id="providers-field" class="multiselect">
-                            <option value=""><?= $block->escapeHtml(__('None')) ?></option>
+                        <?php $selected = $viewModel->getSelectedProviders(); ?>
+                        <select name="providers[]" size="4"  multiple="multiple" id="providers-field" class="multiselect">
+                            <option value="" <?=(count($selected)==0 ? 'selected' : '') ?> ><?= $block->escapeHtml(__('None')) ?></option>
                             <?php foreach ($viewModel->getAvailableProviders() as $providerCode => $providerName): ?>
-                                <option value="<?=$block->escapeHtmlAttr($providerCode);?>">
+                                <option value="<?=$block->escapeHtmlAttr($providerCode);?>"
+                                    <?=(in_array($providerCode, $selected) ? 'selected' : '') ?>>
                                     <?= $block->escapeHtml($providerName) ?>
                                 </option>
                             <?php endforeach; ?>

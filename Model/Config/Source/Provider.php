@@ -14,6 +14,7 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 /**
  * Class Provider
+ * Provider for 2FA services from a customer
  */
 class Provider extends AbstractSource implements OptionSourceInterface
 {

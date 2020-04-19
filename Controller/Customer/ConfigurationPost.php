@@ -17,6 +17,8 @@ use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 
 /**
  * Class Configuration
@@ -35,20 +37,28 @@ class ConfigurationPost extends Action
     private $formKeyValidator;
 
     /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
+
+    /**
      * ConfigurationPost constructor.
      *
      * @param Context $context
      * @param Session $customerSession
      * @param Validator $formKeyValidator
+     * @param CustomerRepositoryInterface $customerRepository
      */
     public function __construct(
         Context $context,
         Session $customerSession,
-        Validator $formKeyValidator
+        Validator $formKeyValidator,
+        CustomerRepositoryInterface $customerRepository
     ) {
         parent::__construct($context);
         $this->customerSession = $customerSession;
         $this->formKeyValidator = $formKeyValidator;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -74,6 +84,10 @@ class ConfigurationPost extends Action
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
         if ($validFormKey && $this->getRequest()->isPost()) {
             try {
+                $providers = $this->_request->getParam('providers');
+                $customer = $this->customerSession->getCustomer()->getDataModel();
+                $customer->setCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS, $providers);
+                $this->customerRepository->save($customer);
                 $this->messageManager->addSuccessMessage(__('You saved the 2FA providers.'));
             } catch (\Exception $e) {
                 $this->messageManager->addExceptionMessage($e, __('We can\'t save the 2FA providers.'));

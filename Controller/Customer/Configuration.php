@@ -18,6 +18,7 @@ use Magento\Framework\Controller\ResultFactory;
 
 /**
  * Class Configuration
+ * Front controller for customer account 2FA settings
  */
 class Configuration extends Action
 {
