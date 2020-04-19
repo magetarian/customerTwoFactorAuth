@@ -62,16 +62,11 @@ class Configuration implements ArgumentInterface
      */
     public function isEnabled(): bool
     {
-        $enabled = false;
-        if (!$this->configProvider->isEnabled()) {
-            return $enabled;
-        }
-
-        if (!count($this->getAvailableProviders())) {
-            return $enabled;
-        }
-
-        return !$enabled;
+        return (bool) (
+            $this->configProvider->isEnabled()
+        ) && (
+            count($this->getAvailableProviders())
+        );
     }
 
     /**

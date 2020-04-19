@@ -12,7 +12,7 @@
                    name="customer-account-navigation-two-factor-auth-link"
                    ifconfig="msp_securitysuite_twofactorauth/general/enabled_customer">
                 <arguments>
-                    <argument name="path" xsi:type="string">twoFactorAuth/customer/configuration</argument>
+                    <argument name="path" xsi:type="string">twofactorauth/customer/configuration</argument>
                     <argument name="label" xsi:type="string" translate="true">2FA Configuration</argument>
                     <argument name="sortOrder" xsi:type="number">150</argument>
                 </arguments>
