@@ -8,6 +8,7 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\ViewModel\Customer;
 
+use Magento\Customer\Api\CustomerMetadataInterface;
 use Magento\Customer\Model\Session;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
@@ -20,6 +21,11 @@ use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
  */
 class Configuration implements ArgumentInterface
 {
+    /**
+     * @var CustomerMetadataInterface
+     */
+    protected $customerMetadata;
+
     /**
      * @var ProviderPool
      */
@@ -43,18 +49,21 @@ class Configuration implements ArgumentInterface
     /**
      * Configuration constructor.
      *
+     * @param CustomerMetadataInterface $customerMetadata
      * @param ProviderPool $providerPool
      * @param ConfigProvider $configProvider
      * @param Session $customerSession
      */
     public function __construct(
+        CustomerMetadataInterface $customerMetadata,
         ProviderPool $providerPool,
         ConfigProvider $configProvider,
         Session $customerSession
     ) {
-        $this->providerPool = $providerPool;
-        $this->configProvider = $configProvider;
-        $this->customerSession = $customerSession;
+        $this->providerPool     = $providerPool;
+        $this->configProvider   = $configProvider;
+        $this->customerSession  = $customerSession;
+        $this->customerMetadata = $customerMetadata;
     }
 
     /**
@@ -116,5 +125,26 @@ class Configuration implements ArgumentInterface
         }
         $selectedProvidersValue = $selectedProviders->getValue();
         return explode(',', $selectedProvidersValue);
+    }
+
+
+    /**
+     * Get 2FA Provider Attribute
+     *
+     * @return \Magento\Customer\Model\Data\AttributeMetadata
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getProviderConfigAttribute()
+    {
+        /**
+         * @var $attribute \Magento\Customer\Model\Data\AttributeMetadata
+         */
+        $attribute = $this->customerMetadata->getAttributeMetadata(
+            CreateCustomerTwoFactorAuthAttributes::PROVIDERS
+        );
+
+        return $attribute;
     }
 }
