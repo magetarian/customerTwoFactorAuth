@@ -1,0 +1,24 @@
+<?php
+/**
+ * @author     Sashas IT Support <support@sashas.org>
+ * @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+ * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+ */
+?>
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\LoginProviders $viewModel */
+$viewModel = $block->getViewModel();
+?>
+<div class="field password required">
+  Providers
+</div>
+<script type="text/x-magento-init">
+    {
+        ".form-login": {
+            "twoFactorAuthProviders": {
+                "formSelector": "form.form-create-account"
+            }
+        }
+    }
+</script>
