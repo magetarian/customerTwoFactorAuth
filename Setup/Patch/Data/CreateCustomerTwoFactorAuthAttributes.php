@@ -12,7 +12,7 @@ use Magento\Eav\Model\Entity\Attribute\SetFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
-use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\Provider;
+use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\EnabledProviders;
 
 /**
  * Class CreateCustomerTwoFactorAuthAttributes
@@ -129,7 +129,7 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
                 'label'    => 'Two Factor Auth Providers',
                 'input'    => 'multiselect',
                 'type'     => 'varchar',
-                'source'   => Provider::class,
+                'source'   => EnabledProviders::class,
                 'required' => false,
                 'position' => 100,
                 'visible'  => true,

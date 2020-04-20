@@ -17,7 +17,7 @@
                 <field canRestore="1" id="force_providers_customer" translate="label" type="multiselect" sortOrder="70"
                        showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Force providers</label>
-                    <source_model>Magetarian\CustomerTwoFactorAuth\Model\Config\Source\Provider</source_model>
+                    <source_model>Magetarian\CustomerTwoFactorAuth\Model\Config\Source\AllProviders</source_model>
                     <comment>Force providers to be used by all customers in the website. Leave empty to allow individual
                         selection.
                     </comment>

@@ -18,7 +18,7 @@
             </argument>
         </arguments>
     </virtualType>
-    <type name="Magetarian\CustomerTwoFactorAuth\Model\Config\Source\Provider">
+    <type name="Magetarian\CustomerTwoFactorAuth\Model\Config\Source\AbstractProvider">
         <arguments>
             <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
         </arguments>

@@ -14,14 +14,15 @@ use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
 /**
  * Class Provider
+ *
  * Provider for 2FA services from a customer
  */
-class Provider extends AbstractSource implements OptionSourceInterface
+abstract class AbstractProvider extends AbstractSource implements OptionSourceInterface
 {
     /**
      * @var ProviderPool
      */
-    private $providerPool;
+    protected $providerPool;
 
     /**
      * Provider constructor.
@@ -49,21 +50,5 @@ class Provider extends AbstractSource implements OptionSourceInterface
         }
 
         return $return;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllOptions(): array
-    {
-        $result = [];
-        foreach ($this->providerPool->getProviders() ?? [] as $provider) {
-            $result[] = [
-                'value' => $provider->getCode(),
-                'label' => $provider->getName(),
-            ];
-        }
-
-        return $result;
     }
 }
