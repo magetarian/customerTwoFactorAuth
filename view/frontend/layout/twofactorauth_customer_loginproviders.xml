@@ -4,16 +4,18 @@
   ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
   ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
   -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account_login"/>
     <body>
         <referenceContainer name="form.additional.info">
             <block name="form.additional.inf"
                    template="Magetarian_CustomerTwoFactorAuth::customer/login_providers.phtml" >
-                <!--                <arguments>-->
-                <!--                    <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Configuration</argument>-->
-                <!--                </arguments>-->
+<!--                <arguments>-->
+<!--                    <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Configuration</argument>-->
+<!--                </arguments>-->
             </block>
         </referenceContainer>
+
     </body>
 </page>

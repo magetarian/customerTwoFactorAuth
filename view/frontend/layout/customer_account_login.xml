@@ -9,7 +9,7 @@
     <body>
         <referenceContainer name="form.additional.info">
             <block name="form.additional.inf"
-                   template="Magetarian_CustomerTwoFactorAuth::customer/login_providers.phtml" >
+                   template="Magetarian_CustomerTwoFactorAuth::customer/providers.phtml" >
                 <!--                <arguments>-->
                 <!--                    <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Configuration</argument>-->
                 <!--                </arguments>-->
