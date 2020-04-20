@@ -40,7 +40,7 @@ class LoginPostPlugin
                 ) {
                     $resultRedirect = $this->resultRedirectFactory->create();
                     $resultRedirect->setPath('twoFactorAuth/customer/loginProviders');
-                    return $resultRedirect;
+                   // return $resultRedirect;
                 }
             } catch (\Exception $e) {
                 return $proceed();
