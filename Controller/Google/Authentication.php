@@ -18,10 +18,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
 
-/**
- * Class Providers
- */
-class Providers extends Action implements HttpPostActionInterface
+class Authentication extends Action implements HttpPostActionInterface
 {
     /**
      * @var AccountManagementInterface
@@ -58,9 +55,7 @@ class Providers extends Action implements HttpPostActionInterface
         $this->providerPool = $providerPool;
     }
 
-    /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
-     */
+
     public function execute()
     {
         $response = [
@@ -73,7 +68,8 @@ class Providers extends Action implements HttpPostActionInterface
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
         $login = $this->getRequest()->getPost('login');
-
+        $code = $this->getRequest()->getPost('code');
+die($code);
         if (
             !$validFormKey ||
             !$login ||
@@ -85,19 +81,19 @@ class Providers extends Action implements HttpPostActionInterface
         try {
             $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
 
-            if (
-                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
-                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
-            ) {
-                $providersArray = explode(
-                    ',',
-                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
-                );
-                foreach ($providersArray as $providerCode) {
-                    $provider = $this->providerPool->getProviderByCode($providerCode);
-                    $response['providers'][$providerCode] = $provider->getName();
-                }
-            }
+//            if (
+//                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
+//                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
+//            ) {
+//                $providersArray = explode(
+//                    ',',
+//                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
+//                );
+//                foreach ($providersArray as $providerCode) {
+//                    $provider = $this->providerPool->getProviderByCode($providerCode);
+//                    $response['providers'][$providerCode] = $provider->getName();
+//                }
+//            }
         } catch (LocalizedException $e) {
             $response = [
                 'errors' => true,
