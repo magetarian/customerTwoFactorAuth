@@ -147,8 +147,7 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
             'attribute_set_id'   => $attributeSetId,
             'attribute_group_id' => $attributeGroupId,
             'used_in_forms'      => [
-                'adminhtml_customer',
-                'customer_account_edit'
+                'adminhtml_customer'
             ]
         ]);
 
@@ -195,9 +194,6 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
         $attribute->addData([
             'attribute_set_id'   => $attributeSetId,
             'attribute_group_id' => $attributeGroupId,
-            'used_in_forms'      => [
-                'customer_account_edit'
-            ]
         ]);
 
         $attribute->save();
@@ -240,9 +236,6 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
         $attribute->addData([
             'attribute_set_id'   => $attributeSetId,
             'attribute_group_id' => $attributeGroupId,
-            'used_in_forms'      => [
-                'customer_account_edit'
-            ]
         ]);
 
         $attribute->save();
