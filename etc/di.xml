@@ -6,6 +6,7 @@
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface" type="Magetarian\CustomerTwoFactorAuth\Model\CustomerConfigManager" />
     <!-- Customer 2FA providers list -->
     <virtualType name="CustomerTwoFactorAuthProviderPool" type="MSP\TwoFactorAuth\Model\ProviderPool">
         <arguments>

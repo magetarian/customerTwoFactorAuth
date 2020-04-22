@@ -7,9 +7,10 @@
 define([
     'jquery',
     'mage/url',
+    'Magetarian_CustomerTwoFactorAuth/js/providers/google',
     'mage/template',
     'jquery-ui-modules/widget'
-], function ($, urlBuilder, template) {
+], function ($, urlBuilder, google, template) {
     'use strict';
 
     $.widget('mage.twoFactorAuthLoginProviders', {
@@ -109,18 +110,19 @@ define([
         },
 
         /**
-         * @todo refactor into separate js classes
+         * @todo refactor into separate js classes and factory class
          * @param code
          * @private
          */
         _bindButtonClick: function (code) {
             let self = this;
             let providerPost = urlBuilder.build(this.options.providerAuthUrlKey.replace('{code}',code));
+
             $.ajax({
                 url: providerPost,
                 data: self.element.serialize(),
                 type: 'post',
-                dataType: 'json',
+                dataType: 'html',
 
                 /** Show loader before send */
                 beforeSend: function () {
@@ -129,10 +131,12 @@ define([
             }).always(function () {
                 $('body').trigger('processStop');
             }).done(function (response) {
-                console.log(response);
                 if (response.errors) {
                     self.loginButton.attr('disabled', false);
                 } else {
+                    $(self.options.containerSelector).append(response);
+                    google.verify(response);
+
                     // if ($.isEmptyObject(response.providers)) {
                     //     self.twoFactorAuthPassed = true;
                     //     self.element.submit();

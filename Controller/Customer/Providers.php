@@ -89,6 +89,7 @@ class Providers extends Action implements HttpPostActionInterface
                 $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
                 $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
             ) {
+                //@todo only forced options should be shown in case admin updated list
                 $providersArray = explode(
                     ',',
                     $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()

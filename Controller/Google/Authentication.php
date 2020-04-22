@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace Magetarian\CustomerTwoFactorAuth\Controller\Customer;
+namespace Magetarian\CustomerTwoFactorAuth\Controller\Google;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\Action\Context;
@@ -20,29 +20,12 @@ use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
 
 class Authentication extends Action implements HttpPostActionInterface
 {
-    /**
-     * @var AccountManagementInterface
-     */
     private $customerAccountManagement;
 
-    /**
-     * @var Validator
-     */
     private $formKeyValidator;
 
-    /**
-     * @var ProviderPoolInterface
-     */
     private $providerPool;
 
-    /**
-     * Providers constructor.
-     *
-     * @param Context $context
-     * @param AccountManagementInterface $customerAccountManagement
-     * @param Validator $formKeyValidator
-     * @param ProviderPoolInterface $providerPool
-     */
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
@@ -68,8 +51,7 @@ class Authentication extends Action implements HttpPostActionInterface
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
         $login = $this->getRequest()->getPost('login');
-        $code = $this->getRequest()->getPost('code');
-die($code);
+
         if (
             !$validFormKey ||
             !$login ||
@@ -78,37 +60,27 @@ die($code);
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
 
+        /** @var \Magento\Framework\View\Result\Layout $resultLayout */
+        $resultLayout = $this->resultFactory->create(ResultFactory::TYPE_LAYOUT);
+
         try {
             $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
+            //@todo validate if provider is not forced
 
-//            if (
-//                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
-//                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
-//            ) {
-//                $providersArray = explode(
-//                    ',',
-//                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
-//                );
-//                foreach ($providersArray as $providerCode) {
-//                    $provider = $this->providerPool->getProviderByCode($providerCode);
-//                    $response['providers'][$providerCode] = $provider->getName();
-//                }
-//            }
+
+
         } catch (LocalizedException $e) {
-            $response = [
-                'errors' => true,
-            ];
-            $this->messageManager->addExceptionMessage($e, $e->getMessage());
+//            $response = [
+//                'errors' => true,
+//            ];
+//            $this->messageManager->addExceptionMessage($e, $e->getMessage());
         } catch (\Exception $e) {
-            $response = [
-                'errors' => true,
-            ];
-            $this->messageManager->addExceptionMessage($e, __('Invalid login or password.'));
+//            $response = [
+//                'errors' => true,
+//            ];
+//            $this->messageManager->addExceptionMessage($e, __('Invalid login or password.'));
         }
 
-        /** @var \Magento\Framework\Controller\Result\Json $resultJson */
-        $resultJson = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-
-        return $resultJson->setData($response);
+        return $resultLayout;
     }
 }
