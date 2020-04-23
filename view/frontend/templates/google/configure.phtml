@@ -15,7 +15,7 @@ $viewModel = $block->getViewModel();
 <?php else: ?>
     <div class="field twofactorauth-google google-configure google-qr">
         <img class="msp-tfa-google-qr" src="<?= $block->escapeHtmlAttr($block->getUrl('twofactorauth/google/qr',['_query' => ['customerId'=>$viewModel->getCustomerId()]])) ?>"/>
-        <p class="msp-tfa-google-secure-code"><?= $block->escapeHtml($viewModel->getSecretCode()) ?></p>
+        <p><textarea class="msp-tfa-google-secure-code"><?= $block->escapeHtml($viewModel->getSecretCode()) ?></textarea></p>
         <p><?= $block->escapeHtml(__('Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.')) ?></p>
     </div>
     <div class="field twofactorauth-google google-configure google-secure-code">

@@ -24,7 +24,7 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
      * Constants
      */
     const PROVIDERS        = 'encoded_providers';
-    const CONFIG           = 'encoded_config';
+    const CONFIG           = 'two_fa_encoded_config';
     const DEFAULT_PROVIDER = 'default_provider';
 
     /**
@@ -176,7 +176,7 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
             Customer::ENTITY,
             self::CONFIG,
             [
-                'label'     => 'Encoded Config',
+                'label'     => 'Two Factor Auth Encoded Config',
                 'input'     => 'textarea',
                 'type'      => 'text',
                 'required'  => false,
@@ -218,7 +218,7 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
             Customer::ENTITY,
             self::DEFAULT_PROVIDER,
             [
-                'label'     => 'Default Provider',
+                'label'     => 'Two Factor Auth Default Provider',
                 'input'     => 'text',
                 'type'      => 'varchar',
                 'required'  => false,

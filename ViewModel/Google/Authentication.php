@@ -13,6 +13,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Framework\App\RequestInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
+use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Google;
 
 class Authentication  implements ArgumentInterface
 {
@@ -22,14 +23,18 @@ class Authentication  implements ArgumentInterface
 
     private $customerConfigManager;
 
+    private $google;
+
     public function __construct(
         RequestInterface $request,
         AccountManagementInterface $customerAccountManagement,
-        CustomerConfigManagerInterface $customerConfigManager
+        CustomerConfigManagerInterface $customerConfigManager,
+        Google $google
     ) {
         $this->request     = $request;
         $this->customerAccountManagement = $customerAccountManagement;
         $this->customerConfigManager = $customerConfigManager;
+        $this->google = $google;
     }
 
     public function isActive(): bool
@@ -46,7 +51,7 @@ class Authentication  implements ArgumentInterface
 
     public function getSecretCode()
     {
-
+        return $this->google->getSecretCode($this->getCustomer());
     }
 
     private function getCustomer(): CustomerInterface

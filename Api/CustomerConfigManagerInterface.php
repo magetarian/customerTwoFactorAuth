@@ -21,5 +21,5 @@ interface CustomerConfigManagerInterface
 
     public function getProviderConfig($customerId, $providerCode): ?array;
 
-    public function setProviderConfig($customerId, $providerCode);
+    public function setProviderConfig($customerId, $providerCode, $config);
 }

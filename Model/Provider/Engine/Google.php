@@ -15,11 +15,11 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
 use Magento\Store\Model\StoreManagerInterface;
-use MSP\TwoFactorAuth\Api\EngineInterface;
+use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
 use MSP\TwoFactorAuth\Model\Provider\Engine\Google as MspGoogle;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 
-class Google //implements EngineInterface
+class Google implements EngineInterface
 {
     //@todo replace with getCode
     const CODE = 'google';
@@ -57,7 +57,6 @@ class Google //implements EngineInterface
      * @param CustomerInterface $customer
      * @return string|null
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @author Konrad Skrzynski <konrad.skrzynski@accenture.com>
      */
     public function getSecretCode(CustomerInterface $customer)
     {
@@ -153,7 +152,7 @@ class Google //implements EngineInterface
     {
         $token = $request->getData('tfa_code');
 
-        $totp = $this->getTotp($user);
+        $totp = $this->getTotp($customer);
         $totp->now();
 
         return $totp->verify($token);
