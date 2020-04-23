@@ -20,16 +20,43 @@ class EnabledProviders extends AbstractProvider
     public function getAllOptions(): array
     {
         $result = [];
-        foreach ($this->providerPool->getProviders() ?? [] as $provider) {
-            if (!$provider->isEnabled()) {
-                continue;
-            }
+        foreach ($this->getAvailableProviders() ?? [] as $code => $name) {
             $result[] = [
-                'value' => $provider->getCode(),
-                'label' => $provider->getName(),
+                'value' => $code,
+                'label' => $name,
             ];
         }
 
         return $result;
+    }
+
+
+    /**
+     * @return array
+     */
+    private function getEnabledProviders(): array
+    {
+        $enabledProviders = [];
+        foreach ($this->providerPool->getProviders() as $provider) {
+            if ($provider->isEnabled()) {
+                $enabledProviders[$provider->getCode()] = $provider->getName();
+            }
+        };
+
+        return $enabledProviders;
+    }
+
+
+    /**
+     * @return array
+     */
+    private function getAvailableProviders(): array
+    {
+        $forcedProviders = $this->configProvider->getForcedProviders();
+        $providers = $this->getEnabledProviders();
+        if (!count($forcedProviders)) {
+            return $providers;
+        }
+        return array_intersect_key($providers, array_flip($forcedProviders));
     }
 }

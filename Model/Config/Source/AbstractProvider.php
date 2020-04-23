@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace Magetarian\CustomerTwoFactorAuth\Model\Config\Source;
 
 use Magento\Framework\Data\OptionSourceInterface;
+use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 use MSP\TwoFactorAuth\Model\ProviderPool;
 use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
 
@@ -25,15 +26,24 @@ abstract class AbstractProvider extends AbstractSource implements OptionSourceIn
     protected $providerPool;
 
     /**
-     * Provider constructor.
+     * @var ConfigProvider
+     */
+    protected $configProvider;
+
+    /**
+     * AbstractProvider constructor.
      *
+     * @param ConfigProvider $configProvider
      * @param ProviderPool $providerPool
      */
     public function __construct(
+        ConfigProvider $configProvider,
         ProviderPool $providerPool
     ) {
-        $this->providerPool = $providerPool;
+        $this->providerPool   = $providerPool;
+        $this->configProvider = $configProvider;
     }
+
 
     /**
      * Get options in "key-value" format
