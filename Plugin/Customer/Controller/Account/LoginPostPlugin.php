@@ -39,8 +39,9 @@ class LoginPostPlugin
                     $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
                 ) {
                     $resultRedirect = $this->resultRedirectFactory->create();
-                    $resultRedirect->setPath('twoFactorAuth/customer/loginProviders');
-                   // return $resultRedirect;
+                    //@todo add message
+                    $resultRedirect->setPath('*/*/');
+                    return $resultRedirect;
                 }
             } catch (\Exception $e) {
                 return $proceed();

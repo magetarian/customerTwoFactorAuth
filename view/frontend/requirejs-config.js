@@ -7,7 +7,8 @@
 var config = {
     map: {
         '*': {
-            twoFactorAuthProviders:    'Magetarian_CustomerTwoFactorAuth/js/login-providers'
+            twoFactorAuthProviders:    'Magetarian_CustomerTwoFactorAuth/js/login-providers',
+            twoFactorAuthProviderGoogle:    'Magetarian_CustomerTwoFactorAuth/js/providers/google'
         }
     }
 };
