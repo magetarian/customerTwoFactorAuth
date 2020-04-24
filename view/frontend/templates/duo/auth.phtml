@@ -11,16 +11,19 @@
 $viewModel = $block->getViewModel();
 ?>
 <div class="field twofactorauth-duo duo-auth">
-    <iframe style="height:330px;" id="duo_iframe" data-host="<?=$viewModel->getApiHost()?>" data-sig-request="<?=$viewModel->getSignature()?>"
+    <iframe id="duo_iframe"
             data-post-action="<?=$block->escapeHtmlAttr($block->getUrl('customer/account/loginPost'))?>"
             data-post-argument="tfa_code"
             data-bind="afterRender: onAfterRender">
     </iframe>
     <input name="provider_code" value="<?=$viewModel->getProviderCode();?>" id="provider_code" type="hidden" />
+    <button type="submit" name="twofactorauth-login" id="twofactorauth-duo" />
     <script type="text/x-magento-init">
     {
         "#duo_iframe": {
             "twoFactorAuthProviderDuo": {
+                "host": "<?=$viewModel->getApiHost()?>",
+                "sigRequest": "<?=$viewModel->getSignature()?>"
             }
         }
     }

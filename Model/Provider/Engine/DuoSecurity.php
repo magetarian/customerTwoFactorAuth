@@ -171,7 +171,7 @@ class DuoSecurity implements EngineInterface
     {
         $time = time();
 
-        list($authSig, $appSig) = explode(':', $request->getData('sig_response'));
+        list($authSig, $appSig) = explode(':', $request->getData('tfa_code'));
 
         $authUser = $this->parseValues($this->getSecretKey(), $authSig, MspDuoSecurity::AUTH_PREFIX, $time);
         $appUser = $this->parseValues($this->getApplicationKey(), $appSig, MspDuoSecurity::APP_PREFIX, $time);

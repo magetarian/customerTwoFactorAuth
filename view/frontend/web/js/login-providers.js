@@ -21,7 +21,7 @@ define([
             providerAuthUrlKey: 'twofactorauth/{code}/authentication',
             twoFactorAuthButtonSelector: 'button[id^="login-using-"]',
             codeProperty: 'code',
-            twoFactorField: '#tfa_code'
+            twoFactorField: 'input[name="tfa_code"]'
         },
         loginButton: null,
         twoFactorAuthPassed: false,

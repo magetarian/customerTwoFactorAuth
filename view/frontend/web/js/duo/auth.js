@@ -14,6 +14,10 @@ define([
 
     $.widget('mage.twoFactorAuthProviderDuo', {
         options: {
+            host: null,
+            sigRequest: null,
+            postAction: null,
+            postArgument: 'tfa_code'
         },
 
         /**
@@ -21,10 +25,29 @@ define([
          * @private
          */
         _create: function () {
-            window.setTimeout(function () {
-                duo.init();
-                console.log('duoinit');
-            }, 100);
+            duo.init(
+                {
+                    host: this.options.host,
+                    sig_request: this.options.sigRequest,
+                    post_action: this.options.postAction,
+                    post_argument: this.options.postArgument,
+                    submit_callback: this._verifiedCallback
+                }
+            );
+        },
+
+        /**
+         * Callback once 2FA completed
+         * @private
+         */
+        _verifiedCallback: function (duoForm) {
+            let loginForm = $(duoForm).parent().closest('form');
+            console.log($(duoForm).closest('form'));
+            $(duoForm).find('input').each(function () {
+                $(duoForm).parent().append(this);
+                $(duoForm).remove();
+            });
+            loginForm.submit();
         }
     });
 
