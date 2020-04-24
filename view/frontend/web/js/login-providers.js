@@ -7,10 +7,9 @@
 define([
     'jquery',
     'mage/url',
-    'Magetarian_CustomerTwoFactorAuth/js/providers/google',
     'mage/template',
     'jquery-ui-modules/widget'
-], function ($, urlBuilder, google, template) {
+], function ($, urlBuilder, template) {
     'use strict';
 
     $.widget('mage.twoFactorAuthLoginProviders', {
@@ -21,7 +20,8 @@ define([
             providerListUrlKey: 'twofactorauth/customer/providers',
             providerAuthUrlKey: 'twofactorauth/{code}/authentication',
             twoFactorAuthButtonSelector: 'button[id^="login-using-"]',
-            codeProperty: 'code'
+            codeProperty: 'code',
+            twoFactorField: '#tfa_code'
         },
         loginButton: null,
         twoFactorAuthPassed: false,
@@ -40,6 +40,11 @@ define([
 
             this.element.on('submit', function(e) {
                 var isvalid = self.element.valid();
+                //@todo refactor
+                if ($(self.options.twoFactorField).length > 0 ) {
+                    self.twoFactorAuthPassed = true;
+                }
+
                 if (isvalid && !self.twoFactorAuthPassed) {
                     e.preventDefault();
                     self.loginButton.attr('disabled', true);
@@ -74,6 +79,7 @@ define([
                     } else {
                         self._parseResponse(response);
                         self.loginButton.hide();
+                        $(self.options.containerSelector).show();
                     }
                 }
             }).fail(function () {
@@ -82,7 +88,6 @@ define([
         },
 
         _parseResponse: function (response) {
-            console.log(response);
             let self = this;
             let providerListTemplate = template(this.options.templateSelector);
             $(self.options.containerSelector).empty();
@@ -116,6 +121,7 @@ define([
          */
         _bindButtonClick: function (code) {
             let self = this;
+            code = code.toLowerCase().replace(/[^a-z]/g,'');
             let providerPost = urlBuilder.build(this.options.providerAuthUrlKey.replace('{code}',code));
 
             $.ajax({
@@ -134,16 +140,7 @@ define([
                 if (response.errors) {
                     self.loginButton.attr('disabled', false);
                 } else {
-                    $(self.options.containerSelector).append(response);
-                    google.verify(response);
-
-                    // if ($.isEmptyObject(response.providers)) {
-                    //     self.twoFactorAuthPassed = true;
-                    //     self.element.submit();
-                    // } else {
-                    //     self._parseResponse(response);
-                    //     self.loginButton.hide();
-                    // }
+                    $(self.options.containerSelector).html(response).trigger('contentUpdated');
                 }
             }).fail(function () {
                 self.loginButton.attr('disabled', false);

@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace Magetarian\CustomerTwoFactorAuth\Controller\Google;
+namespace Magetarian\CustomerTwoFactorAuth\Controller\DuoSecurity;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\Action\Context;
@@ -18,9 +18,6 @@ use Magento\Framework\Controller\ResultFactory;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
 
-/**
- * Class Authentication
- */
 class Authentication extends Action implements HttpPostActionInterface
 {
     /**

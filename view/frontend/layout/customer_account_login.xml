@@ -8,7 +8,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="form.additional.info">
-            <block name="form.additional.inf"
+            <block name="two-factor-authentication"
                    template="Magetarian_CustomerTwoFactorAuth::customer/providers.phtml" >
                 <!--                <arguments>-->
                 <!--                    <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Configuration</argument>-->

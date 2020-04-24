@@ -7,9 +7,9 @@
 <layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
     <container name="root" label="Root">
-        <block name="google-authentication" template="Magetarian_CustomerTwoFactorAuth::google/auth.phtml" cacheable="false">
+        <block name="duo-authentication" template="Magetarian_CustomerTwoFactorAuth::duo/auth.phtml" cacheable="false">
             <arguments>
-                <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Google\Authentication</argument>
+                <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Duo\Authentication</argument>
             </arguments>
         </block>
     </container>

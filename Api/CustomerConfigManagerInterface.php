@@ -10,15 +10,6 @@ namespace Magetarian\CustomerTwoFactorAuth\Api;
 
 interface CustomerConfigManagerInterface
 {
-    /**
-     * Return true if a provider configuration has been activated
-     * @param int $customerId
-     * @param string $providerCode
-     * @return boolean
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function isProviderConfigurationActive($customerId, $providerCode): bool;
-
     public function getProviderConfig($customerId, $providerCode): ?array;
 
     public function setProviderConfig($customerId, $providerCode, $config);

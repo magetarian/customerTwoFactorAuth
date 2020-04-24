@@ -12,6 +12,9 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Account\LoginPost;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magento\Framework\Controller\Result\RedirectFactory;
+use MSP\TwoFactorAuth\Model\ProviderPool;
+use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\DataObjectFactory;
 
 class LoginPostPlugin
 {
@@ -19,30 +22,58 @@ class LoginPostPlugin
 
     private $resultRedirectFactory;
 
+    private $providerPool;
+
+    private $messageManager;
+
+    private $dataObjectFactory;
+
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
-        RedirectFactory $resultRedirectFactory
+        RedirectFactory $resultRedirectFactory,
+        ProviderPool $providerPool,
+        ManagerInterface $messageManager,
+        DataObjectFactory $dataObjectFactory
     ) {
         $this->customerAccountManagement = $customerAccountManagement;
         $this->resultRedirectFactory = $resultRedirectFactory;
+        $this->providerPool = $providerPool;
+        $this->messageManager = $messageManager;
+        $this->dataObjectFactory = $dataObjectFactory;
     }
 
     public function aroundExecute(LoginPost $subject, callable $proceed)
     {
-
         if ($subject->getRequest()->isPost()) {
             $login = $subject->getRequest()->getPost('login');
+            $twoFactorAuthCode = $subject->getRequest()->getPost('tfa_code');
+            $providerCode = $subject->getRequest()->getPost('provider_code');
+            $resultRedirect = $this->resultRedirectFactory->create();
             try {
                 $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
+                //@todo replace getCustomattribute with Interface/class
                 if (
                     $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
-                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
+                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue() &&
+                    (!$twoFactorAuthCode || !$providerCode)
                 ) {
-                    $resultRedirect = $this->resultRedirectFactory->create();
-                    //@todo add message
+                    $this->messageManager->addWarningMessage(
+                        __('Login using Two Factor Authentication, please.')
+                    );
                     $resultRedirect->setPath('*/*/');
                     return $resultRedirect;
                 }
+                $providerEngine = $this->providerPool->getProviderByCode($providerCode)->getEngine();
+                $verification = $this->dataObjectFactory->create([ 'data' => $subject->getRequest()->getParams()]);
+
+                if (!$providerEngine->verify($customer, $verification)) {
+                    $resultRedirect->setPath('*/*/');
+                    $this->messageManager->addErrorMessage(
+                        __('The two factor authentication failed. Please try again.')
+                    );
+                    return $resultRedirect;
+                }
+
             } catch (\Exception $e) {
                 return $proceed();
             }

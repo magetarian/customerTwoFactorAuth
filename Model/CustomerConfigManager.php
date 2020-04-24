@@ -29,19 +29,6 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
 
     //@todo add getProviders function here as well?
 
-    /**
-     * @todo customer attribute responsible for it?
-     */
-    public function isProviderConfigurationActive($customerId, $providerCode): bool
-    {
-//        $config = $this->getProviderConfig($customerId, $providerCode);
-//        return $config &&
-//               isset($config[UserConfigManagerInterface::ACTIVE_CONFIG_KEY]) &&
-//               $config[UserConfigManagerInterface::ACTIVE_CONFIG_KEY];
-
-        return  false;
-    }
-
     public function getProviderConfig($customerId, $providerCode): ?array
     {
         $providersConfig = $this->getCustomerProvidersConfiguration($customerId);
