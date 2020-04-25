@@ -16,7 +16,6 @@
                 <item name="google" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Google</item>
                 <item name="duo_security" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\DuoSecurity</item>
                 <item name="authy" xsi:type="object">MSP\TwoFactorAuth\Model\Provider\Authy</item>
-                <item name="u2fkey" xsi:type="object">MSP\TwoFactorAuth\Model\Provider\U2fKey</item>
             </argument>
         </arguments>
     </virtualType>

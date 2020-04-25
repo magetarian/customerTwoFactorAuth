@@ -142,7 +142,7 @@ class DuoSecurity implements EngineInterface
     {
         $time = time();
 
-        $values = $customer->getEmail() . '|' . $this->getIntegrationKey();
+        $values = $customer->getEmail(). $customer->getId() . '|' . $this->getIntegrationKey();
         $duoSignature = $this->signValues(
             $this->getSecretKey(),
             $values,
@@ -176,7 +176,7 @@ class DuoSecurity implements EngineInterface
         $authUser = $this->parseValues($this->getSecretKey(), $authSig, MspDuoSecurity::AUTH_PREFIX, $time);
         $appUser = $this->parseValues($this->getApplicationKey(), $appSig, MspDuoSecurity::APP_PREFIX, $time);
 
-        return (($authUser === $appUser) && ($appUser === $customer->getEmail()));
+        return (($authUser === $appUser) && ($appUser === $customer->getEmail().$customer->getId()));
     }
 
     /**
