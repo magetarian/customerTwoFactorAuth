@@ -1,0 +1,34 @@
+<?php
+/**
+ * @author     Sashas IT Support <support@sashas.org>
+ * @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+ * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+ */
+?>
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magetarian\CustomerTwoFactorAuth\ViewModel\Google\Authentication $viewModel */
+$viewModel = $block->getViewModel();
+?>
+<?php if (!$viewModel->isConfigured()):?>
+    <div class="field twofactorauth-google google-configure google-qr">
+        <img class="msp-tfa-google-qr" src="<?=$block->escapeHtmlAttr($block->getUrl('twofactorauth/google/qr')) ?>"/>
+        <p><textarea class="msp-tfa-google-secure-code"><?= $block->escapeHtml($viewModel->getSecretCode()) ?></textarea></p>
+        <p><?= $block->escapeHtml(__('Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.')) ?></p>
+    </div>
+<?php endif; ?>
+<div class="field twofactorauth-google google-configure google-secure-code">
+    <label for="tfa_code" class="admin__field-label">
+        <span data-bind='i18n: "Authenticator code"'></span>
+    </label>
+    <label class="label" for="tfa_code"><span><?= $block->escapeHtml(__('Authenticator code')) ?></span></label>
+    <div class="control">
+        <input name="tfa_code" value="" autocomplete="off" id="tfa_code" type="password" class="input-text" placeholder="Your code" title="<?= $block->escapeHtmlAttr(__('Your code')) ?>" data-mage-init='{"mage/trim-input":{}}' data-validate="{required:true}">
+        <input name="provider_code" value="<?=$viewModel->getProviderCode();?>" id="provider_code" type="hidden" />
+    </div>
+</div>
+<div class="primary">
+    <button type="submit" class="action login primary"  name="twofactorauth-login" id="twofactorauth-google">
+        <span><?= $block->escapeHtmlAttr(__('Confirm')) ?></span>
+    </button>
+</div>

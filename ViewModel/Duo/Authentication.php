@@ -6,13 +6,14 @@
  */
 declare(strict_types = 1);
 
-namespace Magetarian\CustomerTwoFactorAuth\ViewModel\Google;
+namespace Magetarian\CustomerTwoFactorAuth\ViewModel\Duo;
 
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Customer\Model\Session;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
 use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
-use MSP\TwoFactorAuth\Model\Provider\Engine\Google;
+use MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 
 /**
  * Class Authentication
@@ -29,34 +30,31 @@ class Authentication  implements ArgumentInterface
      */
     private $customerSession;
 
-    /**
-     * Authentication constructor.
-     *
-     * @param ProviderPoolInterface $providerPool
-     * @param Session $customerSession
-     */
     public function __construct(
         ProviderPoolInterface $providerPool,
-        Session $customerSession
+        Session $customerSession,
+        CustomerRepositoryInterface $customerRepository
     ) {
         $this->providerPool = $providerPool;
         $this->customerSession = $customerSession;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isConfigured(): bool
-    {
-        return  $this->getProvider()->isConfigured($this->getCustomerId());
+        $this->customerRepository = $customerRepository;
     }
 
     /**
      * @return string
      */
-    public function getSecretCode(): string
+    public function getApiHost(): string
     {
-        return $this->getProvider()->getEngine()->getSecretCode($this->getCustomerId());
+        return $this->getProvider()->getEngine()->getApiHostname();
+    }
+
+    /**
+     * @return string
+     */
+    public function getSignature(): string
+    {
+        $customer = $this->customerRepository->getById($this->getCustomerId());
+        return $this->getProvider()->getEngine()->getRequestSignature($customer);
     }
 
     /**
@@ -67,13 +65,9 @@ class Authentication  implements ArgumentInterface
         return $this->getProvider()->getEngine()->getCode();
     }
 
-    /**
-     * @return ProviderInterface
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
     private function getProvider(): ProviderInterface
     {
-        return $this->providerPool->getProviderByCode(Google::CODE);
+        return $this->providerPool->getProviderByCode(DuoSecurity::CODE);
     }
 
     private function getCustomerId(): int

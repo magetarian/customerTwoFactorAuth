@@ -14,32 +14,60 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Google;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Model\Session;
 
+/**
+ * Class Qr
+ */
 class Qr extends Action implements HttpGetActionInterface
 {
+    /**
+     * @var Google
+     */
     private $google;
 
+    /**
+     * @var CustomerRepositoryInterface
+     */
     private $customerRepository;
 
+    /**
+     * @var Session
+     */
+    private $customerSession;
+
+    /**
+     * Qr constructor.
+     *
+     * @param Context $context
+     * @param Google $google
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param Session $customerSession
+     */
     public function __construct(
         Context $context,
         Google $google,
-        CustomerRepositoryInterface $customerRepository
+        CustomerRepositoryInterface $customerRepository,
+        Session $customerSession
     ) {
         parent::__construct($context);
         $this->google = $google;
         $this->customerRepository = $customerRepository;
+        $this->customerSession = $customerSession;
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
+     * @throws \Endroid\QrCode\Exception\ValidationException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute()
     {
         /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
-        $customerId = $this->getRequest()->getParam('customerId');
+        $customerId = $this->customerSession->getTwoFaCustomerId();
         $customer = $this->customerRepository->getById($customerId);
-        //@todo restrict only if not activated
-        //@todo add email to a session
-        //@todo if email not provided
         $pngData = $this->google->getQrCodeAsPng($customer);
         $resultRaw
             ->setHttpResponseCode(200)

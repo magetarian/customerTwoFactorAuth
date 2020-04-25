@@ -31,4 +31,6 @@ interface EngineInterface
      * @return bool
      */
     public function verify(CustomerInterface $customer, DataObject $request);
+
+    public function getCode(): string;
 }

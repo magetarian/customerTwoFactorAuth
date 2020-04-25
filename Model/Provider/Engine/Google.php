@@ -19,19 +19,38 @@ use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
 use MSP\TwoFactorAuth\Model\Provider\Engine\Google as MspGoogle;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 
+/**
+ * Class Google
+ */
 class Google implements EngineInterface
 {
-    //@todo replace with getCode
-    const CODE = 'google';
-
+    /**
+     * @var null
+     */
     private $totp = null;
 
+    /**
+     * @var CustomerConfigManagerInterface
+     */
     private $customerConfigManager;
 
+    /**
+     * @var StoreManagerInterface
+     */
     private $storeManager;
 
+    /**
+     * @var ScopeConfigInterface
+     */
     private $scopeConfig;
 
+    /**
+     * Google constructor.
+     *
+     * @param StoreManagerInterface $storeManager
+     * @param ScopeConfigInterface $scopeConfig
+     * @param CustomerConfigManagerInterface $customerConfigManager
+     */
     public function __construct(
         StoreManagerInterface $storeManager,
         ScopeConfigInterface $scopeConfig,
@@ -54,17 +73,17 @@ class Google implements EngineInterface
 
     /**
      * Get the secret code used for Google Authentication
-     * @param CustomerInterface $customer
+     * @param int $customerId
      * @return string|null
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getSecretCode(CustomerInterface $customer)
+    public function getSecretCode(int $customerId)
     {
-        $config = $this->customerConfigManager->getProviderConfig($customer->getId(), static::CODE);
+        $config = $this->customerConfigManager->getProviderConfig($customerId, $this->getCode());
 
         if (!isset($config['secret'])) {
             $config['secret'] = $this->generateSecret();
-            $this->customerConfigManager->setProviderConfig($customer->getId(), static::CODE, $config);
+            $this->customerConfigManager->setProviderConfig($customerId, $this->getCode(), $config);
         }
 
         return $config['secret'] ?? null;
@@ -124,10 +143,10 @@ class Google implements EngineInterface
     private function getTotp(CustomerInterface $customer)
     {
         if ($this->totp === null) {
-            $config = $this->customerConfigManager->getProviderConfig($customer->getId(), static::CODE);
+            $config = $this->customerConfigManager->getProviderConfig($customer->getId(), $this->getCode());
 
             if (!isset($config['secret'])) {
-                $config['secret'] = $this->getSecretCode($customer);
+                $config['secret'] = $this->getSecretCode($customer->getId());
             }
 
             // @codingStandardsIgnoreStart
@@ -174,5 +193,13 @@ class Google implements EngineInterface
     public function isTrustedDevicesAllowed()
     {
         return !!$this->scopeConfig->getValue(MspGoogle::XML_PATH_ALLOW_TRUSTED_DEVICES);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode(): string
+    {
+        return MspGoogle::CODE;
     }
 }

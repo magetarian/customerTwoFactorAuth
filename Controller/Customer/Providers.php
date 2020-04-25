@@ -17,6 +17,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
+use Magento\Customer\Model\Session;
 
 /**
  * Class Providers
@@ -38,24 +39,20 @@ class Providers extends Action implements HttpPostActionInterface
      */
     private $providerPool;
 
-    /**
-     * Providers constructor.
-     *
-     * @param Context $context
-     * @param AccountManagementInterface $customerAccountManagement
-     * @param Validator $formKeyValidator
-     * @param ProviderPoolInterface $providerPool
-     */
+    private $customerSession;
+
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
         Validator $formKeyValidator,
-        ProviderPoolInterface $providerPool
+        ProviderPoolInterface $providerPool,
+        Session $customerSession
     ) {
         parent::__construct($context);
         $this->customerAccountManagement = $customerAccountManagement;
         $this->formKeyValidator = $formKeyValidator;
         $this->providerPool = $providerPool;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -89,6 +86,7 @@ class Providers extends Action implements HttpPostActionInterface
                 $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
                 $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
             ) {
+                //@todo not show options not enabled
                 //@todo only forced options should be shown in case admin updated list
                 $providersArray = explode(
                     ',',
@@ -98,6 +96,7 @@ class Providers extends Action implements HttpPostActionInterface
                     $provider = $this->providerPool->getProviderByCode($providerCode);
                     $response['providers'][$providerCode] = $provider->getName();
                 }
+                $this->customerSession->setTwoFaCustomerId($customer->getId());
             }
         } catch (LocalizedException $e) {
             $response = [
