@@ -23,7 +23,7 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
     /**
      * Constants
      */
-    const PROVIDERS        = 'encoded_providers';
+    const PROVIDERS        = 'two_fa_providers';
     const CONFIG           = 'two_fa_encoded_config';
     const DEFAULT_PROVIDER = 'default_provider';
 
