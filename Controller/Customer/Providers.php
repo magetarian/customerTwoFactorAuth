@@ -15,6 +15,7 @@ use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Json\Helper\Data;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Customer\Model\Session;
@@ -41,23 +42,25 @@ class Providers extends Action implements HttpPostActionInterface
 
     private $customerSession;
 
+    private $jsonHelper;
+
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
         Validator $formKeyValidator,
         ProviderPoolInterface $providerPool,
-        Session $customerSession
+        Session $customerSession,
+        Data $jsonHelper
     ) {
         parent::__construct($context);
         $this->customerAccountManagement = $customerAccountManagement;
         $this->formKeyValidator = $formKeyValidator;
         $this->providerPool = $providerPool;
         $this->customerSession = $customerSession;
+        $this->jsonHelper = $jsonHelper;
     }
 
-    /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
-     */
+
     public function execute()
     {
         $response = [
@@ -68,9 +71,28 @@ class Providers extends Action implements HttpPostActionInterface
 
         /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
+
+        //checkout
+        $params = $this->jsonHelper->jsonDecode($this->getRequest()->getContent());
+        $loginData = [];
+        if (is_array($params)) {
+            if (isset($params['username'])) {
+                $loginData['username'] = $params['username'];
+            }
+            if (isset($params['password'])) {
+                $loginData['password'] = $params['password'];
+            }
+            $this->getRequest()->setParams($params);
+        }
+        //checkout
+
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
         $login = $this->getRequest()->getPost('login');
-
+        //checkout
+        if (!$login && $loginData) {
+            $login = $loginData;
+        }
+        //checkout
         if (
             !$validFormKey ||
             !$login ||
