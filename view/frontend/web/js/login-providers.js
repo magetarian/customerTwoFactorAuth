@@ -91,14 +91,14 @@ define([
             let self = this;
             let providerListTemplate = template(this.options.templateSelector);
             $(self.options.containerSelector).empty();
-            $.each(response.providers, function(itemCode, itemLabel) {
-                var provider = providerListTemplate({
+            $.each(response.providers, function(key, provider) {
+                var providerHTML = providerListTemplate({
                     data: {
-                        name: itemLabel,
-                        code: itemCode
+                        name: provider.label,
+                        code: provider.code
                     }
                 });
-                $(self.options.containerSelector).append(provider);
+                $(self.options.containerSelector).append(providerHTML);
             });
             this._bindButtons();
             this.loginButton.attr('disabled', false);

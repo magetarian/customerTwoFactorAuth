@@ -12,7 +12,7 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Account\LoginPost;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magento\Framework\Controller\Result\RedirectFactory;
-use MSP\TwoFactorAuth\Model\ProviderPool;
+use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\DataObjectFactory;
 
@@ -31,7 +31,7 @@ class LoginPostPlugin
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
         RedirectFactory $resultRedirectFactory,
-        ProviderPool $providerPool,
+        ProviderPoolInterface $providerPool,
         ManagerInterface $messageManager,
         DataObjectFactory $dataObjectFactory
     ) {

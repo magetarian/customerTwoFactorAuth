@@ -58,7 +58,15 @@
     <type name="Magento\Customer\Controller\Account\LoginPost">
         <plugin name="twofactorauth" type="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Account\LoginPostPlugin" sortOrder="1" disabled="false" />
     </type>
+    <type name="Magento\Customer\Controller\Ajax\Login">
+        <plugin name="twofactorauth" type="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Ajax\LoginPlugin" sortOrder="1" disabled="false" />
+    </type>
     <type name="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Account\LoginPostPlugin">
+        <arguments>
+            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
+        </arguments>
+    </type>
+    <type name="Magetarian\CustomerTwoFactorAuth\Controller\Customer\Providers">
         <arguments>
             <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
         </arguments>
