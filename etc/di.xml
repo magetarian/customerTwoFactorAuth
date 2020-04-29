@@ -66,4 +66,9 @@
             <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
         </arguments>
     </type>
+    <type name="Magetarian\CustomerTwoFactorAuth\Controller\Customer\Providers">
+        <arguments>
+            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
+        </arguments>
+    </type>
 </config>

@@ -73,17 +73,22 @@ class Providers extends Action implements HttpPostActionInterface
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
 
         //checkout
-        $params = $this->jsonHelper->jsonDecode($this->getRequest()->getContent());
         $loginData = [];
-        if (is_array($params)) {
-            if (isset($params['username'])) {
-                $loginData['username'] = $params['username'];
+        try {
+            $params = $this->jsonHelper->jsonDecode($this->getRequest()->getContent());
+            if (is_array($params)) {
+                if (isset($params['username'])) {
+                    $loginData['username'] = $params['username'];
+                }
+                if (isset($params['password'])) {
+                    $loginData['password'] = $params['password'];
+                }
+                $this->getRequest()->setParams($params);
             }
-            if (isset($params['password'])) {
-                $loginData['password'] = $params['password'];
-            }
-            $this->getRequest()->setParams($params);
+        } catch (\Zend_Json_Exception $e) {
+            $loginData = [];
         }
+
         //checkout
 
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
@@ -116,8 +121,13 @@ class Providers extends Action implements HttpPostActionInterface
                 );
                 foreach ($providersArray as $providerCode) {
                     $provider = $this->providerPool->getProviderByCode($providerCode);
-                    $response['providers'][$providerCode] = $provider->getName();
+                    $response['providers'][$providerCode] = [
+                        'label' => $provider->getName(),
+                        'code' => $provider->getCode(),
+                        'configured' => $provider->isConfigured((int)$customer->getId())
+                    ];
                 }
+                //@todo double check if it still need
                 $this->customerSession->setTwoFaCustomerId($customer->getId());
             }
         } catch (LocalizedException $e) {

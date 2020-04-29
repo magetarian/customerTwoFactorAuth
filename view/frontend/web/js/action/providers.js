@@ -32,11 +32,11 @@ define([
                 if (response.errors) {
                     messageContainer.addErrorMessage(response);
                     callbacks.forEach(function (callback) {
-                        callback(providersData);
+                        callback(providersData, response);
                     });
                 } else {
                     callbacks.forEach(function (callback) {
-                        callback(providersData);
+                        callback(providersData, response);
                     });
                 }
             }).fail(function () {
@@ -44,7 +44,7 @@ define([
                     'message': $t('Could not get list of providers. Please try again later')
                 });
                 callbacks.forEach(function (callback) {
-                    callback(providersData);
+                    callback(providersData, null);
                 });
             });
         };

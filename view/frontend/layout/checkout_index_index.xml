@@ -25,9 +25,6 @@
                                                                     <item name="children" xsi:type="array">
                                                                         <item name="tfa-fields" xsi:type="array">
                                                                             <item name="component" xsi:type="string">Magetarian_CustomerTwoFactorAuth/js/view/checkout-tfa</item>
-                                                                            <item name="config" xsi:type="array">
-                                                                                <item name="template" xsi:type="string">Magetarian_CustomerTwoFactorAuth/checkout-tfa</item>
-                                                                            </item>
                                                                         </item>
                                                                     </item>
                                                                 </item>
