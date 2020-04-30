@@ -6,7 +6,7 @@
 
 define([
     'jquery',
-    'Magetarian_CustomerTwoFactorAuth/js/duo/api',
+    'Magetarian_CustomerTwoFactorAuth/js/model/duo/api',
     'domReady!',
     'jquery-ui-modules/widget'
 ], function ($, duo) {

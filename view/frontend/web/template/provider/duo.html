@@ -1,0 +1,17 @@
+<!--
+  ~ @author     Sashas IT Support <support@sashas.org>
+  ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+  ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+  -->
+<div class="field tfa-login" data-bind="visible: !isActive()">
+    <div class="primary">
+        <button type="button" data-bind="css: 'tfa-login-'+getCode(),click: activate.bind($data)" class="action primary" data-code="getCode()">
+            <span data-bind="i18n: 'Login using '+getName()"></span>
+        </button>
+    </div>
+</div>
+<div class="field tfa-auth google-auth" data-bind="visible: isActive()">
+    <iframe id="duo_iframe"></iframe>
+    <input name="provider_code" data-bind="value: getCode()" id="provider_code" type="hidden" />
+</div>
+

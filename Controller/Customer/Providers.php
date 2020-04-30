@@ -65,7 +65,8 @@ class Providers extends Action implements HttpPostActionInterface
     {
         $response = [
             'errors' => false,
-            'providers' => []
+            'providers' => [],
+            'message' => '',
         ];
         $httpBadRequestCode = 400;
 
@@ -119,26 +120,28 @@ class Providers extends Action implements HttpPostActionInterface
                     ',',
                     $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
                 );
+
                 foreach ($providersArray as $providerCode) {
                     $provider = $this->providerPool->getProviderByCode($providerCode);
                     $response['providers'][$providerCode] = [
                         'label' => $provider->getName(),
                         'code' => $provider->getCode(),
-                        'configured' => $provider->isConfigured((int)$customer->getId())
+                        'configured' => $provider->isConfigured((int)$customer->getId()),
+                        'additionalConfig' => $provider->getEngine()->getAdditionalConfig($customer)
                     ];
                 }
-                //@todo double check if it still need
+                //@todo double check if it still need or there is better option
                 $this->customerSession->setTwoFaCustomerId($customer->getId());
             }
         } catch (LocalizedException $e) {
-            $response = [
-                'errors' => true,
-            ];
+            $response['errors'] = true;
+            $response['message'] = $e->getMessage();
+            //@todo remove if not used for Ui Component
             $this->messageManager->addExceptionMessage($e, $e->getMessage());
         } catch (\Exception $e) {
-            $response = [
-                'errors' => true,
-            ];
+            $response['errors'] = true;
+            $response['message'] =__('Invalid login or password.');
+            //@todo remove if not used for Ui Component
             $this->messageManager->addExceptionMessage($e, __('Invalid login or password.'));
         }
 

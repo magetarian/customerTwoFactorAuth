@@ -6,9 +6,11 @@
 
 define([
     'jquery',
+    'mage/url',
     'uiComponent'
 ], function (
     $,
+    urlBuilder,
     Component
 ) {
     'use strict';
@@ -19,6 +21,8 @@ define([
             providerLabel: null,
             providerCode: null,
             configured: false,
+            additinalConfig: {},
+            qrCodeUrlKey: 'twofactorauth/google/qr',
             isActive: false
         },
 
@@ -26,16 +30,15 @@ define([
         initObservable: function () {
             this._super().
             observe(['isActive', 'configured']);
-
             return this;
         },
 
+        /** @inheritdoc */
         initialize: function () {
             this._super();
-            console.log('Google init');
-            console.log(this);
         },
 
+        //@todo make it observable that when selected other button were hidden
         activate: function (data) {
             console.log(data);
             console.log(this.getCode());
@@ -52,6 +55,14 @@ define([
 
         isConfigured: function () {
             return this.configured();
+        },
+
+        getQrCodeUrl: function () {
+            return urlBuilder.build(this.qrCodeUrlKey);
+        },
+
+        getSecretCode: function () {
+            return this.additionalConfig.secretCode;
         }
 
     });
