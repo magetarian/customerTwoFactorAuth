@@ -3,19 +3,40 @@
   ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
   ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
   -->
-<div class="field tfa-login">
+<div class="field tfa-login" data-bind="visible: isButtonVisible()">
     <div class="primary">
         <button type="button" data-bind="css: 'tfa-login-'+getCode(),click: activate.bind($data)" class="action primary" data-code="getCode()">
             <span data-bind="i18n: 'Login using '+getName()"></span>
         </button>
     </div>
 </div>
-<div class="field tfa-auth google-auth" data-bind="visible: isActive()">
-    <!-- ko if: (isConfigured())-->
-    configured auth
-    <!-- /ko -->
-    <!-- ko ifnot: (isConfigured())-->
-    not configured
-    <!-- /ko -->
+<!-- ko ifnot: (isConfigured())-->
+<div class="field tfa-auth google-configure" data-bind="visible: isActive()">
+    <img class="msp-tfa-google-qr" attr='src: getQrCodeUrl()' />
+    <p><textarea class="msp-tfa-google-secure-code" data-bind='i18n: getSecretCode()'></textarea></p>
+    <p data-bind='i18n: "Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm."'></p>
 </div>
-
+<!-- /ko -->
+<div class="field tfa-auth google-auth" data-bind="visible: isActive()">
+    <label for="tfa_code" class="label">
+        <span data-bind='i18n: "Authenticator code"'></span>
+    </label>
+    <div class="control">
+        <input
+            data-bind="mageInit: {'mage/trim-input':{}}"
+            id="tfa_code"
+            name="tfa_code"
+            class="input-text"
+            type="password"
+            autofocus
+            autocomplete="off"
+            data-validate="{required:true}"
+            placeholder="Your code"/>
+        <input name="provider_code" data-bind="value: getCode()" id="provider_code" type="hidden" />
+    </div>
+</div>
+<div class="primary" data-bind="visible: isActive()">
+    <button type="submit" class="action primary" name="twofactorauth-login" id="twofactorauth-google">
+        <span data-bind="i18n: 'Confirm'"></span>
+    </button>
+</div>

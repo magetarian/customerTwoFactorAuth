@@ -12,7 +12,7 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Ajax\Login;
 use Magento\Framework\Exception\LocalizedException;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
-use MSP\TwoFactorAuth\Model\ProviderPool;
+use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\DataObjectFactory;
 use Magento\Framework\Json\Helper\Data;
@@ -33,7 +33,7 @@ class LoginPlugin
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
         ResultFactory $resultFactory,
-        ProviderPool $providerPool,
+        ProviderPoolInterface $providerPool,
         DataObjectFactory $dataObjectFactory,
         Data $jsonHelper
     ) {
@@ -82,6 +82,17 @@ class LoginPlugin
                 $response = [
                     'errors' => true,
                     'message' => __('Login using 2FA, please.')
+                ];
+                return $resultJson->setData($response);
+            }
+
+            $providerEngine = $this->providerPool->getProviderByCode($providerCode)->getEngine();
+            $verification = $this->dataObjectFactory->create([ 'data' => $credentials]);
+
+            if (!$providerEngine->verify($customer, $verification)) {
+                $response = [
+                    'errors' => true,
+                    'message' => __('The two factor authentication failed. Please try again.')
                 ];
                 return $resultJson->setData($response);
             }

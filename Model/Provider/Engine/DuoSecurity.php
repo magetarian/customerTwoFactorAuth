@@ -209,4 +209,9 @@ class DuoSecurity implements EngineInterface
     {
         return MspDuoSecurity::CODE;
     }
+
+    public function getAdditionalConfig(CustomerInterface $customer): array
+    {
+        return ['apiHost'=> $this->getApiHostname(), 'signature' => $this->getRequestSignature($customer)];
+    }
 }

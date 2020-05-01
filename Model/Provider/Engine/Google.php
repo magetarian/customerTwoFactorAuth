@@ -187,6 +187,7 @@ class Google implements EngineInterface
     }
 
     /**
+     * @todo remove
      * Return true if this provider allows trusted devices
      * @return boolean
      */
@@ -201,5 +202,16 @@ class Google implements EngineInterface
     public function getCode(): string
     {
         return MspGoogle::CODE;
+    }
+
+    /**
+     * @param CustomerInterface $customer
+     *
+     * @return array|null[]|string[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getAdditionalConfig(CustomerInterface $customer): array
+    {
+        return ['secretCode' => $this->getSecretCode((int)$customer->getId())];
     }
 }

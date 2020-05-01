@@ -9,7 +9,14 @@ var config = {
         '*': {
             twoFactorAuthProviders:    'Magetarian_CustomerTwoFactorAuth/js/login-providers',
             twoFactorAuthProviderDuo:  'Magetarian_CustomerTwoFactorAuth/js/duo/auth',
-            twoFactorAuthProviderDuoApi:  'Magetarian_CustomerTwoFactorAuth/js/duo/api'
+            twoFactorAuthProviderDuoApi:  'Magetarian_CustomerTwoFactorAuth/js/model/duo/api'
+        }
+    },
+    config: {
+        mixins: {
+            'Magento_Customer/js/action/login': {
+                'Magetarian_CustomerTwoFactorAuth/js/action/login-mixin': true
+            }
         }
     }
 };

@@ -5,10 +5,10 @@
  */
 
 define([
-    'jquery',
-    'uiComponent'
+    'mage/url',
+    'Magetarian_CustomerTwoFactorAuth/js/view/provider/default'
 ], function (
-    $,
+    urlBuilder,
     Component
 ) {
     'use strict';
@@ -16,42 +16,21 @@ define([
     return Component.extend({
         defaults: {
             template: 'Magetarian_CustomerTwoFactorAuth/provider/google',
-            providerLabel: null,
-            providerCode: null,
-            configured: false,
-            isActive: false
+            qrCodeUrlKey: 'twofactorauth/google/qr'
         },
 
-        /** @inheritdoc */
-        initObservable: function () {
-            this._super().
-            observe(['isActive', 'configured']);
-
-            return this;
+        /**
+         * @return {String}
+         */
+        getQrCodeUrl: function () {
+            return urlBuilder.build(this.qrCodeUrlKey);
         },
 
-        initialize: function () {
-            this._super();
-            console.log('Google init');
-            console.log(this);
-        },
-
-        activate: function (data) {
-            console.log(data);
-            console.log(this.getCode());
-            this.isActive(true);
-        },
-
-        getCode: function () {
-           return this.code;
-        },
-
-        getName: function () {
-            return this.label
-        },
-
-        isConfigured: function () {
-            return this.configured();
+        /**
+         * @return {String}
+         */
+        getSecretCode: function () {
+            return this.additionalConfig.secretCode;
         }
 
     });

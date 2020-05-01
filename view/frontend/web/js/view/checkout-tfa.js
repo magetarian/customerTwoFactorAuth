@@ -7,7 +7,6 @@
 define([
     'jquery',
     'Magento_Customer/js/action/login',
-    'Magetarian_CustomerTwoFactorAuth/js/action/providers',
     'Magento_Checkout/js/model/full-screen-loader',
     'mageUtils',
     'uiLayout',
@@ -15,7 +14,6 @@ define([
 ], function (
     $,
     loginAction,
-    providersAction,
     fullScreenLoader,
     utils,
     layout,
@@ -26,63 +24,44 @@ define([
     return Component.extend({
         defaults: {
             template: 'Magetarian_CustomerTwoFactorAuth/checkout-tfa',
-            isVisible: false
+            isVisible: false,
+            loginFormSelector: 'form[data-role=email-with-possible-login]'
         },
 
         /** @inheritdoc */
         initObservable: function () {
             this._super().
             observe(['isVisible']);
-
             return this;
         },
 
+        /** @inheritdoc */
         initialize: function () {
             this._super();
             let self = this;
-            loginAction.registerLoginCallback(function(loginData) {
-
-               //@todo check if doesnt have 2fa field
-               self.getProvidersList(loginData);
-            });
-
-            providersAction.registerProvidersCallback(function(providersData, response) {
+            loginAction.registerProvidersCallback(function(providersData, response) {
                 self.renderProviders(providersData, response);
             });
         },
 
-        getProvidersList: function (loginData) {
-            let self = this;
-            fullScreenLoader.startLoader();
-
-            providersAction(loginData).always(function () {
-                fullScreenLoader.stopLoader();
-                self.isVisible(true);
-            });
-        },
-
+        /**
+         * @param {object} providersData
+         * @param {object} response
+         */
         renderProviders: function (providersData, response) {
             let self = this;
-            console.log(providersData);
-            console.log(response);
-            if (response !== null ) {
-                $.each(response.providers, function(key, providerConfig) {
-                    console.log(providerConfig.code);
-                    if (providerConfig.code =='google') {
-                        layout([self.createComponent(
-                            {
-                                config: providerConfig,
-                                component: 'Magetarian_CustomerTwoFactorAuth/js/view/provider/'+providerConfig.code,
-                                name: providerConfig.code,
-                                method: {},
-                                item: {},
-                                displayArea: 'provider'
-                            }
-                        )]);
+            $(this.loginFormSelector).find('.actions-toolbar').hide();
+            $.each(response.providers, function(key, providerConfig) {
+                layout([self.createComponent(
+                    {
+                        config: providerConfig,
+                        component: 'Magetarian_CustomerTwoFactorAuth/js/view/provider/'+providerConfig.code,
+                        code: providerConfig.code,
+                        displayArea: 'provider'
                     }
-
-                });
-            }
+                )]);
+            });
+            this.isVisible(true);
         },
 
         /**
@@ -95,7 +74,7 @@ define([
 
             templateData = {
                 parentName: this.name,
-                name: provider.name
+                name: provider.code
             };
             rendererTemplate = {
                 parent: '${ $.$data.parentName }',
@@ -105,7 +84,7 @@ define([
             };
             rendererComponent = utils.template(rendererTemplate, templateData);
             utils.extend(rendererComponent, {
-                item: provider.item,
+                item: {},
                 config: provider.config
             });
 

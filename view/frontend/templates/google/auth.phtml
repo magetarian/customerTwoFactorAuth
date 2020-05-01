@@ -18,9 +18,6 @@ $viewModel = $block->getViewModel();
     </div>
 <?php endif; ?>
 <div class="field twofactorauth-google google-configure google-secure-code">
-    <label for="tfa_code" class="admin__field-label">
-        <span data-bind='i18n: "Authenticator code"'></span>
-    </label>
     <label class="label" for="tfa_code"><span><?= $block->escapeHtml(__('Authenticator code')) ?></span></label>
     <div class="control">
         <input name="tfa_code" value="" autocomplete="off" id="tfa_code" type="password" class="input-text" placeholder="Your code" title="<?= $block->escapeHtmlAttr(__('Your code')) ?>" data-mage-init='{"mage/trim-input":{}}' data-validate="{required:true}">

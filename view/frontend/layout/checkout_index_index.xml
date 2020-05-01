@@ -13,6 +13,14 @@
                     <item name="components" xsi:type="array">
                         <item name="checkout" xsi:type="array">
                             <item name="children" xsi:type="array">
+                                <item name="authentication" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="captcha" xsi:type="array">
+                                            <item name="component" xsi:type="string">Magetarian_CustomerTwoFactorAuth/js/view/checkout-tfa</item>
+                                            <item name="displayArea" xsi:type="string">additional-login-form-fields</item>
+                                        </item>
+                                    </item>
+                                </item>
                                 <item name="steps" xsi:type="array">
                                     <item name="children" xsi:type="array">
                                         <item name="shipping-step" xsi:type="array">

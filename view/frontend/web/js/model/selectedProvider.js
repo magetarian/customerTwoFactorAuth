@@ -4,14 +4,10 @@
  * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
  */
 
-#two-factor-auth-provider-list, #twofactorauth-duo {
-    display:none;
-}
+define([
+    'ko'
+], function (ko) {
+    'use strict';
 
-.duo-iframe {
-    width: 100%;
-    min-width: 304px;
-    max-width: 620px;
-    height: 330px;
-    background: transparent;
-}
+    return ko.observable(null);
+});

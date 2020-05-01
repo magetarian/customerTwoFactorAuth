@@ -18,7 +18,7 @@ interface EngineInterface
      */
     public function isEnabled();
 
-    /**
+    /** @todo remove
      * Return true if this provider allows trusted devices
      * @return boolean
      */
@@ -33,4 +33,6 @@ interface EngineInterface
     public function verify(CustomerInterface $customer, DataObject $request);
 
     public function getCode(): string;
+
+    public function getAdditionalConfig(CustomerInterface $customer): array;
 }
