@@ -3,7 +3,7 @@
   ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
   ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
   -->
-<div class="field tfa-login" data-bind="visible: !isActive()">
+<div class="field tfa-login" data-bind="visible: isButtonVisible()">
     <div class="primary">
         <button type="button" data-bind="css: 'tfa-login-'+getCode(),click: activate.bind($data)" class="action primary" data-code="getCode()">
             <span data-bind="i18n: 'Login using '+getName()"></span>

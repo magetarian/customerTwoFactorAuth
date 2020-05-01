@@ -11,7 +11,7 @@
 $viewModel = $block->getViewModel();
 ?>
 <div class="field twofactorauth-duo duo-auth">
-    <iframe id="duo_iframe"></iframe>
+    <iframe id="duo_iframe" class="duo-iframe"></iframe>
     <input name="provider_code" value="<?=$viewModel->getProviderCode();?>" id="provider_code" type="hidden" />
     <button type="submit" name="twofactorauth-login" id="twofactorauth-duo" />
     <script type="text/x-magento-init">

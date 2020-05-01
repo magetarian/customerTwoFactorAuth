@@ -6,17 +6,12 @@
 
 define([
     'jquery',
-    'mage/url',
     'Magetarian_CustomerTwoFactorAuth/js/model/duo/api',
-    'Magento_Customer/js/action/login',
-    'uiComponent',
-    'domReady!',
-    'mage/validation'
+    'Magetarian_CustomerTwoFactorAuth/js/view/provider/default',
+    'domReady!'
 ], function (
     $,
-    urlBuilder,
     duo,
-    loginAction,
     Component
 ) {
     'use strict';
@@ -24,31 +19,16 @@ define([
     return Component.extend({
         defaults: {
             template: 'Magetarian_CustomerTwoFactorAuth/provider/duo',
-            providerLabel: null,
-            providerCode: null,
-            configured: false,
-            additinalConfig: {},
             loginFormUrlKey: null,
-            isActive: false,
             postAction: null,
             postArgument: 'tfa_code'
         },
 
         /** @inheritdoc */
-        initObservable: function () {
-            this._super().
-            observe(['isActive', 'configured']);
-            return this;
-        },
-
-        /** @inheritdoc */
-        initialize: function () {
-            this._super();
-        },
-
         activate: function (data) {
             duo.init(
                 {
+                    iframe: this.getIframeId(),
                     host: this.getApiHost(),
                     sig_request: this.getSignature(),
                     post_action: this.postAction,
@@ -56,21 +36,26 @@ define([
                     submit_callback: this.verifiedCallback
                 }
             );
-            this.isActive(true);
+            this._super();
         },
 
-        getCode: function () {
-           return this.code;
+        /**
+         * @return {String}
+         */
+        getIframeId: function () {
+            return this.parentName.toLowerCase().replace(/[^a-z]/g,'');
         },
 
-        getName: function () {
-            return this.label
-        },
-
+        /**
+         * @return {String}
+         */
         getApiHost: function () {
             return this.additionalConfig.apiHost;
         },
 
+        /**
+         * @return {String}
+         */
         getSignature: function () {
             return this.additionalConfig.signature;
         },

@@ -5,11 +5,9 @@
  */
 
 define([
-    'jquery',
     'mage/url',
-    'uiComponent'
+    'Magetarian_CustomerTwoFactorAuth/js/view/provider/default'
 ], function (
-    $,
     urlBuilder,
     Component
 ) {
@@ -18,49 +16,19 @@ define([
     return Component.extend({
         defaults: {
             template: 'Magetarian_CustomerTwoFactorAuth/provider/google',
-            providerLabel: null,
-            providerCode: null,
-            configured: false,
-            additinalConfig: {},
-            qrCodeUrlKey: 'twofactorauth/google/qr',
-            isActive: false
+            qrCodeUrlKey: 'twofactorauth/google/qr'
         },
 
-        /** @inheritdoc */
-        initObservable: function () {
-            this._super().
-            observe(['isActive', 'configured']);
-            return this;
-        },
-
-        /** @inheritdoc */
-        initialize: function () {
-            this._super();
-        },
-
-        //@todo make it observable that when selected other button were hidden
-        activate: function (data) {
-            console.log(data);
-            console.log(this.getCode());
-            this.isActive(true);
-        },
-
-        getCode: function () {
-           return this.code;
-        },
-
-        getName: function () {
-            return this.label
-        },
-
-        isConfigured: function () {
-            return this.configured();
-        },
-
+        /**
+         * @return {String}
+         */
         getQrCodeUrl: function () {
             return urlBuilder.build(this.qrCodeUrlKey);
         },
 
+        /**
+         * @return {String}
+         */
         getSecretCode: function () {
             return this.additionalConfig.secretCode;
         }
