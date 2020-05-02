@@ -12,6 +12,7 @@ use Magento\Eav\Model\Entity\Attribute\SetFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
+use Magetarian\CustomerTwoFactorAuth\Model\Attribute\Backend\TwoFaEncodedConfig;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\EnabledProviders;
 
 /**
@@ -25,7 +26,6 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
      */
     const PROVIDERS        = 'two_fa_providers';
     const CONFIG           = 'two_fa_encoded_config';
-    const DEFAULT_PROVIDER = 'default_provider';
 
     /**
      * @var ModuleDataSetupInterface
@@ -67,7 +67,6 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
         $this->moduleDataSetup->getConnection()->startSetup();
         $this->createProviderAttribute();
         $this->createProviderConfigAttribute();
-        $this->createDefaultProviderAttribute();
         $this->moduleDataSetup->getConnection()->endSetup();
     }
 
@@ -79,10 +78,6 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
         $customerSetup->removeAttribute(
             Customer::ENTITY,
             self::PROVIDERS
-        );
-        $customerSetup->removeAttribute(
-            Customer::ENTITY,
-            self::DEFAULT_PROVIDER
         );
         $customerSetup->removeAttribute(
             Customer::ENTITY,
@@ -154,9 +149,6 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
         $attribute->save();
     }
 
-    /**
-     *
-     */
     private function createProviderConfigAttribute()
     {
         /** @var CustomerSetup $customerSetup */
@@ -176,61 +168,20 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
             Customer::ENTITY,
             self::CONFIG,
             [
-                'label'     => 'Two Factor Auth Encoded Config',
-                'input'     => 'textarea',
-                'type'      => 'text',
-                'required'  => false,
-                'position'  => 101,
-                'visible'   => false,
-                'system'    => false,
+                'label'         => 'Two Factor Auth Encoded Config',
+                'input'         => 'textarea',
+                'type'          => 'text',
+                'required'      => false,
+                'position'      => 101,
+                'visible'       => false,
+                'system'        => false,
+                'backend_model' => TwoFaEncodedConfig::class
             ]
         );
 
         $attribute = $customerSetup->getEavConfig()->getAttribute(
             Customer::ENTITY,
             self::CONFIG
-        );
-
-        $attribute->addData([
-            'attribute_set_id'   => $attributeSetId,
-            'attribute_group_id' => $attributeGroupId,
-        ]);
-
-        $attribute->save();
-    }
-
-    private function createDefaultProviderAttribute()
-    {
-        /** @var CustomerSetup $customerSetup */
-        $customerSetup = $this->customerSetupFactory->create(
-            ['setup' => $this->moduleDataSetup]
-        );
-        $customerEntity = $customerSetup->getEavConfig()->getEntityType(
-            Customer::ENTITY
-        );
-        $attributeSetId = $customerEntity->getDefaultAttributeSetId();
-
-        /** @var $attributeSet Set */
-        $attributeSet     = $this->attributeSetFactory->create();
-        $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
-
-        $customerSetup->addAttribute(
-            Customer::ENTITY,
-            self::DEFAULT_PROVIDER,
-            [
-                'label'     => 'Two Factor Auth Default Provider',
-                'input'     => 'text',
-                'type'      => 'varchar',
-                'required'  => false,
-                'position'  => 101,
-                'visible'   => false,
-                'system'    => false,
-            ]
-        );
-
-        $attribute = $customerSetup->getEavConfig()->getAttribute(
-            Customer::ENTITY,
-            self::DEFAULT_PROVIDER
         );
 
         $attribute->addData([
