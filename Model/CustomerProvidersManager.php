@@ -57,7 +57,6 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
                 $customerProviders[] = $provider;
             }
         }
-
         return $customerProviders;
     }
 
