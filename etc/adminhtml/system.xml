@@ -9,16 +9,32 @@
     <system>
         <section id="msp_securitysuite_twofactorauth">
             <group id="general">
-                <field id="enabled_customer" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1"
+                <field id="customer_force_tfa" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1"
                        showInStore="0">
-                    <label>Enable Two Factor Auth for Customers</label>
+                    <label>Force Two Factor Auth for Customers</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Force all customers to use 2FA.</comment>
+                </field>
+            </group>
+            <group id="duo">
+                <field id="enabled_customer" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Enable This Provider For Customers</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field canRestore="1" id="force_providers_customer" translate="label" type="multiselect" sortOrder="70"
-                       showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Force providers</label>
-                    <source_model>Magetarian\CustomerTwoFactorAuth\Model\Config\Source\AllProviders</source_model>
-                    <comment>Force all customers to use 2FA with one of selected providers.</comment>
+            </group>
+            <group id="google">
+                <field id="enabled_customer" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Enable This Provider For Customers</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="authy">
+                <field id="enabled_customer" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Enable This Provider For Customers</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>

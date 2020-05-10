@@ -7,9 +7,11 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface" type="Magetarian\CustomerTwoFactorAuth\Model\CustomerConfigManager" />
+    <preference for="Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface" type="Magetarian\CustomerTwoFactorAuth\Model\CustomerProvidersManager" />
     <preference for="Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface" type="Magetarian\CustomerTwoFactorAuth\Model\Provider" />
+    <preference for="Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface" type="Magetarian\CustomerTwoFactorAuth\Model\ProviderPool" />
     <!-- Customer 2FA providers list -->
-    <virtualType name="CustomerTwoFactorAuthProviderPool" type="MSP\TwoFactorAuth\Model\ProviderPool">
+    <type name="Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface">
         <arguments>
             <argument name="providers" xsi:type="array">
                 <!-- Parameter "name" must be the same as defined in virtualType "code" parameter -->
@@ -18,7 +20,7 @@
                 <item name="authy" xsi:type="object">MSP\TwoFactorAuth\Model\Provider\Authy</item>
             </argument>
         </arguments>
-    </virtualType>
+    </type>
     <virtualType name="Magetarian\CustomerTwoFactorAuth\Model\Provider\Google" type="Magetarian\CustomerTwoFactorAuth\Model\Provider">
         <arguments>
             <argument name="engine" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Google</argument>
@@ -35,45 +37,12 @@
             <argument name="canReset" xsi:type="boolean">false</argument>
         </arguments>
     </virtualType>
-    <type name="Magetarian\CustomerTwoFactorAuth\Model\Config\Source\AbstractProvider">
-        <arguments>
-            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
-        </arguments>
-    </type>
-    <type name="Magetarian\CustomerTwoFactorAuth\Controller\Google\Authentication">
-        <arguments>
-            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
-        </arguments>
-    </type>
-    <type name="Magetarian\CustomerTwoFactorAuth\ViewModel\Google\Authentication">
-        <arguments>
-            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
-        </arguments>
-    </type>
-    <type name="Magetarian\CustomerTwoFactorAuth\ViewModel\Duo\Authentication">
-        <arguments>
-            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
-        </arguments>
-    </type>
     <type name="Magento\Customer\Controller\Account\LoginPost">
         <plugin name="twofactorauth" type="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Account\LoginPostPlugin" sortOrder="1" disabled="false" />
     </type>
     <type name="Magento\Customer\Controller\Ajax\Login">
         <plugin name="twofactorauth" type="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Ajax\LoginPlugin" sortOrder="1" disabled="false" />
     </type>
-    <type name="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Account\LoginPostPlugin">
-        <arguments>
-            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
-        </arguments>
-    </type>
-    <type name="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Ajax\LoginPlugin">
-        <arguments>
-            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
-        </arguments>
-    </type>
-    <type name="Magetarian\CustomerTwoFactorAuth\Controller\Customer\Providers">
-        <arguments>
-            <argument name="providerPool" xsi:type="object">CustomerTwoFactorAuthProviderPool</argument>
-        </arguments>
-    </type>
+
+
 </config>

@@ -24,6 +24,8 @@ use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
  */
 class Google implements EngineInterface
 {
+    const XML_PATH_ENABLED_CUSTOMER = 'msp_securitysuite_twofactorauth/google/enabled_customer';
+
     /**
      * @var null
      */
@@ -183,7 +185,8 @@ class Google implements EngineInterface
      */
     public function isEnabled()
     {
-        return !!$this->scopeConfig->getValue(MspGoogle::XML_PATH_ENABLED);
+        return !!$this->scopeConfig->getValue(MspGoogle::XML_PATH_ENABLED) &&
+               !!$this->scopeConfig->getValue(static::XML_PATH_ENABLED_CUSTOMER);
     }
 
     /**

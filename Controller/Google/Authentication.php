@@ -16,7 +16,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
-use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
+use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class Authentication

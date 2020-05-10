@@ -11,7 +11,7 @@ namespace Magetarian\CustomerTwoFactorAuth\ViewModel\Google;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Customer\Model\Session;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
-use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
+use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use MSP\TwoFactorAuth\Model\Provider\Engine\Google;
 
 /**

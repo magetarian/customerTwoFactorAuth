@@ -17,8 +17,8 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Json\Helper\Data;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
-use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Customer\Model\Session;
+use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
 /**
  * Class Providers
@@ -35,29 +35,26 @@ class Providers extends Action implements HttpPostActionInterface
      */
     private $formKeyValidator;
 
-    /**
-     * @var ProviderPoolInterface
-     */
-    private $providerPool;
-
     private $customerSession;
 
     private $jsonHelper;
+
+    private $customerProvidersManager;
 
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
         Validator $formKeyValidator,
-        ProviderPoolInterface $providerPool,
         Session $customerSession,
-        Data $jsonHelper
+        Data $jsonHelper,
+        CustomerProvidersManagerInterface $customerProvidersManager
     ) {
         parent::__construct($context);
         $this->customerAccountManagement = $customerAccountManagement;
         $this->formKeyValidator = $formKeyValidator;
-        $this->providerPool = $providerPool;
         $this->customerSession = $customerSession;
         $this->jsonHelper = $jsonHelper;
+        $this->customerProvidersManager = $customerProvidersManager;
     }
 
 
@@ -109,30 +106,21 @@ class Providers extends Action implements HttpPostActionInterface
 
         try {
             $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
+            /** @var $customerProviders \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[] */
+            $customerProviders = $this->customerProvidersManager->getCustomerProviders((int) $customer->getId());
 
-            if (
-                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
-                $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
-            ) {
-                //@todo not show options not enabled
-                //@todo only forced options should be shown in case admin updated list
-                $providersArray = explode(
-                    ',',
-                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue()
-                );
 
-                foreach ($providersArray as $providerCode) {
-                    $provider = $this->providerPool->getProviderByCode($providerCode);
-                    $response['providers'][$providerCode] = [
-                        'label' => $provider->getName(),
-                        'code' => $provider->getCode(),
-                        'configured' => $provider->isConfigured((int)$customer->getId()),
-                        'additionalConfig' => $provider->getEngine()->getAdditionalConfig($customer)
-                    ];
-                }
-                //@todo double check if it still need or there is better option
-                $this->customerSession->setTwoFaCustomerId($customer->getId());
+            foreach ($customerProviders as $provider) {
+                $response['providers'][$provider->getCode()] = [
+                    'label'            => $provider->getName(),
+                    'code'             => $provider->getCode(),
+                    'configured'       => $provider->isConfigured((int)$customer->getId()),
+                    'additionalConfig' => $provider->getEngine()->getAdditionalConfig($customer)
+                ];
             }
+            //@todo double check if it still need or there is better option
+            $this->customerSession->setTwoFaCustomerId($customer->getId());
+
         } catch (LocalizedException $e) {
             $response['errors'] = true;
             $response['message'] = $e->getMessage();

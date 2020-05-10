@@ -17,8 +17,7 @@ use Magento\Store\Model\ScopeInterface;
  */
 class ConfigProvider
 {
-    const XML_PATH_ENABLED         = 'msp_securitysuite_twofactorauth/general/enabled_customer';
-    const XML_PATH_FORCE_PROVIDERS = 'msp_securitysuite_twofactorauth/general/force_providers_customer';
+    const XML_PATH_CUSTOMER_FORCE_TFA = 'msp_securitysuite_twofactorauth/general/customer_force_tfa';
 
     /**
      * @var ScopeConfigInterface
@@ -39,17 +38,8 @@ class ConfigProvider
     /**
      * @return bool
      */
-    public function isEnabled(): bool
+    public function getIsTfaForced(): bool
     {
-        return $this->scopeConfig->isSetFlag(static::XML_PATH_ENABLED, ScopeInterface::SCOPE_WEBSITE);
-    }
-
-    /**
-     * @return array
-     */
-    public function getForcedProviders(): array
-    {
-        $providers = $this->scopeConfig->getValue(static::XML_PATH_FORCE_PROVIDERS, ScopeInterface::SCOPE_WEBSITE);
-        return $providers ? explode(',', $providers) : [];
+        return $this->scopeConfig->isSetFlag(static::XML_PATH_CUSTOMER_FORCE_TFA, ScopeInterface::SCOPE_WEBSITE);
     }
 }
