@@ -8,9 +8,25 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\Api;
 
+/**
+ * Interface CustomerConfigManagerInterface
+ */
 interface CustomerConfigManagerInterface
 {
-    public function getProviderConfig($customerId, $providerCode): ?array;
+    /**
+     * @param int $customerId
+     * @param string $providerCode
+     *
+     * @return array|null
+     */
+    public function getProviderConfig(int $customerId, string $providerCode): ?array;
 
-    public function setProviderConfig($customerId, $providerCode, $config);
+    /**
+     * @param int $customerId
+     * @param string $providerCode
+     * @param array|null $config
+     *
+     * @return mixed
+     */
+    public function setProviderConfig(int $customerId, string $providerCode, ?array $config);
 }

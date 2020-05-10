@@ -8,16 +8,17 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\ViewModel\Google;
 
-use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Customer\Model\Session;
+use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
-use MSP\TwoFactorAuth\Model\Provider\Engine\Google;
+use MSP\TwoFactorAuth\Model\Provider\Engine\Google as MspGoogle;
+use Magetarian\CustomerTwoFactorAuth\Api\CustomerProviderConfigInterface;
 
 /**
- * Class Authentication
+ * Class Customer
  */
-class Authentication  implements ArgumentInterface
+class Customer implements ArgumentInterface, CustomerProviderConfigInterface
 {
     /**
      * @var ProviderPoolInterface
@@ -30,7 +31,7 @@ class Authentication  implements ArgumentInterface
     private $customerSession;
 
     /**
-     * Authentication constructor.
+     * Customer constructor.
      *
      * @param ProviderPoolInterface $providerPool
      * @param Session $customerSession
@@ -39,32 +40,40 @@ class Authentication  implements ArgumentInterface
         ProviderPoolInterface $providerPool,
         Session $customerSession
     ) {
-        $this->providerPool = $providerPool;
-        $this->customerSession = $customerSession;
+        $this->providerPool     = $providerPool;
+        $this->customerSession  = $customerSession;
     }
 
     /**
      * @return bool
      */
-    public function isConfigured(): bool
+    public function isEnabled(): bool
     {
-        return  $this->getProvider()->isConfigured($this->getCustomerId());
+        return (bool) $this->getProvider()->isEnabled();
     }
 
     /**
      * @return string
      */
-    public function getSecretCode(): string
+    public function getProviderName(): string
+    {
+        return $this->getProvider()->getName();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSecretCode()
     {
         return $this->getProvider()->getEngine()->getSecretCode($this->getCustomerId());
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getProviderCode(): string
+    private function getCustomerId(): int
     {
-        return $this->getProvider()->getEngine()->getCode();
+        return (int) $this->customerSession->getCustomerId();
     }
 
     /**
@@ -73,11 +82,6 @@ class Authentication  implements ArgumentInterface
      */
     private function getProvider(): ProviderInterface
     {
-        return $this->providerPool->getProviderByCode(Google::CODE);
-    }
-
-    private function getCustomerId(): int
-    {
-        return (int) $this->customerSession->getTwoFaCustomerId();
+        return $this->providerPool->getProviderByCode(MspGoogle::CODE);
     }
 }

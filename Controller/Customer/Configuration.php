@@ -27,7 +27,7 @@ class Configuration extends Customer
     public function execute()
     {
         $resultPage = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
-        $resultPage->getConfig()->getTitle()->set(__('2FA Configuration'));
+        $resultPage->getConfig()->getTitle()->set(__('Two Factor Authentication'));
         return $resultPage;
     }
 }

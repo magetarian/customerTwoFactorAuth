@@ -12,6 +12,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 
 class CustomerConfigManager implements CustomerConfigManagerInterface
 {
@@ -27,9 +28,7 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
         $this->customerRepository = $customerRepository;
     }
 
-    //@todo add getProviders function here as well?
-
-    public function getProviderConfig($customerId, $providerCode): ?array
+    public function getProviderConfig(int $customerId, string $providerCode): ?array
     {
         $providersConfig = $this->getCustomerProvidersConfiguration($customerId);
 
@@ -40,7 +39,7 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
         return $providersConfig[$providerCode];
     }
 
-    public function setProviderConfig($customerId, $providerCode, $config)
+    public function setProviderConfig(int $customerId, string $providerCode, ?array $config)
     {
         $providersConfig = $this->getCustomerProvidersConfiguration($customerId);
         if ($config === null) {
@@ -54,7 +53,7 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
         $this->setCustomerProvidersConfiguration($customerId, $providersConfig);
     }
 
-    private function getCustomerProvidersConfiguration($customerId): array
+    private function getCustomerProvidersConfiguration(int $customerId): array
     {
         if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG))
             return [];
@@ -64,14 +63,14 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
                     ->getValue();
     }
 
-    private function setCustomerProvidersConfiguration($customerId, $config)
+    private function setCustomerProvidersConfiguration(int $customerId, array $config)
     {
         $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG, [$config]);
         $this->customer = $this->customerRepository->save($this->getCustomer($customerId));
         $this->customerConfig = $config;
     }
 
-    private function getCustomer($customerId): CustomerInterface
+    private function getCustomer(int $customerId): CustomerInterface
     {
         if (is_null($this->customer)) {
             $this->customer = $this->customerRepository->getById($customerId);

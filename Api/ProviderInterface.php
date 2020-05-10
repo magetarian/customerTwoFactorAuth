@@ -40,18 +40,6 @@ interface ProviderInterface
     public function getName(): string;
 
     /**
-     * Return true if this provider configuration can be reset
-     * @return boolean
-     */
-    public function isResetAllowed(): bool;
-
-    /**
-     * Return true if this provider allows trusted devices
-     * @return boolean
-     */
-    public function isTrustedDevicesAllowed(): bool;
-
-    /**
      * Reset provider configuration
      * @param int $customerId
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface

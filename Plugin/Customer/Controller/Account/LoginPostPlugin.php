@@ -12,9 +12,10 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Account\LoginPost;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magento\Framework\Controller\Result\RedirectFactory;
-use MSP\TwoFactorAuth\Api\ProviderPoolInterface;
+use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\DataObjectFactory;
+use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
 class LoginPostPlugin
 {
@@ -28,18 +29,22 @@ class LoginPostPlugin
 
     private $dataObjectFactory;
 
+    private $customerProvidersManager;
+
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
         RedirectFactory $resultRedirectFactory,
         ProviderPoolInterface $providerPool,
         ManagerInterface $messageManager,
-        DataObjectFactory $dataObjectFactory
+        DataObjectFactory $dataObjectFactory,
+        CustomerProvidersManagerInterface $customerProvidersManager
     ) {
         $this->customerAccountManagement = $customerAccountManagement;
         $this->resultRedirectFactory = $resultRedirectFactory;
         $this->providerPool = $providerPool;
         $this->messageManager = $messageManager;
         $this->dataObjectFactory = $dataObjectFactory;
+        $this->customerProvidersManager = $customerProvidersManager;
     }
 
     public function aroundExecute(LoginPost $subject, callable $proceed)
@@ -51,12 +56,10 @@ class LoginPostPlugin
             $resultRedirect = $this->resultRedirectFactory->create();
             try {
                 $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
-                //@todo replace getCustomattribute with Interface/class
-                if (
-                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS) &&
-                    $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)->getValue() &&
-                    (!$twoFactorAuthCode || !$providerCode)
-                ) {
+                /** @var $customerProviders \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[] */
+                $customerProviders = $this->customerProvidersManager->getCustomerProviders((int) $customer->getId());
+
+                if (count($customerProviders) && (!$twoFactorAuthCode || !$providerCode) ) {
                     $this->messageManager->addWarningMessage(
                         __('Login using Two Factor Authentication, please.')
                     );

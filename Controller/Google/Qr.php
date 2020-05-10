@@ -66,7 +66,10 @@ class Qr extends Action implements HttpGetActionInterface
     {
         /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
-        $customerId = $this->customerSession->getTwoFaCustomerId();
+        $customerId = $this->customerSession->getCustomerId();
+        if (!$customerId) {
+            $customerId = $this->customerSession->getTwoFaCustomerId();
+        }
         $customer = $this->customerRepository->getById($customerId);
         $pngData = $this->google->getQrCodeAsPng($customer);
         $resultRaw

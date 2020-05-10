@@ -16,6 +16,8 @@ use MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity as MspDuoSecurity;
 
 class DuoSecurity implements EngineInterface
 {
+    const XML_PATH_ENABLED_CUSTOMER = 'msp_securitysuite_twofactorauth/duo/enabled_customer';
+
     /**
      * @var ScopeConfigInterface
      */
@@ -187,19 +189,11 @@ class DuoSecurity implements EngineInterface
     {
         return
             !!$this->scopeConfig->getValue(MspDuoSecurity::XML_PATH_ENABLED) &&
+            !!$this->scopeConfig->getValue(static::XML_PATH_ENABLED_CUSTOMER) &&
             !!$this->getApiHostname() &&
             !!$this->getIntegrationKey() &&
             !!$this->getApiHostname() &&
             !!$this->getSecretKey();
-    }
-
-    /**
-     * Return true if this provider allows trusted devices
-     * @return boolean
-     */
-    public function isTrustedDevicesAllowed()
-    {
-        return false;
     }
 
     /**

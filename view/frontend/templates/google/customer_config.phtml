@@ -1,0 +1,42 @@
+<?php
+/**
+ * @author     Sashas IT Support <support@sashas.org>
+ * @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+ * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+ */
+?>
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Google $viewModel */
+$viewModel = $block->getViewModel();
+?>
+<?php if ($viewModel->isEnabled()):?>
+    <div class="block block-google">
+        <div class="block-title">
+            <strong><?= $block->escapeHtml($viewModel->getProviderName()) ?></strong>
+        </div>
+        <div class="block-content">
+            <div class="box box-settings">
+                <div class="box-content">
+                    <img class="msp-tfa-google-qr" src="<?=$block->escapeHtmlAttr($block->getUrl('twofactorauth/google/qr')) ?>"/>
+                    <p><textarea class="msp-tfa-google-secure-code"><?= $block->escapeHtml($viewModel->getSecretCode()) ?></textarea></p>
+                    <p><?= $block->escapeHtml(__('Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.')) ?></p>
+                </div>
+                <form
+                    class="form"
+                    action="<?= $block->escapeUrl($block->getUrl('twofactorauth/google/resetPost')) ?>"
+                    method="post">
+                    <?= $block->getBlockHtml('formkey') ?>
+                    <div class="box-actions">
+                        <div class="primary">
+                            <button type="submit" title="<?= $block->escapeHtmlAttr(__('Reset')) ?>"
+                                    class="action primary">
+                                <span><?= $block->escapeHtml(__('Reset')) ?></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>

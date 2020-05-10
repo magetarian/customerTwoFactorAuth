@@ -8,19 +8,42 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\Model\Config\Source;
 
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
+use Magento\Framework\Data\OptionSourceInterface;
+use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
+
 /**
  * Class Provider
  * Provider for 2FA services from a customer
  */
-class EnabledProviders extends AbstractProvider
+class EnabledProviders extends AbstractSource implements OptionSourceInterface
 {
+
+    protected $providerPool;
+
+    public function __construct(
+        ProviderPoolInterface $providerPool
+    ) {
+        $this->providerPool   = $providerPool;
+    }
+
+    /**
+     * Get options in "key-value" format
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->getAllOptions();
+    }
+
     /**
      * @return array
      */
     public function getAllOptions(): array
     {
         $result = [];
-        foreach ($this->getAvailableProviders() ?? [] as $code => $name) {
+        foreach ($this->getEnabledProviders() ?? [] as $code => $name) {
             $result[] = [
                 'value' => $code,
                 'label' => $name,
@@ -41,22 +64,8 @@ class EnabledProviders extends AbstractProvider
             if ($provider->isEnabled()) {
                 $enabledProviders[$provider->getCode()] = $provider->getName();
             }
-        };
+        }
 
         return $enabledProviders;
-    }
-
-
-    /**
-     * @return array
-     */
-    private function getAvailableProviders(): array
-    {
-        $forcedProviders = $this->configProvider->getForcedProviders();
-        $providers = $this->getEnabledProviders();
-        if (!count($forcedProviders)) {
-            return $providers;
-        }
-        return array_intersect_key($providers, array_flip($forcedProviders));
     }
 }
