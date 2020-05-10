@@ -11,7 +11,7 @@ namespace Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\Data\Form\FormKey\Validator;
+use Magento\Framework\Encryption\Helper\Security;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
@@ -19,6 +19,7 @@ use Magento\Framework\Json\Helper\Data;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magento\Customer\Model\Session;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
+use Magento\Framework\Data\Form\FormKey;
 
 /**
  * Class Providers
@@ -30,31 +31,28 @@ class Providers extends Action implements HttpPostActionInterface
      */
     private $customerAccountManagement;
 
-    /**
-     * @var Validator
-     */
-    private $formKeyValidator;
-
     private $customerSession;
 
     private $jsonHelper;
 
     private $customerProvidersManager;
 
+    private $formKey;
+
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
-        Validator $formKeyValidator,
+        FormKey $formKey,
         Session $customerSession,
         Data $jsonHelper,
         CustomerProvidersManagerInterface $customerProvidersManager
     ) {
         parent::__construct($context);
         $this->customerAccountManagement = $customerAccountManagement;
-        $this->formKeyValidator = $formKeyValidator;
         $this->customerSession = $customerSession;
         $this->jsonHelper = $jsonHelper;
         $this->customerProvidersManager = $customerProvidersManager;
+        $this->formKey = $formKey;
     }
 
 
@@ -70,42 +68,29 @@ class Providers extends Action implements HttpPostActionInterface
         /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
 
-        //checkout
         $loginData = [];
         try {
-            $params = $this->jsonHelper->jsonDecode($this->getRequest()->getContent());
-            if (is_array($params)) {
-                if (isset($params['username'])) {
-                    $loginData['username'] = $params['username'];
-                }
-                if (isset($params['password'])) {
-                    $loginData['password'] = $params['password'];
-                }
-                $this->getRequest()->setParams($params);
-            }
+            $loginData = $this->jsonHelper->jsonDecode($this->getRequest()->getContent());
         } catch (\Zend_Json_Exception $e) {
-            $loginData = [];
+            return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
 
-        //checkout
-
-        $validFormKey = $this->formKeyValidator->validate($this->getRequest());
-        $login = $this->getRequest()->getPost('login');
-        //checkout
-        if (!$login && $loginData) {
-            $login = $loginData;
+        if (!isset($loginData['form_key'])) {
+            return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
-        //checkout
+
+        $validFormKey = Security::compareStrings($loginData['form_key'], $this->formKey->getFormKey());
+
         if (
             !$validFormKey ||
-            !$login ||
+            !$loginData ||
             $this->getRequest()->getMethod() !== 'POST' ||
             !$this->getRequest()->isXmlHttpRequest()) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
 
         try {
-            $customer = $this->customerAccountManagement->authenticate($login['username'], $login['password']);
+            $customer = $this->customerAccountManagement->authenticate($loginData['username'], $loginData['password']);
             /** @var $customerProviders \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[] */
             $customerProviders = $this->customerProvidersManager->getCustomerProviders((int) $customer->getId());
 
@@ -114,12 +99,12 @@ class Providers extends Action implements HttpPostActionInterface
                 $response['providers'][$provider->getCode()] = [
                     'label'            => $provider->getName(),
                     'code'             => $provider->getCode(),
-                    'configured'       => $provider->isConfigured((int)$customer->getId()),
+                    'configured'       => $provider->isConfigured((int) $customer->getId()),
                     'additionalConfig' => $provider->getEngine()->getAdditionalConfig($customer)
                 ];
             }
             //@todo double check if it still need or there is better option
-            $this->customerSession->setTwoFaCustomerId($customer->getId());
+            $this->customerSession->setTwoFaCustomerId((int) $customer->getId());
 
         } catch (LocalizedException $e) {
             $response['errors'] = true;

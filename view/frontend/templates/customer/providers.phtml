@@ -4,27 +4,16 @@
  * @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
  * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
  */
-?>
-<?php
+
 /** @var \Magento\Framework\View\Element\Template $block */
-/** @var \Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\LoginProviders $viewModel */
-$viewModel = $block->getViewModel();
 ?>
-<fieldset id="two-factor-auth-provider-list" class="fieldset providers-list"></fieldset>
+<div id="tfa-customer-login" data-bind="scope:'tfa-login'" class="tfa-container">
+    <!-- ko template: getTemplate() --><!-- /ko -->
+</div>
 <script type="text/x-magento-init">
-    {
-        "#login-form": {
-            "twoFactorAuthProviders": {
+        {
+            "#tfa-customer-login": {
+                "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
             }
         }
-    }
-</script>
-<script id="provider-list-template" type="text/x-magento-template">
-    <div class="field provider-selection provider-<%- data.code %> required">
-        <div class="primary">
-            <button type="button" class="action login primary" data-code="<%- data.code %>" name="login-<%- data.code %>" id="login-using-<%- data.code %>">
-                <span><?= $block->escapeHtmlAttr(__('Sign In Using ')) ?><%- data.name %></span>
-            </button>
-        </div>
-    </div>
 </script>
