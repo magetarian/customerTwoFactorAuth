@@ -6,25 +6,23 @@
  */
 declare(strict_types = 1);
 
-namespace Magetarian\CustomerTwoFactorAuth\Controller\Customer;
+namespace Magetarian\CustomerTwoFactorAuth\Controller\Google;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Customer\Api\CustomerRepositoryInterface;
+use MSP\TwoFactorAuth\Model\Provider\Engine\Google as MspGoogle;
 use Magetarian\CustomerTwoFactorAuth\Controller\Customer;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
- * Class Configuration
+ * Class ResetPost
  */
-class ConfigurationPost extends Customer implements HttpPostActionInterface
+class ResetPost extends Customer implements HttpPostActionInterface
 {
     /**
      * @var Validator
@@ -36,48 +34,47 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
      */
     private $customerRepository;
 
+    /**
+     * @var
+     */
+    private $customerConfigManager;
 
     /**
-     * ConfigurationPost constructor.
+     * ResetPost constructor.
      *
      * @param Context $context
      * @param Session $customerSession
      * @param Validator $formKeyValidator
-     * @param CustomerRepositoryInterface $customerRepository
+     * @param ProviderPoolInterface $providerPool
      */
     public function __construct(
         Context $context,
         Session $customerSession,
         Validator $formKeyValidator,
-        CustomerRepositoryInterface $customerRepository
+        ProviderPoolInterface $providerPool
     ) {
         parent::__construct($context, $customerSession);
         $this->formKeyValidator   = $formKeyValidator;
-        $this->customerRepository = $customerRepository;
+        $this->providerPool = $providerPool;
     }
 
-
     /**
-     * Save 2FA Authentication Configuration
-     *
-     * @return ResponseInterface|ResultInterface|\Magento\Framework\View\Result\Layout
+     * @return ResponseInterface|ResultInterface
      */
     public function execute()
     {
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
         if ($validFormKey) {
             try {
-                $providers = $this->_request->getParam('providers');
-                $customer = $this->customerSession->getCustomer()->getDataModel();
-                $customer->setCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS, $providers);
-                $this->customerRepository->save($customer);
-                $this->messageManager->addSuccessMessage(__('You saved the 2FA providers.'));
+                $provider = $this->providerPool->getProviderByCode(MspGoogle::CODE);
+                $provider->resetConfiguration((int) $this->customerSession->getCustomerId());
+                $this->messageManager->addSuccessMessage(__('The configuration has been reset.'));
             } catch (\Exception $e) {
-                $this->messageManager->addExceptionMessage($e, __('We can\'t save the 2FA providers.'));
+                $this->messageManager->addExceptionMessage($e, __('We can\'t reset the configuration.'));
             }
         }
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-        $resultRedirect->setPath('*/*/configuration');
+        $resultRedirect->setPath('*/customer/configuration');
         return $resultRedirect;
     }
 }

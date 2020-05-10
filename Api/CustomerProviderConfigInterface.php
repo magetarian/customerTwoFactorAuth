@@ -4,19 +4,22 @@
  * @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
  * @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
  */
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Magetarian\CustomerTwoFactorAuth\Api;
 
 /**
- * Interface CustomerProvidersManagerInterface
+ * Interface CustomerProviderConfigInterface
  */
-interface CustomerProvidersManagerInterface
+interface CustomerProviderConfigInterface
 {
     /**
-     * @param int $customerId
-     *
-     * @return array
+     * @return bool
      */
-    public function getCustomerProviders(int $customerId): array;
+    public function isEnabled(): bool;
+
+    /**
+     * @return string
+     */
+    public function getProviderName(): string;
 }

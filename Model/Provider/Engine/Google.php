@@ -145,10 +145,10 @@ class Google implements EngineInterface
     private function getTotp(CustomerInterface $customer)
     {
         if ($this->totp === null) {
-            $config = $this->customerConfigManager->getProviderConfig($customer->getId(), $this->getCode());
+            $config = $this->customerConfigManager->getProviderConfig((int) $customer->getId(), $this->getCode());
 
             if (!isset($config['secret'])) {
-                $config['secret'] = $this->getSecretCode($customer->getId());
+                $config['secret'] = $this->getSecretCode((int) $customer->getId());
             }
 
             // @codingStandardsIgnoreStart
@@ -190,16 +190,6 @@ class Google implements EngineInterface
     }
 
     /**
-     * @todo remove
-     * Return true if this provider allows trusted devices
-     * @return boolean
-     */
-    public function isTrustedDevicesAllowed()
-    {
-        return !!$this->scopeConfig->getValue(MspGoogle::XML_PATH_ALLOW_TRUSTED_DEVICES);
-    }
-
-    /**
      * @return string
      */
     public function getCode(): string
@@ -215,6 +205,6 @@ class Google implements EngineInterface
      */
     public function getAdditionalConfig(CustomerInterface $customer): array
     {
-        return ['secretCode' => $this->getSecretCode((int)$customer->getId())];
+        return ['secretCode' => $this->getSecretCode((int) $customer->getId())];
     }
 }

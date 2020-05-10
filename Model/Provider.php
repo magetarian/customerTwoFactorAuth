@@ -102,24 +102,6 @@ class Provider implements ProviderInterface
     }
 
     /**
-     * Return true if this provider configuration can be reset
-     * @return boolean
-     */
-    public function isResetAllowed(): bool
-    {
-        return $this->canReset;
-    }
-
-    /**
-     * Return true if this provider allows trusted devices
-     * @return boolean
-     */
-    public function isTrustedDevicesAllowed(): bool
-    {
-        return $this->engine->isTrustedDevicesAllowed();
-    }
-
-    /**
      * @inheritdoc
      */
     public function resetConfiguration($customerId): ProviderInterface

@@ -26,7 +26,6 @@
             <argument name="engine" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Google</argument>
             <argument name="code" xsi:type="const">\MSP\TwoFactorAuth\Model\Provider\Engine\Google::CODE</argument>
             <argument name="name" xsi:type="string">Google Authenticator</argument>
-            <argument name="canReset" xsi:type="boolean">true</argument>
         </arguments>
     </virtualType>
     <virtualType name="Magetarian\CustomerTwoFactorAuth\Model\Provider\DuoSecurity" type="Magetarian\CustomerTwoFactorAuth\Model\Provider">
@@ -34,7 +33,6 @@
             <argument name="engine" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\DuoSecurity</argument>
             <argument name="code" xsi:type="const">\MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity::CODE</argument>
             <argument name="name" xsi:type="string">Duo Security</argument>
-            <argument name="canReset" xsi:type="boolean">false</argument>
         </arguments>
     </virtualType>
     <type name="Magento\Customer\Controller\Account\LoginPost">
@@ -43,6 +41,4 @@
     <type name="Magento\Customer\Controller\Ajax\Login">
         <plugin name="twofactorauth" type="Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Ajax\LoginPlugin" sortOrder="1" disabled="false" />
     </type>
-
-
 </config>

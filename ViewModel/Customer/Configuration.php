@@ -55,7 +55,7 @@ class Configuration implements ArgumentInterface
      */
     public function isEnabled(): bool
     {
-        return (bool) count($this->getEnabledProviders();
+        return (bool) count($this->getEnabledProviders());
     }
 
     /**

@@ -197,15 +197,6 @@ class DuoSecurity implements EngineInterface
     }
 
     /**
-     * Return true if this provider allows trusted devices
-     * @return boolean
-     */
-    public function isTrustedDevicesAllowed()
-    {
-        return false;
-    }
-
-    /**
      * @return string
      */
     public function getCode(): string
