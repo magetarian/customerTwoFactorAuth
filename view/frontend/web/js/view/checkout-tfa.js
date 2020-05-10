@@ -23,7 +23,7 @@ define([
 
     return Component.extend({
         defaults: {
-            template: 'Magetarian_CustomerTwoFactorAuth/checkout-tfa',
+            template: 'Magetarian_CustomerTwoFactorAuth/tfa-login',
             isVisible: false,
             loginFormSelector: 'form[data-role=email-with-possible-login]'
         },

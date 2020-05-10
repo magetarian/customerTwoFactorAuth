@@ -61,7 +61,7 @@ class LoginPostPlugin
 
                 if (count($customerProviders) && (!$twoFactorAuthCode || !$providerCode) ) {
                     $this->messageManager->addWarningMessage(
-                        __('Login using Two Factor Authentication, please.')
+                        __('Login using two factor authentication, please.')
                     );
                     $resultRedirect->setPath('*/*/');
                     return $resultRedirect;

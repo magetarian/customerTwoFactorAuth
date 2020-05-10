@@ -85,7 +85,7 @@ class LoginPlugin
             if (count($customerProviders) && (!$twoFactorAuthCode || !$providerCode)) {
                 $response = [
                     'errors' => true,
-                    'message' => __('Login using 2FA, please.')
+                    'message' => __('Login using two factor authentication, please.')
                 ];
                 return $resultJson->setData($response);
             }
