@@ -11,7 +11,6 @@ namespace Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Ajax;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Ajax\Login;
 use Magento\Framework\Exception\LocalizedException;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\DataObjectFactory;

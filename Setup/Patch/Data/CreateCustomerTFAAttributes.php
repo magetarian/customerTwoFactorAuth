@@ -153,7 +153,7 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
                 'position'      => 101,
                 'visible'       => false,
                 'system'        => false,
-                'backend_model' => TwoFaEncodedConfig::class
+                'backend'       => TwoFaEncodedConfig::class
             ]
         );
 
@@ -161,7 +161,6 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
             Customer::ENTITY,
             self::PROVIDERS
         );
-
         $attribute->addData([
             'attribute_set_id'   => $attributeSetId,
             'attribute_group_id' => $attributeGroupId
@@ -172,12 +171,10 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
             Customer::ENTITY,
             self::CONFIG
         );
-
         $attribute->addData([
             'attribute_set_id'   => $attributeSetId,
             'attribute_group_id' => $attributeGroupId,
         ]);
-
         $attribute->save();
     }
 }

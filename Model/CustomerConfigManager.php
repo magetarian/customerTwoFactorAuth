@@ -11,7 +11,7 @@ namespace Magetarian\CustomerTwoFactorAuth\Model;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttributes;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 
 class CustomerConfigManager implements CustomerConfigManagerInterface
@@ -55,17 +55,17 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
 
     private function getCustomerProvidersConfiguration(int $customerId): array
     {
-        if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG))
+        if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG))
             return [];
 
         return $this->getCustomer($customerId)
-                    ->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG)
+                    ->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)
                     ->getValue();
     }
 
     private function setCustomerProvidersConfiguration(int $customerId, array $config)
     {
-        $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG, [$config]);
+        $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTFAAttributes::CONFIG, [$config]);
         $this->customer = $this->customerRepository->save($this->getCustomer($customerId));
         $this->customerConfig = $config;
     }

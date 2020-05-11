@@ -11,7 +11,7 @@ namespace Magetarian\CustomerTwoFactorAuth\Model;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttributes;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
@@ -39,14 +39,14 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
 
         $customerProviders = [];
         $allProviders = $this->providerPool->getProviders();
-        $customerProvidersAttribute = $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS);
+        $customerProvidersAttribute = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS);
         foreach ($allProviders as $provider) {
             if (!$provider->isEnabled())
                  continue;
 
-            if ($customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)) {
+            if ($customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)) {
                 $selectedProvidersArray = [];
-                $selectedProviders = $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)
+                $selectedProviders = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)
                                               ->getValue();
                 if ($selectedProviders) {
                     $selectedProvidersArray = explode(',',$selectedProviders);

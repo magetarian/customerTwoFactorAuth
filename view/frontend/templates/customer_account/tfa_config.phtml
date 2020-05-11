@@ -47,7 +47,7 @@ $providerAttribute = $viewModel->getProviderConfigAttribute();
             </div>
         </div>
     </div>
+    <?= $block->getChildHtml('tfa_additional_info') ?>
 <?php else:?>
     <?= $block->escapeHtml(__('There are no two factor authentication providers configured.'));?>
 <?php endif; ?>
-<?= $block->getChildHtml('tfa_additional_info') ?>

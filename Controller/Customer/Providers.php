@@ -16,7 +16,6 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Json\Helper\Data;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magento\Customer\Model\Session;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 use Magento\Framework\Data\Form\FormKey;

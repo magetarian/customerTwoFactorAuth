@@ -10,7 +10,6 @@ namespace Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Account;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Account\LoginPost;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Framework\Message\ManagerInterface;

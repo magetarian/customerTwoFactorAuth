@@ -11,7 +11,7 @@ namespace Magetarian\CustomerTwoFactorAuth\ViewModel\Customer;
 use Magento\Customer\Api\CustomerMetadataInterface;
 use Magento\Customer\Model\Session;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttributes;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
@@ -81,7 +81,7 @@ class Configuration implements ArgumentInterface
         $selectedProviders = $this->customerSession
             ->getCustomer()
             ->getDataModel()
-            ->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS);
+            ->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS);
         if (!$selectedProviders) {
             return [];
         }
@@ -91,7 +91,6 @@ class Configuration implements ArgumentInterface
 
 
     /**
-     * @todo  should replace getAvailableProviders or removed
      * Get 2FA Provider Attribute
      *
      * @return \Magento\Customer\Model\Data\AttributeMetadata
@@ -105,7 +104,7 @@ class Configuration implements ArgumentInterface
          * @var $attribute \Magento\Customer\Model\Data\AttributeMetadata
          */
         $attribute = $this->customerMetadata->getAttributeMetadata(
-            CreateCustomerTwoFactorAuthAttributes::PROVIDERS
+            CreateCustomerTFAAttributes::PROVIDERS
         );
 
         return $attribute;
