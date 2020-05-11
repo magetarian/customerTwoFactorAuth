@@ -31,16 +31,6 @@ class ResetPost extends Customer implements HttpPostActionInterface
     private $formKeyValidator;
 
     /**
-     * @var CustomerRepositoryInterface
-     */
-    private $customerRepository;
-
-    /**
-     * @var
-     */
-    private $customerConfigManager;
-
-    /**
      * ResetPost constructor.
      *
      * @param Context $context

@@ -8,6 +8,7 @@ declare(strict_types = 1);
 
 namespace Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magetarian\CustomerTwoFactorAuth\Controller\Customer;
@@ -16,7 +17,7 @@ use Magetarian\CustomerTwoFactorAuth\Controller\Customer;
  * Class Configuration
  * Front controller for customer account 2FA settings
  */
-class Configuration extends Customer
+class Configuration extends Customer implements HttpGetActionInterface
 {
     /**
      * Dispatch request
