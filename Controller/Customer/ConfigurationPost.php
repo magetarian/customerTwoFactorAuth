@@ -71,9 +71,9 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
                 $customer = $this->customerSession->getCustomer()->getDataModel();
                 $customer->setCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS, $providers);
                 $this->customerRepository->save($customer);
-                $this->messageManager->addSuccessMessage(__('You saved the 2FA providers.'));
+                $this->messageManager->addSuccessMessage(__('You saved the TFA providers.'));
             } catch (\Exception $e) {
-                $this->messageManager->addExceptionMessage($e, __('We can\'t save the 2FA providers.'));
+                $this->messageManager->addExceptionMessage($e, __('We can\'t save the TFA providers.'));
             }
         }
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

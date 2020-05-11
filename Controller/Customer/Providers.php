@@ -30,14 +30,36 @@ class Providers extends Action implements HttpPostActionInterface
      */
     private $customerAccountManagement;
 
+    /**
+     * @var Session
+     */
     private $customerSession;
 
+    /**
+     * @var Data
+     */
     private $jsonHelper;
 
+    /**
+     * @var CustomerProvidersManagerInterface
+     */
     private $customerProvidersManager;
 
+    /**
+     * @var FormKey
+     */
     private $formKey;
 
+    /**
+     * Providers constructor.
+     *
+     * @param Context $context
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param FormKey $formKey
+     * @param Session $customerSession
+     * @param Data $jsonHelper
+     * @param CustomerProvidersManagerInterface $customerProvidersManager
+     */
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
@@ -55,6 +77,10 @@ class Providers extends Action implements HttpPostActionInterface
     }
 
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
+     * @throws LocalizedException
+     */
     public function execute()
     {
         $response = [
@@ -93,7 +119,6 @@ class Providers extends Action implements HttpPostActionInterface
             /** @var $customerProviders \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[] */
             $customerProviders = $this->customerProvidersManager->getCustomerProviders((int) $customer->getId());
 
-
             foreach ($customerProviders as $provider) {
                 $response['providers'][$provider->getCode()] = [
                     'label'            => $provider->getName(),
@@ -102,19 +127,13 @@ class Providers extends Action implements HttpPostActionInterface
                     'additionalConfig' => $provider->getEngine()->getAdditionalConfig($customer)
                 ];
             }
-            //@todo double check if it still need or there is better option
             $this->customerSession->setTwoFaCustomerId((int) $customer->getId());
-
         } catch (LocalizedException $e) {
             $response['errors'] = true;
             $response['message'] = $e->getMessage();
-            //@todo remove if not used for Ui Component
-            $this->messageManager->addExceptionMessage($e, $e->getMessage());
         } catch (\Exception $e) {
             $response['errors'] = true;
             $response['message'] =__('Invalid login or password.');
-            //@todo remove if not used for Ui Component
-            $this->messageManager->addExceptionMessage($e, __('Invalid login or password.'));
         }
 
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */

@@ -65,11 +65,7 @@ class ResetTFAButton extends GenericButton implements ButtonProviderInterface
      */
     private function IsProviderActive(): bool
     {
-        foreach ($this->providerPool->getProviders() as $provider) {
-            if ($provider->isEnabled())
-                return true;
-        }
-        return false;
+        return (bool) $this->providerPool->getEnabledProviders();
     }
 
     /**

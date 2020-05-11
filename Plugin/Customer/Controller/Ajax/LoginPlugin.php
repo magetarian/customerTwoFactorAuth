@@ -18,20 +18,51 @@ use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\Json\DecoderInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
+/**
+ * Class LoginPlugin
+ */
 class LoginPlugin
 {
+    /**
+     * @var AccountManagementInterface
+     */
     private $customerAccountManagement;
 
+    /**
+     * @var ResultFactory
+     */
     private $resultFactory;
 
+    /**
+     * @var ProviderPoolInterface
+     */
     private $providerPool;
 
+    /**
+     * @var DataObjectFactory
+     */
     private $dataObjectFactory;
 
+    /**
+     * @var Data
+     */
     private $jsonHelper;
 
+    /**
+     * @var CustomerProvidersManagerInterface
+     */
     private $customerProvidersManager;
 
+    /**
+     * LoginPlugin constructor.
+     *
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param ResultFactory $resultFactory
+     * @param ProviderPoolInterface $providerPool
+     * @param DataObjectFactory $dataObjectFactory
+     * @param Data $jsonHelper
+     * @param CustomerProvidersManagerInterface $customerProvidersManager
+     */
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
         ResultFactory $resultFactory,
@@ -48,6 +79,12 @@ class LoginPlugin
         $this->customerProvidersManager = $customerProvidersManager;
     }
 
+    /**
+     * @param Login $subject
+     * @param callable $proceed
+     *
+     * @return \Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw
+     */
     public function aroundExecute(Login $subject, callable $proceed)
     {
         $httpBadRequestCode = 400;

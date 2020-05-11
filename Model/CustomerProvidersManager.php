@@ -15,14 +15,33 @@ use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttribute
 use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
+/**
+ * Class CustomerProvidersManager
+ */
 class CustomerProvidersManager implements CustomerProvidersManagerInterface
 {
+    /**
+     * @var CustomerRepositoryInterface
+     */
     private $customerRepository;
 
+    /**
+     * @var ConfigProvider
+     */
     private $configProvider;
 
+    /**
+     * @var ProviderPoolInterface
+     */
     private $providerPool;
 
+    /**
+     * CustomerProvidersManager constructor.
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param ConfigProvider $configProvider
+     * @param ProviderPoolInterface $providerPool
+     */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         ConfigProvider $configProvider,
@@ -33,17 +52,19 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
         $this->providerPool = $providerPool;
     }
 
+    /**
+     * @param int $customerId
+     *
+     * @return array
+     */
     public function getCustomerProviders(int $customerId): array
     {
         $customer = $this->getCustomer($customerId);
 
         $customerProviders = [];
-        $allProviders = $this->providerPool->getProviders();
+        $enabledProviders = $this->providerPool->getEnabledProviders();
         $customerProvidersAttribute = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS);
-        foreach ($allProviders as $provider) {
-            if (!$provider->isEnabled())
-                 continue;
-
+        foreach ($enabledProviders as $provider) {
             if ($customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)) {
                 $selectedProvidersArray = [];
                 $selectedProviders = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)
@@ -60,6 +81,13 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
         return $customerProviders;
     }
 
+    /**
+     * @param $customerId
+     *
+     * @return CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     private function getCustomer($customerId): CustomerInterface
     {
         return $this->customerRepository->getById($customerId);

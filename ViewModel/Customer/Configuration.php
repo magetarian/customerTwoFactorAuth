@@ -64,11 +64,7 @@ class Configuration implements ArgumentInterface
     public function getEnabledProviders(): array
     {
         if (!count($this->enabledProviders)) {
-            foreach ($this->providerPool->getProviders() as $provider) {
-                if ($provider->isEnabled()) {
-                    $this->enabledProviders[$provider->getCode()] = $provider->getName();
-                }
-            }
+            $this->enabledProviders = $this->providerPool->getEnabledProviders();
         }
         return $this->enabledProviders;
     }

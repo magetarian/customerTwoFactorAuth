@@ -16,20 +16,51 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\DataObjectFactory;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
+/**
+ * Class LoginPostPlugin
+ */
 class LoginPostPlugin
 {
+    /**
+     * @var AccountManagementInterface
+     */
     private $customerAccountManagement;
 
+    /**
+     * @var RedirectFactory
+     */
     private $resultRedirectFactory;
 
+    /**
+     * @var ProviderPoolInterface
+     */
     private $providerPool;
 
+    /**
+     * @var ManagerInterface
+     */
     private $messageManager;
 
+    /**
+     * @var DataObjectFactory
+     */
     private $dataObjectFactory;
 
+    /**
+     * @var CustomerProvidersManagerInterface
+     */
     private $customerProvidersManager;
 
+    /**
+     * LoginPostPlugin constructor.
+     *
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param RedirectFactory $resultRedirectFactory
+     * @param ProviderPoolInterface $providerPool
+     * @param ManagerInterface $messageManager
+     * @param DataObjectFactory $dataObjectFactory
+     * @param CustomerProvidersManagerInterface $customerProvidersManager
+     */
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
         RedirectFactory $resultRedirectFactory,
@@ -46,6 +77,12 @@ class LoginPostPlugin
         $this->customerProvidersManager = $customerProvidersManager;
     }
 
+    /**
+     * @param LoginPost $subject
+     * @param callable $proceed
+     *
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
     public function aroundExecute(LoginPost $subject, callable $proceed)
     {
         if ($subject->getRequest()->isPost()) {
