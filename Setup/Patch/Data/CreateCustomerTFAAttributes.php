@@ -136,7 +136,7 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
                 'source'   => EnabledProviders::class,
                 'required' => false,
                 'position' => 100,
-                'visible'  => true,
+                'visible'  => false,
                 'system'   => false,
                 'backend'  => ArrayBackend::class
             ]
