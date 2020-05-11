@@ -20,7 +20,7 @@ $providerAttribute = $viewModel->getProviderConfigAttribute();
             <div class="box box-providers">
                 <form
                     class="form"
-                    action="<?= $block->escapeUrl($block->getUrl('twofactorauth/customer/configurationPost')) ?>"
+                    action="<?= $block->escapeUrl($block->getUrl('tfa/customer/configurationPost')) ?>"
                     method="post">
                     <?= $block->getBlockHtml('formkey') ?>
                     <div class="box-content">

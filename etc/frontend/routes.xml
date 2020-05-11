@@ -6,7 +6,7 @@
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
-        <route id="twofactorauth" frontName="twofactorauth">
+        <route id="tfa" frontName="tfa">
             <module name="Magetarian_CustomerTwoFactorAuth" />
         </route>
     </router>

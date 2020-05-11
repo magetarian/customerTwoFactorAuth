@@ -18,13 +18,13 @@ $viewModel = $block->getViewModel();
         <div class="block-content">
             <div class="box box-settings">
                 <div class="box-content">
-                    <img class="msp-tfa-google-qr" src="<?=$block->escapeHtmlAttr($block->getUrl('twofactorauth/google/qr')) ?>"/>
+                    <img class="msp-tfa-google-qr" src="<?=$block->escapeHtmlAttr($block->getUrl('tfa/google/qr')) ?>"/>
                     <p><textarea class="msp-tfa-google-secure-code"><?= $block->escapeHtml($viewModel->getSecretCode()) ?></textarea></p>
                     <p><?= $block->escapeHtml(__('Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.')) ?></p>
                 </div>
                 <form
                     class="form"
-                    action="<?= $block->escapeUrl($block->getUrl('twofactorauth/google/resetPost')) ?>"
+                    action="<?= $block->escapeUrl($block->getUrl('tfa/google/resetPost')) ?>"
                     method="post">
                     <?= $block->getBlockHtml('formkey') ?>
                     <div class="box-actions">
