@@ -36,7 +36,6 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
      */
     private $customerRepository;
 
-
     /**
      * ConfigurationPost constructor.
      *
@@ -55,7 +54,6 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
         $this->formKeyValidator   = $formKeyValidator;
         $this->customerRepository = $customerRepository;
     }
-
 
     /**
      * Save 2FA Authentication Configuration

@@ -14,6 +14,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
 
 /**
  * Class Provider
+ * Generic model of a TFA provider
  */
 class Provider implements ProviderInterface
 {

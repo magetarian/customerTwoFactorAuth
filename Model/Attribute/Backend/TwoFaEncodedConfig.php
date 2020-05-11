@@ -14,6 +14,7 @@ use Magento\Framework\Serialize\SerializerInterface;
 
 /**
  * Class TwoFaEncodedConfig
+ * Backend model for tfa configuration attribute
  */
 class TwoFaEncodedConfig extends AbstractBackend
 {

@@ -14,6 +14,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class ProviderPool
+ * Provider Pool Model
  */
 class ProviderPool implements ProviderPoolInterface
 {
@@ -49,8 +50,9 @@ class ProviderPool implements ProviderPoolInterface
         $enabledProviders = [];
         /** @var \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface $provider */
         foreach ($this->getProviders() as $provider) {
-            if ($provider->isEnabled()) {}
-            $enabledProviders[] = $provider;
+            if ($provider->isEnabled()) {
+                $enabledProviders[] = $provider;
+            }
         }
         return $enabledProviders;
     }

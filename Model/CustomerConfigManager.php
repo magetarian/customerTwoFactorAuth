@@ -16,6 +16,7 @@ use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 
 /**
  * Class CustomerConfigManager
+ * The model sets/updates/reads customer tfa configuration
  */
 class CustomerConfigManager implements CustomerConfigManagerInterface
 {
@@ -28,11 +29,6 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      * @var null
      */
     private $customer = null;
-
-    /**
-     * @var null
-     */
-    private $customerConfig = null;
 
     /**
      * CustomerConfigManager constructor.
@@ -90,8 +86,9 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      */
     private function getCustomerProvidersConfiguration(int $customerId): array
     {
-        if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG))
+        if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)) {
             return [];
+        }
 
         return $this->getCustomer($customerId)
                     ->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)
@@ -110,7 +107,6 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
     {
         $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTFAAttributes::CONFIG, [$config]);
         $this->customer = $this->customerRepository->save($this->getCustomer($customerId));
-        $this->customerConfig = $config;
     }
 
     /**
@@ -122,7 +118,7 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      */
     private function getCustomer(int $customerId): CustomerInterface
     {
-        if (is_null($this->customer)) {
+        if (!$this->customer) {
             $this->customer = $this->customerRepository->getById($customerId);
         }
         return $this->customer;

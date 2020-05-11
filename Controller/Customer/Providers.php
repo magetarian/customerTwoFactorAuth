@@ -22,6 +22,7 @@ use Magento\Framework\Data\Form\FormKey;
 
 /**
  * Class Providers
+ * The class return enabled providers for a customer login action
  */
 class Providers extends Action implements HttpPostActionInterface
 {
@@ -76,7 +77,6 @@ class Providers extends Action implements HttpPostActionInterface
         $this->formKey = $formKey;
     }
 
-
     /**
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
      * @throws LocalizedException
@@ -106,8 +106,7 @@ class Providers extends Action implements HttpPostActionInterface
 
         $validFormKey = Security::compareStrings($loginData['form_key'], $this->formKey->getFormKey());
 
-        if (
-            !$validFormKey ||
+        if (!$validFormKey ||
             !$loginData ||
             $this->getRequest()->getMethod() !== 'POST' ||
             !$this->getRequest()->isXmlHttpRequest()) {

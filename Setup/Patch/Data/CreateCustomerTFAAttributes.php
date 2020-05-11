@@ -17,16 +17,17 @@ use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\EnabledProviders;
 
 /**
  * Class CreateCustomerTFAAttributes
- * Customer attributes for 2FA
+ * New Attributes for TFA
  */
 class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertableInterface
 {
     /**
-     * Constants
+     *  Providers Attribute Code
      */
     const PROVIDERS        = 'tfa_providers';
+
     /**
-     *
+     * Configuration Attribute Code
      */
     const CONFIG           = 'tfa_encoded_config';
 

@@ -20,6 +20,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
 /**
  * Class LoginPlugin
+ * Around plugin for ajax login
  */
 class LoginPlugin
 {
@@ -96,7 +97,10 @@ class LoginPlugin
         } catch (\Exception $e) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
-        if (!$credentials || $subject->getRequest()->getMethod() !== 'POST' || !$subject->getRequest()->isXmlHttpRequest()) {
+        if (!$credentials ||
+            $subject->getRequest()->getMethod() !== 'POST' ||
+            !$subject->getRequest()->isXmlHttpRequest()
+        ) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
         $response = [
@@ -138,7 +142,7 @@ class LoginPlugin
             }
 
         } catch (\Exception $e) {
-           return $proceed();
+            return $proceed();
         }
 
         return $proceed();

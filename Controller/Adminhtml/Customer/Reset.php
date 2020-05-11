@@ -16,6 +16,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class Reset
+ * Reset TFA configuration for a customer
  */
 class Reset extends Action implements HttpGetActionInterface
 {
@@ -40,8 +41,7 @@ class Reset extends Action implements HttpGetActionInterface
     public function __construct(
         Context $context,
         ProviderPoolInterface $providerPool
-    )
-    {
+    ) {
         $this->providerPool = $providerPool;
         parent::__construct($context);
     }

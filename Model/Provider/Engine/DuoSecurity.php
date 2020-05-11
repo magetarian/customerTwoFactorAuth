@@ -16,6 +16,7 @@ use MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity as MspDuoSecurity;
 
 /**
  * Class DuoSecurity
+ * DuoSecurity engine
  */
 class DuoSecurity implements EngineInterface
 {

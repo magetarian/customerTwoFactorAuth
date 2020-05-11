@@ -30,7 +30,6 @@ abstract class Customer extends Action
      */
     protected $customerSession;
 
-
     /**
      * Configuration constructor.
      *
@@ -44,7 +43,6 @@ abstract class Customer extends Action
         parent::__construct($context);
         $this->customerSession = $customerSession;
     }
-
 
     /**
      * Dispatch request

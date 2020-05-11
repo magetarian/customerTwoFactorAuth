@@ -17,6 +17,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class CustomerProvidersManager
+ * The class return list of specific providers for a csutomer
  */
 class CustomerProvidersManager implements CustomerProvidersManagerInterface
 {
@@ -70,7 +71,7 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
                 $selectedProviders = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)
                                               ->getValue();
                 if ($selectedProviders) {
-                    $selectedProvidersArray = explode(',',$selectedProviders);
+                    $selectedProvidersArray = explode(',', $selectedProviders);
                 }
 
                 $customerProviders[] = $provider;

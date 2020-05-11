@@ -16,8 +16,9 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class Configuration
- * ViewModel for customer account
+ * ViewModel for customer account configuration
  */
+
 class Configuration implements ArgumentInterface
 {
     /**
@@ -84,7 +85,6 @@ class Configuration implements ArgumentInterface
         $selectedProvidersValue = $selectedProviders->getValue();
         return explode(',', $selectedProvidersValue);
     }
-
 
     /**
      * Get 2FA Provider Attribute

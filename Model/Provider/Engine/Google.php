@@ -21,6 +21,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 
 /**
  * Class Google
+ * Google Athenticator engine
  */
 class Google implements EngineInterface
 {

@@ -18,6 +18,7 @@ use Magento\Customer\Model\Session;
 
 /**
  * Class Qr
+ * Generation of QR code for Google Authentication
  */
 class Qr extends Action implements HttpGetActionInterface
 {

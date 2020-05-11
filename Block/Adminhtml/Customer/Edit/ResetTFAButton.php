@@ -16,6 +16,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class ResetTFAButton
+ * Button for reset customer tfa configuration
  */
 class ResetTFAButton extends GenericButton implements ButtonProviderInterface
 {
@@ -47,7 +48,7 @@ class ResetTFAButton extends GenericButton implements ButtonProviderInterface
     {
         $customerId = $this->getCustomerId();
         $data = [];
-        if ($customerId && $this->IsProviderActive()) {
+        if ($customerId && $this->isProviderActive()) {
             $data = [
                 'label' => __('Reset TFA'),
                 'id' => 'customer-reset-tfa-button',
@@ -63,7 +64,7 @@ class ResetTFAButton extends GenericButton implements ButtonProviderInterface
     /**
      * @return bool
      */
-    private function IsProviderActive(): bool
+    private function isProviderActive(): bool
     {
         return (bool) $this->providerPool->getEnabledProviders();
     }

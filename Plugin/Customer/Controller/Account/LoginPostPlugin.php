@@ -18,6 +18,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
 /**
  * Class LoginPostPlugin
+ * Around plugin for login post action
  */
 class LoginPostPlugin
 {
@@ -95,7 +96,7 @@ class LoginPostPlugin
                 /** @var $customerProviders \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[] */
                 $customerProviders = $this->customerProvidersManager->getCustomerProviders((int) $customer->getId());
 
-                if (count($customerProviders) && (!$twoFactorAuthCode || !$providerCode) ) {
+                if (count($customerProviders) && (!$twoFactorAuthCode || !$providerCode)) {
                     $this->messageManager->addWarningMessage(
                         __('Login using two factor authentication, please.')
                     );
