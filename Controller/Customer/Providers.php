@@ -100,13 +100,8 @@ class Providers extends Action implements HttpPostActionInterface
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
 
-        if (!isset($loginData['form_key'])) {
-            return $resultRaw->setHttpResponseCode($httpBadRequestCode);
-        }
-
-        $validFormKey = Security::compareStrings($loginData['form_key'], $this->formKey->getFormKey());
-
-        if (!$validFormKey ||
+        if (!isset($loginData['form_key']) ||
+            !Security::compareStrings($loginData['form_key'], $this->formKey->getFormKey()) ||
             !$loginData ||
             $this->getRequest()->getMethod() !== 'POST' ||
             !$this->getRequest()->isXmlHttpRequest()) {
