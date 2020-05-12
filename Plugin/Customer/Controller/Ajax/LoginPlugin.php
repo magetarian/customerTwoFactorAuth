@@ -11,7 +11,6 @@ namespace Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Ajax;
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Ajax\Login;
 use Magento\Framework\Exception\LocalizedException;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\DataObjectFactory;
@@ -19,20 +18,52 @@ use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\Json\DecoderInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
+/**
+ * Class LoginPlugin
+ * Around plugin for ajax login
+ */
 class LoginPlugin
 {
+    /**
+     * @var AccountManagementInterface
+     */
     private $customerAccountManagement;
 
+    /**
+     * @var ResultFactory
+     */
     private $resultFactory;
 
+    /**
+     * @var ProviderPoolInterface
+     */
     private $providerPool;
 
+    /**
+     * @var DataObjectFactory
+     */
     private $dataObjectFactory;
 
+    /**
+     * @var Data
+     */
     private $jsonHelper;
 
+    /**
+     * @var CustomerProvidersManagerInterface
+     */
     private $customerProvidersManager;
 
+    /**
+     * LoginPlugin constructor.
+     *
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param ResultFactory $resultFactory
+     * @param ProviderPoolInterface $providerPool
+     * @param DataObjectFactory $dataObjectFactory
+     * @param Data $jsonHelper
+     * @param CustomerProvidersManagerInterface $customerProvidersManager
+     */
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
         ResultFactory $resultFactory,
@@ -49,6 +80,12 @@ class LoginPlugin
         $this->customerProvidersManager = $customerProvidersManager;
     }
 
+    /**
+     * @param Login $subject
+     * @param callable $proceed
+     *
+     * @return \Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw
+     */
     public function aroundExecute(Login $subject, callable $proceed)
     {
         $httpBadRequestCode = 400;
@@ -60,7 +97,10 @@ class LoginPlugin
         } catch (\Exception $e) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
-        if (!$credentials || $subject->getRequest()->getMethod() !== 'POST' || !$subject->getRequest()->isXmlHttpRequest()) {
+        if (!$credentials ||
+            $subject->getRequest()->getMethod() !== 'POST' ||
+            !$subject->getRequest()->isXmlHttpRequest()
+        ) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
         $response = [
@@ -102,7 +142,7 @@ class LoginPlugin
             }
 
         } catch (\Exception $e) {
-           return $proceed();
+            return $proceed();
         }
 
         return $proceed();

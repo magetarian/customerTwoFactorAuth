@@ -21,6 +21,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class ResetPost
+ * Ability for a customer to reset Google Authenticator configuration
  */
 class ResetPost extends Customer implements HttpPostActionInterface
 {
@@ -28,16 +29,6 @@ class ResetPost extends Customer implements HttpPostActionInterface
      * @var Validator
      */
     private $formKeyValidator;
-
-    /**
-     * @var CustomerRepositoryInterface
-     */
-    private $customerRepository;
-
-    /**
-     * @var
-     */
-    private $customerConfigManager;
 
     /**
      * ResetPost constructor.

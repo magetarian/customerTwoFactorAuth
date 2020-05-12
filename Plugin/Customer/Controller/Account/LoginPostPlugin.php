@@ -10,27 +10,58 @@ namespace Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Account;
 
 use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Controller\Account\LoginPost;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\DataObjectFactory;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 
+/**
+ * Class LoginPostPlugin
+ * Around plugin for login post action
+ */
 class LoginPostPlugin
 {
+    /**
+     * @var AccountManagementInterface
+     */
     private $customerAccountManagement;
 
+    /**
+     * @var RedirectFactory
+     */
     private $resultRedirectFactory;
 
+    /**
+     * @var ProviderPoolInterface
+     */
     private $providerPool;
 
+    /**
+     * @var ManagerInterface
+     */
     private $messageManager;
 
+    /**
+     * @var DataObjectFactory
+     */
     private $dataObjectFactory;
 
+    /**
+     * @var CustomerProvidersManagerInterface
+     */
     private $customerProvidersManager;
 
+    /**
+     * LoginPostPlugin constructor.
+     *
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param RedirectFactory $resultRedirectFactory
+     * @param ProviderPoolInterface $providerPool
+     * @param ManagerInterface $messageManager
+     * @param DataObjectFactory $dataObjectFactory
+     * @param CustomerProvidersManagerInterface $customerProvidersManager
+     */
     public function __construct(
         AccountManagementInterface $customerAccountManagement,
         RedirectFactory $resultRedirectFactory,
@@ -47,6 +78,12 @@ class LoginPostPlugin
         $this->customerProvidersManager = $customerProvidersManager;
     }
 
+    /**
+     * @param LoginPost $subject
+     * @param callable $proceed
+     *
+     * @return \Magento\Framework\Controller\Result\Redirect
+     */
     public function aroundExecute(LoginPost $subject, callable $proceed)
     {
         if ($subject->getRequest()->isPost()) {
@@ -59,7 +96,7 @@ class LoginPostPlugin
                 /** @var $customerProviders \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[] */
                 $customerProviders = $this->customerProvidersManager->getCustomerProviders((int) $customer->getId());
 
-                if (count($customerProviders) && (!$twoFactorAuthCode || !$providerCode) ) {
+                if (count($customerProviders) && (!$twoFactorAuthCode || !$providerCode)) {
                     $this->messageManager->addWarningMessage(
                         __('Login using two factor authentication, please.')
                     );

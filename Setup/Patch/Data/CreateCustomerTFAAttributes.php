@@ -16,16 +16,20 @@ use Magetarian\CustomerTwoFactorAuth\Model\Attribute\Backend\TwoFaEncodedConfig;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\EnabledProviders;
 
 /**
- * Class CreateCustomerTwoFactorAuthAttributes
- * Customer attributes for 2FA
+ * Class CreateCustomerTFAAttributes
+ * New Attributes for TFA
  */
-class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, PatchRevertableInterface
+class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertableInterface
 {
     /**
-     * Constants
+     *  Providers Attribute Code
      */
-    const PROVIDERS        = 'two_fa_providers';
-    const CONFIG           = 'two_fa_encoded_config';
+    const PROVIDERS        = 'tfa_providers';
+
+    /**
+     * Configuration Attribute Code
+     */
+    const CONFIG           = 'tfa_encoded_config';
 
     /**
      * @var ModuleDataSetupInterface
@@ -65,11 +69,13 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
     public function apply()
     {
         $this->moduleDataSetup->getConnection()->startSetup();
-        $this->createProviderAttribute();
-        $this->createProviderConfigAttribute();
+        $this->createCustomerAttributes();
         $this->moduleDataSetup->getConnection()->endSetup();
     }
 
+    /**
+     *
+     */
     public function revert()
     {
         $this->moduleDataSetup->getConnection()->startSetup();
@@ -102,7 +108,11 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
         return [];
     }
 
-    private function createProviderAttribute()
+    /**
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Zend_Validate_Exception
+     */
+    private function createCustomerAttributes()
     {
         /** @var CustomerSetup $customerSetup */
         $customerSetup = $this->customerSetupFactory->create(
@@ -121,15 +131,30 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
             Customer::ENTITY,
             self::PROVIDERS,
             [
-                'label'    => 'Two Factor Auth Providers',
+                'label'    => 'TFA Providers',
                 'input'    => 'multiselect',
                 'type'     => 'varchar',
                 'source'   => EnabledProviders::class,
                 'required' => false,
                 'position' => 100,
-                'visible'  => true,
+                'visible'  => false,
                 'system'   => false,
                 'backend'  => ArrayBackend::class
+            ]
+        );
+
+        $customerSetup->addAttribute(
+            Customer::ENTITY,
+            self::CONFIG,
+            [
+                'label'         => 'TFA Encoded Config',
+                'input'         => 'textarea',
+                'type'          => 'text',
+                'required'      => false,
+                'position'      => 101,
+                'visible'       => false,
+                'system'        => false,
+                'backend'       => TwoFaEncodedConfig::class
             ]
         );
 
@@ -137,58 +162,20 @@ class CreateCustomerTwoFactorAuthAttributes implements DataPatchInterface, Patch
             Customer::ENTITY,
             self::PROVIDERS
         );
-
         $attribute->addData([
             'attribute_set_id'   => $attributeSetId,
-            'attribute_group_id' => $attributeGroupId,
-            'used_in_forms'      => [
-                'adminhtml_customer'
-            ]
+            'attribute_group_id' => $attributeGroupId
         ]);
-
         $attribute->save();
-    }
-
-    private function createProviderConfigAttribute()
-    {
-        /** @var CustomerSetup $customerSetup */
-        $customerSetup = $this->customerSetupFactory->create(
-            ['setup' => $this->moduleDataSetup]
-        );
-        $customerEntity = $customerSetup->getEavConfig()->getEntityType(
-            Customer::ENTITY
-        );
-        $attributeSetId = $customerEntity->getDefaultAttributeSetId();
-
-        /** @var $attributeSet Set */
-        $attributeSet     = $this->attributeSetFactory->create();
-        $attributeGroupId = $attributeSet->getDefaultGroupId($attributeSetId);
-
-        $customerSetup->addAttribute(
-            Customer::ENTITY,
-            self::CONFIG,
-            [
-                'label'         => 'Two Factor Auth Encoded Config',
-                'input'         => 'textarea',
-                'type'          => 'text',
-                'required'      => false,
-                'position'      => 101,
-                'visible'       => false,
-                'system'        => false,
-                'backend_model' => TwoFaEncodedConfig::class
-            ]
-        );
 
         $attribute = $customerSetup->getEavConfig()->getAttribute(
             Customer::ENTITY,
             self::CONFIG
         );
-
         $attribute->addData([
             'attribute_set_id'   => $attributeSetId,
             'attribute_group_id' => $attributeGroupId,
         ]);
-
         $attribute->save();
     }
 }

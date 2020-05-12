@@ -14,8 +14,15 @@ use Magento\Framework\DataObject;
 use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
 use MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity as MspDuoSecurity;
 
+/**
+ * Class DuoSecurity
+ * DuoSecurity engine
+ */
 class DuoSecurity implements EngineInterface
 {
+    /**
+     * Enabled for customer XML Path
+     */
     const XML_PATH_ENABLED_CUSTOMER = 'msp_securitysuite_twofactorauth/duo/enabled_customer';
 
     /**
@@ -204,6 +211,11 @@ class DuoSecurity implements EngineInterface
         return MspDuoSecurity::CODE;
     }
 
+    /**
+     * @param CustomerInterface $customer
+     *
+     * @return array
+     */
     public function getAdditionalConfig(CustomerInterface $customer): array
     {
         return ['apiHost'=> $this->getApiHostname(), 'signature' => $this->getRequestSignature($customer)];

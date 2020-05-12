@@ -4,10 +4,11 @@
   ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
   ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
   -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
-    <router id="standard">
-        <route id="tfa" frontName="tfa">
-            <module name="Magetarian_CustomerTwoFactorAuth" />
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="customer_tfa" frontName="customer_tfa">
+            <module name="Magetarian_CustomerTwoFactorAuth" before="Magento_Backend"/>
         </route>
     </router>
 </config>

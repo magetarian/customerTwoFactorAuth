@@ -53,19 +53,15 @@ class EnabledProviders extends AbstractSource implements OptionSourceInterface
         return $result;
     }
 
-
     /**
      * @return array
      */
     private function getEnabledProviders(): array
     {
         $enabledProviders = [];
-        foreach ($this->providerPool->getProviders() as $provider) {
-            if ($provider->isEnabled()) {
-                $enabledProviders[$provider->getCode()] = $provider->getName();
-            }
+        foreach ($this->providerPool->getEnabledProviders() as $provider) {
+            $enabledProviders[$provider->getCode()] = $provider->getName();
         }
-
         return $enabledProviders;
     }
 }

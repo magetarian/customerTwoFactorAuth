@@ -8,13 +8,21 @@ declare(strict_types=1);
 
 namespace Magetarian\CustomerTwoFactorAuth\Api;
 
+use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
+
 interface ProviderPoolInterface
 {
     /**
      * Get a list of providers
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[]
      */
-    public function getProviders();
+    public function getProviders(): array;
+
+    /**
+     * Get a list of enabled providers
+     * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[]
+     */
+    public function getEnabledProviders(): array;
 
     /**
      * Get provider by code
@@ -22,5 +30,5 @@ interface ProviderPoolInterface
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getProviderByCode($code);
+    public function getProviderByCode($code): ProviderInterface;
 }

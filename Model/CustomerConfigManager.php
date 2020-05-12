@@ -11,23 +11,42 @@ namespace Magetarian\CustomerTwoFactorAuth\Model;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttributes;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 
+/**
+ * Class CustomerConfigManager
+ * The model sets/updates/reads customer tfa configuration
+ */
 class CustomerConfigManager implements CustomerConfigManagerInterface
 {
+    /**
+     * @var CustomerRepositoryInterface
+     */
     private $customerRepository;
 
+    /**
+     * @var null
+     */
     private $customer = null;
 
-    private $customerConfig = null;
-
+    /**
+     * CustomerConfigManager constructor.
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     */
     public function __construct(
         CustomerRepositoryInterface $customerRepository
     ) {
         $this->customerRepository = $customerRepository;
     }
 
+    /**
+     * @param int $customerId
+     * @param string $providerCode
+     *
+     * @return array|null
+     */
     public function getProviderConfig(int $customerId, string $providerCode): ?array
     {
         $providersConfig = $this->getCustomerProvidersConfiguration($customerId);
@@ -39,6 +58,13 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
         return $providersConfig[$providerCode];
     }
 
+    /**
+     * @param int $customerId
+     * @param string $providerCode
+     * @param array|null $config
+     *
+     * @return mixed|void
+     */
     public function setProviderConfig(int $customerId, string $providerCode, ?array $config)
     {
         $providersConfig = $this->getCustomerProvidersConfiguration($customerId);
@@ -53,26 +79,46 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
         $this->setCustomerProvidersConfiguration($customerId, $providersConfig);
     }
 
+    /**
+     * @param int $customerId
+     *
+     * @return array
+     */
     private function getCustomerProvidersConfiguration(int $customerId): array
     {
-        if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG))
+        if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)) {
             return [];
+        }
 
         return $this->getCustomer($customerId)
-                    ->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG)
+                    ->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)
                     ->getValue();
     }
 
+    /**
+     * @param int $customerId
+     * @param array $config
+     *
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\State\InputMismatchException
+     */
     private function setCustomerProvidersConfiguration(int $customerId, array $config)
     {
-        $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTwoFactorAuthAttributes::CONFIG, [$config]);
+        $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTFAAttributes::CONFIG, [$config]);
         $this->customer = $this->customerRepository->save($this->getCustomer($customerId));
-        $this->customerConfig = $config;
     }
 
+    /**
+     * @param int $customerId
+     *
+     * @return CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     private function getCustomer(int $customerId): CustomerInterface
     {
-        if (is_null($this->customer)) {
+        if (!$this->customer) {
             $this->customer = $this->customerRepository->getById($customerId);
         }
         return $this->customer;

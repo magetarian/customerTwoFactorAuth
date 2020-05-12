@@ -16,7 +16,7 @@ define([
     return Component.extend({
         defaults: {
             template: 'Magetarian_CustomerTwoFactorAuth/provider/google',
-            qrCodeUrlKey: 'twofactorauth/google/qr'
+            qrCodeUrlKey: 'tfa/google/qr'
         },
 
         /**

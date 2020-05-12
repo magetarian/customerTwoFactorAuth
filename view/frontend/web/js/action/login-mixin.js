@@ -31,7 +31,7 @@ define([
             }
 
             return storage.post(
-                'twofactorauth/customer/providers',
+                'tfa/customer/providers',
                 JSON.stringify(loginData),
                 isGlobal
             ).done(function (response) {

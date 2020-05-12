@@ -19,7 +19,7 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magetarian\CustomerTwoFactorAuth\Controller\Customer;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttributes;
 
 /**
  * Class Configuration
@@ -35,7 +35,6 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
      * @var CustomerRepositoryInterface
      */
     private $customerRepository;
-
 
     /**
      * ConfigurationPost constructor.
@@ -56,7 +55,6 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
         $this->customerRepository = $customerRepository;
     }
 
-
     /**
      * Save 2FA Authentication Configuration
      *
@@ -69,11 +67,11 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
             try {
                 $providers = $this->_request->getParam('providers');
                 $customer = $this->customerSession->getCustomer()->getDataModel();
-                $customer->setCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS, $providers);
+                $customer->setCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS, $providers);
                 $this->customerRepository->save($customer);
-                $this->messageManager->addSuccessMessage(__('You saved the 2FA providers.'));
+                $this->messageManager->addSuccessMessage(__('You saved the TFA providers.'));
             } catch (\Exception $e) {
-                $this->messageManager->addExceptionMessage($e, __('We can\'t save the 2FA providers.'));
+                $this->messageManager->addExceptionMessage($e, __('We can\'t save the TFA providers.'));
             }
         }
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

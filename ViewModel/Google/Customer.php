@@ -17,6 +17,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\CustomerProviderConfigInterface;
 
 /**
  * Class Customer
+ * ViewModel for Google Authentication customer configuration
  */
 class Customer implements ArgumentInterface, CustomerProviderConfigInterface
 {

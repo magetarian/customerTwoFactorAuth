@@ -20,17 +20,21 @@ $providerAttribute = $viewModel->getProviderConfigAttribute();
             <div class="box box-providers">
                 <form
                     class="form"
-                    action="<?= $block->escapeUrl($block->getUrl('twofactorauth/customer/configurationPost')) ?>"
+                    action="<?= $block->escapeUrl($block->getUrl('tfa/customer/configurationPost')) ?>"
                     method="post">
                     <?= $block->getBlockHtml('formkey') ?>
                     <div class="box-content">
                         <?php $selected = $viewModel->getSelectedProviders(); ?>
-                        <select name="providers[]" size="4"  multiple="multiple" id="providers-field" class="multiselect">
-                            <option value="" <?= (count($selected) == 0 ? 'selected' : '') ?>><?= $block->escapeHtml(__('None')) ?></option>
-                            <?php foreach ($viewModel->getEnabledProviders() as $providerCode => $providerName): ?>
-                                <option value="<?=$block->escapeHtmlAttr($providerCode);?>"
-                                    <?=(in_array($providerCode, $selected) ? 'selected' : '') ?>>
-                                    <?= $block->escapeHtml($providerName) ?>
+                        <select name="providers[]" size="4"  multiple="multiple" id="providers-field"
+                                class="multiselect">
+                            <option value="" <?= (count($selected) == 0 ? 'selected' : '') ?>>
+                                <?= $block->escapeHtml(__('None')) ?>
+                            </option>
+                            <?php  /** @var \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface $provider */ ?>
+                            <?php foreach ($viewModel->getEnabledProviders() as $provider): ?>
+                                <option value="<?=$block->escapeHtmlAttr($provider->getCode());?>"
+                                    <?=(in_array($provider->getCode(), $selected) ? 'selected' : '') ?>>
+                                    <?= $block->escapeHtml($provider->getName()) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -47,7 +51,7 @@ $providerAttribute = $viewModel->getProviderConfigAttribute();
             </div>
         </div>
     </div>
+    <?= $block->getChildHtml('tfa_additional_info') ?>
 <?php else:?>
     <?= $block->escapeHtml(__('There are no two factor authentication providers configured.'));?>
 <?php endif; ?>
-<?= $block->getChildHtml('tfa_additional_info') ?>

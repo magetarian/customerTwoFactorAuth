@@ -11,18 +11,38 @@ namespace Magetarian\CustomerTwoFactorAuth\Model;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTwoFactorAuthAttributes;
+use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttributes;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
+/**
+ * Class CustomerProvidersManager
+ * The class return list of specific providers for a csutomer
+ */
 class CustomerProvidersManager implements CustomerProvidersManagerInterface
 {
+    /**
+     * @var CustomerRepositoryInterface
+     */
     private $customerRepository;
 
+    /**
+     * @var ConfigProvider
+     */
     private $configProvider;
 
+    /**
+     * @var ProviderPoolInterface
+     */
     private $providerPool;
 
+    /**
+     * CustomerProvidersManager constructor.
+     *
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param ConfigProvider $configProvider
+     * @param ProviderPoolInterface $providerPool
+     */
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         ConfigProvider $configProvider,
@@ -33,33 +53,41 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
         $this->providerPool = $providerPool;
     }
 
+    /**
+     * @param int $customerId
+     *
+     * @return array
+     */
     public function getCustomerProviders(int $customerId): array
     {
         $customer = $this->getCustomer($customerId);
 
         $customerProviders = [];
-        $allProviders = $this->providerPool->getProviders();
-        $customerProvidersAttribute = $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS);
-        foreach ($allProviders as $provider) {
-            if (!$provider->isEnabled())
-                 continue;
-
-            if ($customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)) {
+        $enabledProviders = $this->providerPool->getEnabledProviders();
+        foreach ($enabledProviders as $provider) {
+            if ($customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)) {
                 $selectedProvidersArray = [];
-                $selectedProviders = $customer->getCustomAttribute(CreateCustomerTwoFactorAuthAttributes::PROVIDERS)
+                $selectedProviders = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)
                                               ->getValue();
                 if ($selectedProviders) {
-                    $selectedProvidersArray = explode(',',$selectedProviders);
+                    $selectedProvidersArray = explode(',', $selectedProviders);
                 }
 
                 $customerProviders[] = $provider;
-            } elseif ($this->configProvider->getIsTfaForced()) {
+            } elseif ($this->configProvider->isTfaForced()) {
                 $customerProviders[] = $provider;
             }
         }
         return $customerProviders;
     }
 
+    /**
+     * @param $customerId
+     *
+     * @return CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     private function getCustomer($customerId): CustomerInterface
     {
         return $this->customerRepository->getById($customerId);

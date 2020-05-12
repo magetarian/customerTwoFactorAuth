@@ -1,0 +1,15 @@
+image: "sashas777/magento-php:7.3-cli"
+
+before_script:
+    - php -v
+    - composer -v
+
+stages:
+    - build
+    - test
+
+install:
+    stage: build
+    script:
+        - composer install
+        - ls -al
