@@ -27,6 +27,12 @@
     "require-dev": {
         "phpunit/phpunit": "*"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    ],
     "autoload": {
         "files": [ "registration.php" ],
         "psr-4": {
