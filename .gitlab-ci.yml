@@ -11,6 +11,6 @@ stages:
 install:
     stage: build
     script:
-        - echo $COMPOSER_USER
+        - composer config --global http-basic.repo.magento.com $COMPOSER_USER $COMPOSER_PASSWORD
         - composer install
-        - ls -al 
+        - ls -al
