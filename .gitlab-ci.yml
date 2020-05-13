@@ -11,5 +11,6 @@ stages:
 install:
     stage: build
     script:
+        - echo $COMPOSER_USER
         - composer install
         - ls -al
