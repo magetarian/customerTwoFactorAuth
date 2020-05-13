@@ -13,4 +13,4 @@ install:
     script:
         - echo $COMPOSER_USER
         - composer install
-        - ls -al
+        - ls -al 
