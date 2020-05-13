@@ -8,9 +8,19 @@ stages:
     - build
     - test
 
+cache:
+    paths:
+        - .composer-cache/
+
 install:
     stage: build
     script:
         - composer config --global http-basic.repo.magento.com $COMPOSER_USER $COMPOSER_PASSWORD
         - composer install --no-scripts --no-suggest --no-ansi --no-interaction
-        - ls -al
+        - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
+        - vendor/bin/phpcs
+
+test:
+    stage: test
+    script:
+        - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  -standard=Magento2 .
