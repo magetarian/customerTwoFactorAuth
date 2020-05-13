@@ -14,7 +14,3 @@ install:
         - composer config --global http-basic.repo.magento.com $COMPOSER_USER $COMPOSER_PASSWORD
         - composer install --no-scripts --no-suggest --no-ansi --no-interaction
         - ls -al
-test:
-    stage: test
-    script:
-#        - vendor/bin/phpunit --configuration phpunit.xml --coverage-text --colors=never
