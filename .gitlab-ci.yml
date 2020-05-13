@@ -18,9 +18,9 @@ install:
         - composer config --global http-basic.repo.magento.com $COMPOSER_USER $COMPOSER_PASSWORD
         - composer install --no-scripts --no-suggest --no-ansi --no-interaction
         - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
-        - vendor/bin/phpcs
 
 test:
     stage: test
     script:
-        - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  -standard=Magento2 .
+        - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  --standard=Magento2 .
+        - vendor/bin/phpmd . text vendor/magento/magento2-functional-testing-framework/dev/tests/static/Magento/CodeMessDetector/ruleset.xml --exclude vendor/,Test/
