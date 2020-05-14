@@ -18,4 +18,5 @@ install:
         - composer install --no-scripts --no-suggest --no-ansi --no-interaction --no-progress
         - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
         - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  --standard=Magento2 .
+        - vendor/bin/phpunit -c phpunit.xml --coverage-text --colors=never
         - vendor/bin/phpmd . text vendor/magento/magento2-functional-testing-framework/dev/tests/static/Magento/CodeMessDetector/ruleset.xml --exclude vendor/,Test/
