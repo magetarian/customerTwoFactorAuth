@@ -31,8 +31,10 @@
         }
     ],
     "require-dev": {
+        "phpunit/phpunit": "~6.5.0",
         "magento/magento-coding-standard": "^5.0",
-        "thesgroup/magento2-testing-framework": "dev-master"
+        "thesgroup/magento2-testing-framework": "dev-master",
+        "phpmd/phpmd": "@stable"
     },
     "autoload": {
         "files": [ "registration.php" ],
