@@ -1,22 +1,37 @@
 image: "sashas777/magento-php:7.3-cli"
 
-before_script:
-    - php -v
-    - composer -v
-
 stages:
+    - build
     - test
 
 cache:
     paths:
         - ~/.composer/cache/
 
+cache:
+    key: $CI_COMMIT_SHA
+    paths:
+        - vendor/
+        - composer.lock
+
 install:
-    stage: test
+    stage: build
     script:
         - composer config --global http-basic.repo.magento.com $COMPOSER_USER $COMPOSER_PASSWORD
         - composer install --no-scripts --no-suggest --no-ansi --no-interaction --no-progress
         - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
+
+phpcs:
+    stage: test
+    script:
         - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  --standard=Magento2 .
+
+phpunit:
+    stage: test
+    script:
         - vendor/bin/phpunit -c phpunit.xml --coverage-text --colors=never
+
+phpmd:
+    stage: test
+    script:
         - vendor/bin/phpmd . text vendor/magento/magento2-functional-testing-framework/dev/tests/static/Magento/CodeMessDetector/ruleset.xml --exclude vendor/,Test/
