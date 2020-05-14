@@ -39,7 +39,7 @@ phpunit:
             - composer.lock
     script:
         - vendor/bin/phpunit -c vendor/thesgroup/magento2-testing-framework/unit/phpunit.xml --coverage-text --colors=never
-
+ 
 phpmd:
     stage: test
     cache:
