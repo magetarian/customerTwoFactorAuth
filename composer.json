@@ -1,6 +1,6 @@
 {
-    "name": "magetarian/module-customer-two-factor-auth",
-    "description": "2FA customer module for Magento 2",
+    "name": "magetarian/module-customer-tfa",
+    "description": "TFA customer module for Magento 2",
     "homepage": "https://github.com/magetarian/customerTwoFactorAuth",
     "type": "magento2-module",
     "version": "1.0.0",
