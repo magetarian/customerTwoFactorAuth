@@ -45,4 +45,5 @@ phpmd:
         paths:
             - vendor/
     script:
+        - docker-php-ext-enable xdebug
         - vendor/bin/phpmd . ansi vendor/thesgroup/magento2-testing-framework/static/phpmd/ruleset.xml --exclude vendor/,Test/
