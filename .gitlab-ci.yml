@@ -1,15 +1,49 @@
 image: "sashas777/magento-php:7.3-cli"
 
-before_script:
-    - php -v
-    - composer -v
-
 stages:
     - build
     - test
 
+cache:
+    paths:
+        - ~/.composer/cache/
+
 install:
     stage: build
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+            - composer.lock
     script:
-        - composer install
-        - ls -al
+        - composer config --global http-basic.repo.magento.com $COMPOSER_USER $COMPOSER_PASSWORD
+        - composer install --no-scripts --no-suggest --no-ansi --no-interaction --no-progress
+
+phpcs:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
+        - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  --standard=Magento2 .
+
+phpunit:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - docker-php-ext-enable xdebug
+        - vendor/bin/phpunit-tests
+
+phpmd:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - vendor/bin/phpmd . ansi vendor/thesgroup/magento2-testing-framework/static/phpmd/ruleset.xml --exclude vendor/,Test/

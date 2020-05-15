@@ -8,6 +8,8 @@
     <module name="Magetarian_CustomerTwoFactorAuth">
         <sequence>
             <module name="MSP_TwoFactorAuth"/>
+            <module name="Magento_Customer"/>
+            <module name="Magento_Checkout"/>
         </sequence>
     </module>
 </config>
