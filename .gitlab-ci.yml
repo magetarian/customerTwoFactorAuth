@@ -18,7 +18,6 @@ install:
     script:
         - composer config --global http-basic.repo.magento.com $COMPOSER_USER $COMPOSER_PASSWORD
         - composer install --no-scripts --no-suggest --no-ansi --no-interaction --no-progress
-        - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
 
 phpcs:
     stage: test
@@ -26,8 +25,8 @@ phpcs:
         key: $CI_COMMIT_SHA
         paths:
             - vendor/
-            - composer.lock
     script:
+        - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
         - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  --standard=Magento2 .
 
 phpunit:
@@ -36,16 +35,14 @@ phpunit:
         key: $CI_COMMIT_SHA
         paths:
             - vendor/
-            - composer.lock
     script:
-        - vendor/bin/phpunit -c vendor/thesgroup/magento2-testing-framework/unit/phpunit.xml --coverage-text --colors=never
- 
+        - vendor/bin/phpunit-tests
+
 phpmd:
     stage: test
     cache:
         key: $CI_COMMIT_SHA
         paths:
             - vendor/
-            - composer.lock
     script:
-        - vendor/bin/phpmd . text vendor/thesgroup/magento2-testing-framework/static/phpmd/ruleset.xml --exclude vendor/,Test/
+        - vendor/bin/phpmd . ansi vendor/thesgroup/magento2-testing-framework/static/phpmd/ruleset.xml --exclude vendor/,Test/

@@ -81,6 +81,8 @@ class LoginPlugin
     }
 
     /**
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @param Login $subject
      * @param callable $proceed
      *
