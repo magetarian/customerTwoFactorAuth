@@ -13,7 +13,7 @@ The module adds ability for customers login using 2FA.
 Run the following command at Magento 2 root folder:
 
 ```
-composer require magetarian/module-customer-two-factor-auth
+composer require magetarian/module-customer-tfa
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
 php bin/magento setup:static-content:deploy
@@ -24,7 +24,7 @@ php bin/magento setup:static-content:deploy
 Run the following command at Magento 2 root folder:
 
 ```
-composer remove magetarian/module-customer-two-factor-auth
+composer remove magetarian/module-customer-tfa
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
 php bin/magento setup:static-content:deploy
