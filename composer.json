@@ -15,6 +15,7 @@
         "magento/framework": "102.0.*",
         "magento/module-customer": "102.0.*",
         "magento/module-checkout": "100.3.*",
+        "magento/framework-message-queue": "100.3.*",
         "msp/twofactorauth": "3.1.*"
     },
     "license": [
