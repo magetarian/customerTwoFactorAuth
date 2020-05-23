@@ -26,8 +26,25 @@ phpcs:
         paths:
             - vendor/
     script:
-        - vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/
-        - vendor/bin/phpcs --ignore=*/vendor/*,*/Test/*  --standard=Magento2 .
+        - vendor/bin/phpcs-tests
+
+eslint:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - vendor/bin/js-tests
+
+phpmd:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - vendor/bin/phpmd-tests
 
 phpunit:
     stage: test
@@ -38,12 +55,3 @@ phpunit:
     script:
         - docker-php-ext-enable xdebug
         - vendor/bin/phpunit-tests
-
-phpmd:
-    stage: test
-    cache:
-        key: $CI_COMMIT_SHA
-        paths:
-            - vendor/
-    script:
-        - vendor/bin/phpmd . ansi vendor/thesgroup/magento2-testing-framework/static/phpmd/ruleset.xml --exclude vendor/,Test/

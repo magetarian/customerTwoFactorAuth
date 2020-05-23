@@ -19,7 +19,7 @@
         "msp/twofactorauth": "3.1.*"
     },
     "license": [
-        "GPL-3.0"
+        "GPL-3.0-only"
     ],
     "authors": [
         {
