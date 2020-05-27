@@ -1,0 +1,88 @@
+<!--
+  ~ @author     Sashas IT Support <support@sashas.org>
+  ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
+  ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+  -->
+<div class="field tfa-login" data-bind="visible: isButtonVisible()">
+    <div class="primary">
+        <button type="button" data-bind="css: 'tfa-login-'+getCode(),click: activate.bind($data)" class="action primary" data-code="getCode()">
+            <span data-bind="i18n: 'Login using '+getName()"></span>
+        </button>
+    </div>
+</div>
+<!-- ko ifnot: (isConfigured())-->
+<div class="tfa-auth authy-configure" data-bind="visible: isActive()">
+    <fieldset class="register fieldset" visible='currentStep() === "register"'>
+        <p data-bind='i18n: "Please register yourself to Authy."'></p>
+        <div class="field field-tfa-phone-prefix">
+            <label for="tfa_authy_country" class="label">
+                <span data-bind='i18n: "Country"'></span>
+            </label>
+            <div class="control">
+                <select
+                    id="tfa_authy_country"
+                    class="select required-entry"
+                    data-bind="value: country, foreach: getCountries()">
+                    <option data-bind="value: dial_code, text: name"></option>
+                </select>
+            </div>
+        </div>
+        <div class="field field-tfa-phone required">
+            <label for="tfa_authy_phone" class="label">
+                <span data-bind='i18n: "Phone number"'></span>
+            </label>
+            <div class="control">
+                <input
+                    data-bind="value: phone, mageInit: {'mage/trim-input':{}}"
+                    id="tfa_authy_phone"
+                    class="input-text required-entry validate-greater-than-zero"
+                    type="text"
+                    data-validate="{required:true}"
+                    autofocus
+                    placeholder="Phone number"/>
+            </div>
+        </div>
+        <div class="field field-tfa-method">
+            <label for="tfa_authy_phone_action" class="label">
+                <span data-bind='i18n: "Verification method"'></span>
+            </label>
+            <div class="control">
+                <select
+                    data-bind='value: method'
+                    id="tfa_authy_phone_action"
+                    class="select required-entry">
+                    <option value="sms" selected data-bind='i18n: "Send me an SMS"'></option>
+                    <option value="call" data-bind='i18n: "Call me"'></option>
+                </select>
+            </div>
+        </div>
+        <div class="primary">
+            <button type="button" enable="allowRegisterAction()" click="doRegister.bind($data, $element)" class="action primary" name="authy-register" id="authy-register">
+                <span data-bind="i18n: 'Continue'"></span>
+            </button>
+        </div>
+    </fieldset>
+    <fieldset  class="verify fieldset" visible='currentStep() === "verify"'>
+        <div class="field field-tfa-verify">
+            <label for="tfa_authy_verify" class="label">
+                <span data-bind='i18n: "Verification code"'></span>
+            </label>
+            <div class="control">
+                <input
+                    data-bind="value: verifyCode, mageInit: {'mage/trim-input':{}}"
+                    id="tfa_authy_verify"
+                    class="input-text required-entry"
+                    type="text"
+                    autofocus
+                    placeholder="Verification code"/>
+            </div>
+        </div>
+    </fieldset>
+</div>
+<!-- /ko -->
+
+<div class="primary" data-bind='visible: isActive() && currentStep() === "authentication"'>
+    <button type="submit" class="action primary" name="tfa-login" id="tfa-google">
+        <span data-bind="i18n: 'Confirm'"></span>
+    </button>
+</div>

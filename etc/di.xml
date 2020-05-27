@@ -17,7 +17,7 @@
                 <!-- Parameter "name" must be the same as defined in virtualType "code" parameter -->
                 <item name="google" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Google</item>
                 <item name="duo_security" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\DuoSecurity</item>
-                <item name="authy" xsi:type="object">MSP\TwoFactorAuth\Model\Provider\Authy</item>
+                <item name="authy" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Authy</item>
             </argument>
         </arguments>
     </type>
@@ -33,6 +33,13 @@
             <argument name="engine" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\DuoSecurity</argument>
             <argument name="code" xsi:type="const">\MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity::CODE</argument>
             <argument name="name" xsi:type="string">Duo Security</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magetarian\CustomerTwoFactorAuth\Model\Provider\Authy" type="Magetarian\CustomerTwoFactorAuth\Model\Provider">
+        <arguments>
+            <argument name="engine" xsi:type="object">Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Authy</argument>
+            <argument name="code" xsi:type="const">\MSP\TwoFactorAuth\Model\Provider\Engine\Authy::CODE</argument>
+            <argument name="name" xsi:type="string">Authy</argument>
         </arguments>
     </virtualType>
     <type name="Magento\Customer\Controller\Account\LoginPost">
