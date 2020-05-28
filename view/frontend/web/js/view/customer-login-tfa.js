@@ -28,7 +28,6 @@ define([
             this._super();
             let self = this;
             this.loginButton = $(this.loginFormSelector).find(this.buttonSelector);
-
             $(this.loginFormSelector).on('submit', function(e) {
                 let isValid = $(self.loginFormSelector).valid();
                 if (isValid) {
@@ -53,6 +52,7 @@ define([
                     });
                 }
             });
+            return this;
         }
     });
 });

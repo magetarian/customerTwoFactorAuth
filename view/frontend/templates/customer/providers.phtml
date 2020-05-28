@@ -8,6 +8,9 @@
 /** @var \Magento\Framework\View\Element\Template $block */
 ?>
 <div id="tfa-customer-login" data-bind="scope:'tfa-login'" class="tfa-container">
+    <!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
     <!-- ko template: getTemplate() --><!-- /ko -->
 </div>
 <script type="text/x-magento-init">

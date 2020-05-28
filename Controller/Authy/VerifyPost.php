@@ -20,7 +20,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Authy;
 
-class RegisterPost extends Action implements HttpPostActionInterface
+class VerifyPost extends Action implements HttpPostActionInterface
 {
     /**
      * @var AccountManagementInterface
@@ -54,22 +54,22 @@ class RegisterPost extends Action implements HttpPostActionInterface
     {
         $response = [
             'errors' => false,
-            'data' => [],
+            'data' => ['oneTouchToken' => false, 'oneTouchStatus' => false],
             'message' => '',
         ];
         $httpBadRequestCode = 400;
         /** @var \Magento\Framework\Controller\Result\Raw $resultRaw */
         $resultRaw = $this->resultFactory->create(ResultFactory::TYPE_RAW);
 
-        $registrationData = [];
+        $authData = [];
         try {
-            $registrationData = $this->json->unserialize($this->getRequest()->getContent());
+            $authData = $this->json->unserialize($this->getRequest()->getContent());
         } catch (\InvalidArgumentException $e) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
-        if (!isset($registrationData['form_key']) ||
-            !Security::compareStrings($registrationData['form_key'], $this->formKey->getFormKey()) ||
-            !$registrationData ||
+        if (!isset($authData['form_key']) ||
+            !Security::compareStrings($authData['form_key'], $this->formKey->getFormKey()) ||
+            !$authData ||
             $this->getRequest()->getMethod() !== 'POST' ||
             !$this->getRequest()->isXmlHttpRequest()) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
@@ -77,17 +77,18 @@ class RegisterPost extends Action implements HttpPostActionInterface
 
         try {
             $customer = $this->customerAccountManagement->authenticate(
-                $registrationData['username'],
-                $registrationData['password']
-            );
-            $result = $this->authy->requestEnroll(
-                $customer,
-                $registrationData['country'],
-                $registrationData['phone'],
-                $registrationData['method']
+                $authData['username'],
+                $authData['password']
             );
 
-            $response['data']['secondsToExpire'] = $result['seconds_to_expire'];
+            $result = $this->authy->requestToken(
+                $customer,
+                $authData['method'],
+                (isset($authData['code']) ? $authData['code'] : null)
+            );
+            $response['data']['oneTouchCode'] = (isset($result['code']) ? $result['code'] : false);
+            $response['data']['oneTouchStatus'] = (isset($result['status']) ? $result['status'] : false);
+
         } catch (LocalizedException $e) {
             $response['errors'] = true;
             $response['message'] = $e->getMessage();

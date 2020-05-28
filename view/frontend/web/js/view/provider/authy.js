@@ -9,12 +9,14 @@ define([
     'mage/url',
     'ko',
     'Magetarian_CustomerTwoFactorAuth/js/action/authy/register',
+    'Magetarian_CustomerTwoFactorAuth/js/action/authy/verify',
     'Magetarian_CustomerTwoFactorAuth/js/view/provider/default'
 ], function (
     $,
     urlBuilder,
     ko,
     registerAction,
+    verifyAction,
     Component
 ) {
     'use strict';
@@ -23,21 +25,68 @@ define([
         country: ko.observable(''),
         phone: ko.observable(''),
         method: ko.observable(''),
-        verifyCode: ko.observable(''),
         currentStep: ko.observable(''),
+        secondsToExpire: ko.observable(''),
+        timer: null,
+        authButton: null,
 
         defaults: {
-            template: 'Magetarian_CustomerTwoFactorAuth/provider/authy',
-            phoneSelector: '#tfa_authy_phone'
+            template: 'Magetarian_CustomerTwoFactorAuth/provider/authy'
         },
 
         /** @inheritdoc */
         initialize: function () {
             this._super();
+            let self = this;
             if (!this.isConfigured()) {
                 this.currentStep('register');
             } else {
                 this.currentStep('authentication');
+            }
+            registerAction.registerAuthyRegisterCallback(function(registerData, response) {
+                self.currentStep('verify');
+                self.setTimer(response.data.secondsToExpire);
+            });
+            verifyAction.registerAuthyVerifyCallback(function(verifyData, response) {
+                if (verifyData.method !== 'onetouch') {
+                    self.currentStep('verify');
+                } else {
+                    self.validateOneTouch(response.data.oneTouchCode, response.data.oneTouchStatus);
+                }
+            });
+            return this;
+        },
+
+        /** @inheritdoc */
+        isConfigured: function () {
+            return this.configured() && this.additionalConfig.phoneConfirmed;
+        },
+
+        validateOneTouch: function (code, status) {
+            if (status !== 'approved') {
+                let verifyData = this.collectFormData(this.authButton);
+                verifyData['method'] = this.method();
+                verifyData['code'] = code;
+                $('body').trigger('processStart');
+                verifyAction(verifyData).always(function () {
+                    $('body').trigger('processStop');
+                });
+            } else {
+                // $(this.authButton).closest("form").find(this)
+                // @todo add tfa code -> approval code
+                // hide while in progress
+                //submit form
+            }
+        },
+
+        setTimer: function (sec) {
+            let self = this;
+            if (!this.timer) {
+                this.secondsToExpire(sec);
+                this.timer = setInterval(function() {
+                    var newSecondsToExpire = self.secondsToExpire() - 1;
+                    self.secondsToExpire(newSecondsToExpire <= 0 ? clearInterval(self.timer) : newSecondsToExpire);
+                }, 1000);
             }
         },
 
@@ -48,13 +97,42 @@ define([
             return this.additionalConfig.countryList;
         },
 
-        doRegister: function (element) {
+        collectFormData: function (element) {
+            let formData = {},
+                formDataArray = $(element).closest("form").serializeArray();
+            formDataArray.forEach(function (entry) {
+                let regexMatches = entry.name.match(/\[(.*?)\]/);
+                if (regexMatches && regexMatches.length>1) {
+                    formData[regexMatches[1]] = entry.value;
+                } else {
+                    formData[entry.name] = entry.value;
+                }
+            });
+            return formData;
+        },
 
-           console.log('asd');
-           console.log(element);
-            var loginData = {};
+        doRegister: function (element) {
+            let registerData = this.collectFormData(element);
+            registerData['country'] = this.country();
+            registerData['phone'] = this.phone();
+            registerData['method'] = this.method();
             $('body').trigger('processStart');
-            registerAction(loginData).always(function () {
+            registerAction(registerData).always(function () {
+                $('body').trigger('processStop');
+            });
+        },
+
+        AuthClick: function (element, method) {
+            this.method(method);
+            this.authButton = element;
+            if (this.method() === 'token') {
+                this.currentStep('verify');
+                return this;
+            }
+            let verifyData = this.collectFormData(element);
+            verifyData['method'] = this.method();
+            $('body').trigger('processStart');
+            verifyAction(verifyData).always(function () {
                 $('body').trigger('processStop');
             });
         },

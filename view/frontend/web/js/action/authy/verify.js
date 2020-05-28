@@ -15,29 +15,29 @@ define([
     var callbacks = [],
 
         /**
-         * @param {Object} registerData
+         * @param {Object} verifyData
          * @param {*} isGlobal
          * @param {Object} messageContainer
          */
-        action = function (registerData, isGlobal, messageContainer) {
+        action = function (verifyData, isGlobal, messageContainer) {
             messageContainer = messageContainer || globalMessageList;
-            registerData['form_key'] = $.mage.cookies.get('form_key');
+            verifyData['form_key'] = $.mage.cookies.get('form_key');
 
             return storage.post(
-                'tfa/authy/registerpost',
-                JSON.stringify(registerData),
+                'tfa/authy/verifypost',
+                JSON.stringify(verifyData),
                 isGlobal
             ).done(function (response) {
                 if (response.errors) {
                     messageContainer.addErrorMessage(response);
                 } else {
                     callbacks.forEach(function (callback) {
-                        callback(registerData, response);
+                        callback(verifyData, response);
                     });
                 }
             }).fail(function () {
                 messageContainer.addErrorMessage({
-                    'message': $t('Could not register at Authy. Please try again later')
+                    'message': $t('Could not authenticate using Authy. Please try again later')
                 });
             });
         };
@@ -45,7 +45,7 @@ define([
     /**
      * @param {Function} callback
      */
-    action.registerAuthyRegisterCallback = function (callback) {
+    action.registerAuthyVerifyCallback = function (callback) {
         callbacks.push(callback);
     };
 

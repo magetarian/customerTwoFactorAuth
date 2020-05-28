@@ -15,7 +15,7 @@ use Magento\Framework\Encryption\Helper\Security;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Json\Helper\Data;
+use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Customer\Model\Session;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
 use Magento\Framework\Data\Form\FormKey;
@@ -37,9 +37,9 @@ class Providers extends Action implements HttpPostActionInterface
     private $customerSession;
 
     /**
-     * @var Data
+     * @var Json
      */
-    private $jsonHelper;
+    private $json;
 
     /**
      * @var CustomerProvidersManagerInterface
@@ -58,7 +58,7 @@ class Providers extends Action implements HttpPostActionInterface
      * @param AccountManagementInterface $customerAccountManagement
      * @param FormKey $formKey
      * @param Session $customerSession
-     * @param Data $jsonHelper
+     * @param Json $json
      * @param CustomerProvidersManagerInterface $customerProvidersManager
      */
     public function __construct(
@@ -66,13 +66,13 @@ class Providers extends Action implements HttpPostActionInterface
         AccountManagementInterface $customerAccountManagement,
         FormKey $formKey,
         Session $customerSession,
-        Data $jsonHelper,
+        Json $json,
         CustomerProvidersManagerInterface $customerProvidersManager
     ) {
         parent::__construct($context);
         $this->customerAccountManagement = $customerAccountManagement;
         $this->customerSession = $customerSession;
-        $this->jsonHelper = $jsonHelper;
+        $this->json = $json;
         $this->customerProvidersManager = $customerProvidersManager;
         $this->formKey = $formKey;
     }
@@ -96,7 +96,7 @@ class Providers extends Action implements HttpPostActionInterface
 
         $loginData = [];
         try {
-            $loginData = $this->jsonHelper->jsonDecode($this->getRequest()->getContent());
+            $loginData = $this->json->unserialize($this->getRequest()->getContent());
         } catch (\Zend_Json_Exception $e) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }

@@ -19,7 +19,6 @@ use MSP\TwoFactorAuth\Model\Provider\Engine\Authy as MspAuthy;
 use MSP\TwoFactorAuth\Model\Provider\Engine\Authy\Service as MspAuthyService;
 use Magento\Framework\HTTP\Client\CurlFactory;
 use Magento\Framework\Serialize\Serializer\Json;
-use MSP\TwoFactorAuth\Model\Provider\Engine\Authy\OneTouch as MspOneTouch;
 use MSP\TwoFactorAuth\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
 
 class Authy implements EngineInterface
@@ -65,23 +64,39 @@ class Authy implements EngineInterface
         $this->countryCollectionFactory = $countryCollectionFactory;
     }
 
-    public function verify(CustomerInterface $customer, DataObject $request)
+    public function verify(CustomerInterface $customer, DataObject $request): bool
     {
         $code = $request->getData('tfa_code');
         if (!preg_match('/^\w+$/', $code)) {
             throw new LocalizedException(__('Invalid code format'));
         }
+        $providerInfo = $this->customerConfigManager->getProviderConfig((int) $customer->getId(),$this->getCode());
+        try {
+            if (isset($providerInfo['phone_confirmed']) && $providerInfo['phone_confirmed']) {
+                $this->authenticate($customer, $providerInfo, $code);
+            } else {
+                $this->verifyAndEnroll($customer, $providerInfo, $code);
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
 
-        $providerInfo = $this->customerConfigManager->getProviderConfig($customer->getId(),$this->getCode());
+        return true;
+    }
+
+    private function authenticate(CustomerInterface $customer, array $providerInfo, string $code)
+    {
         if (!isset($providerInfo[static::CONFIG_CUSTOMER_KEY])) {
             throw new LocalizedException(__('Missing customer information'));
         }
+        if (isset($providerInfo['pending_approval'])) {
+            $this->verifyOneTouch($customer, $providerInfo);
+        } else {
+            $url = $this->getProtectedApiEndpoint('verify/' . $code . '/' . $providerInfo[static::CONFIG_CUSTOMER_KEY]);
+            $response = $this->makeApiRequest($url, [], 'GET');
+        }
 
-        $url = $this->getProtectedApiEndpoint('verify/' . $code . '/' . $providerInfo[static::CONFIG_CUSTOMER_KEY]);
-        //@todo try catch
-        $response = $this->makeApiRequest($url, [], 'GET');
 
-        return true;
     }
 
     /**
@@ -96,79 +111,68 @@ class Authy implements EngineInterface
             !!$this->getApiKey();
     }
 
-    private function requestToken(CustomerInterface $customer, $via)
+    public function requestToken(CustomerInterface $customer, string $method, ?string $approvalCode)
     {
-        if (!in_array($via, ['call', 'sms'])) {
-            throw new LocalizedException(__('Unsupported via method'));
+        if (!in_array($method, ['call', 'sms', 'onetouch'])) {
+            throw new LocalizedException(__('Unsupported method'));
         }
 
-        $providerInfo = $this->customerConfigManager->getProviderConfig($customer->getId(), $this->getCode());
+        $providerInfo = $this->customerConfigManager->getProviderConfig((int) $customer->getId(), $this->getCode());
         if (!isset($providerInfo[static::CONFIG_CUSTOMER_KEY])) {
             throw new LocalizedException(__('Missing customer information'));
         }
 
-        $url = $this->getProtectedApiEndpoint('' . $via . '/' . $providerInfo[static::CONFIG_CUSTOMER_KEY]) . '?force=true';
-        //@todo try catch
-        $response = $this->makeApiRequest($url, [], 'GET');
-
-        return true;
+        if ($method == 'onetouch') {
+            $response = $this->requestOneTouch($customer, $providerInfo, $approvalCode);
+        } else {
+            $url = $this->getProtectedApiEndpoint('' . $method . '/' . $providerInfo[static::CONFIG_CUSTOMER_KEY]);
+            $response = $this->makeApiRequest($url. '?force=true', [], 'GET');
+        }
+        return $response;
     }
 
-    public function enroll(CustomerInterface $customer)
+    private function verifyAndEnroll(CustomerInterface $customer, ?array $providerInfo, string $code)
     {
-        $providerInfo = $this->customerConfigManager->getProviderConfig($customer->getId(), $this->getCode());
         if (!isset($providerInfo['country_code'])) {
-            throw new LocalizedException(__('Missing phone information'));
+            throw new LocalizedException(__('Missing country information'));
         }
 
-        $url = $this->getProtectedApiEndpoint('users/new');
+        $checkUrl = $this->getProtectedApiEndpoint('phones/verification/check');
+        $enrollUrl = $this->getProtectedApiEndpoint('users/new');
+
+        $data =  [
+            'country_code' => $providerInfo['country_code'],
+            'phone_number' => $providerInfo['phone_number'],
+            'verification_code' => $code,
+        ];
+        $response = $this->makeApiRequest($checkUrl, $data, 'GET');
 
         $data = [
             'user[email]' => $customer->getEmail(),
             'user[cellphone]' => $providerInfo['phone_number'],
             'user[country_code]' => $providerInfo['country_code'],
         ];
-
-        $response = $this->makeApiRequest($url, $data);
+        $response = $this->makeApiRequest($enrollUrl, $data);
 
         $providerInfo[static::CONFIG_CUSTOMER_KEY] =  $response['user']['id'];
-        $this->customerConfigManager->setProviderConfig($customer->getId(), $this->getCode(), $providerInfo);
-
-        return true;
-    }
-
-    public function verifyEnroll(CustomerInterface $customer, DataObject $request)
-    {
-        $providerInfo = $this->customerConfigManager->getProviderConfig($customer->getId(), $this->getCode());
-        if (!isset($providerInfo['country_code'])) {
-            throw new LocalizedException(__('Missing verify request information'));
-        }
-
-        $url = $this->service->getProtectedApiEndpoint('phones/verification/check');
-        $data =  [
-            'country_code' => $providerInfo['country_code'],
-            'phone_number' => $providerInfo['phone_number'],
-            'verification_code' => $verificationCode,
-        ];
-        $response = $this->makeApiRequest($url, $data, 'GET');
-
         $providerInfo['phone_confirmed'] = true;
-        $this->customerConfigManager->setProviderConfig($customer->getId(), $this->getCode(), $providerInfo);
-
-        return true;
+        $this->customerConfigManager->setProviderConfig((int) $customer->getId(), $this->getCode(), $providerInfo);
     }
 
-    public function requestEnroll(CustomerInterface $customer, $country, $phoneNumber, $method, &$response)
-    {
-        $url = $this->service->getProtectedApiEndpoint('phones/verification/start');
+    public function requestEnroll(
+        CustomerInterface $customer,
+        string $country,
+        string $phoneNumber,
+        string $method
+    ): array {
+        $url = $this->getProtectedApiEndpoint('phones/verification/start');
         $data = [
             'via' => $method,
             'country_code' => $country,
             'phone_number' => $phoneNumber
         ];
         $response = $this->makeApiRequest($url, $data);
-
-        $this->customerConfigManager->setProviderConfig($customer->getId(), $this->getCode(), [
+        $this->customerConfigManager->setProviderConfig((int) $customer->getId(), $this->getCode(), [
             'country_code' => $country,
             'phone_number' => $phoneNumber,
             'carrier' => $response['carrier'],
@@ -182,73 +186,62 @@ class Authy implements EngineInterface
             ],
             'phone_confirmed' => false,
         ]);
-
-        return true;
+        return $response;
     }
 
-    public function requestOneTouch(CustomerInterface $customer)
+    private function requestOneTouch(CustomerInterface $customer, array $providerInfo, $approvalCode)
     {
-        $providerInfo = $this->customerConfigManager->getProviderConfig($customer->getId(), $this->getCode());
-        if (!isset($providerInfo[static::CONFIG_CUSTOMER_KEY])) {
-            throw new LocalizedException(__('Missing customer information'));
+        if ($approvalCode) {
+            return [
+                'code' => $approvalCode,
+                'status' => $this->validateOneTouch($customer, $providerInfo, $approvalCode)
+            ];
         }
-
-        $url = $this->getOneTouchApiEndpoint('users/' . $providerInfo[static::CONFIG_CUSTOMER_KEY] . '/approval_requests');
+        $url = $this->getOneTouchApiEndpoint(
+            'users/' . $providerInfo[static::CONFIG_CUSTOMER_KEY] . '/approval_requests'
+        );
 
         $data = [
-            'message' => $this->scopeConfig->getValue(MspOneTouch::XML_PATH_ONETOUCH_MESSAGE),
-//            'details[URL]' => $this->storeManager->getStore()->getBaseUrl(),
-            'details[User]' => $customer->getLastname().$customer->getLastname(),
+            'message' => __('Login request')->getText(),
+            'details[User]' => $customer->getLastname().' '.$customer->getLastname(),
             'details[Email]' => $customer->getEmail(),
             'seconds_to_expire' => 300,
         ];
         $response = $this->makeApiRequest($url, $data);
-        $providerInfo['pending_approval'] =  $response['approval_request']['uuid'];
-        $this->customerConfigManager->setProviderConfig($customer->getId(), $this->getCode(), $providerInfo);
-        return true;
+        return [
+            'code' => $response['approval_request']['uuid'],
+            'status' => $this->validateOneTouch($customer, $providerInfo, $response['approval_request']['uuid'])
+        ];
     }
 
-    public function verifyOneTouch(CustomerInterface $customer)
+    private function validateOneTouch(CustomerInterface $customer, array $providerInfo, string $approvalCode): string
     {
-        $providerInfo = $this->customerConfigManager->getProviderConfig($customer->getId(), $this->getCode());
-        if (!isset($providerInfo[static::CONFIG_CUSTOMER_KEY])) {
-            throw new LocalizedException(__('Missing customer information'));
+        if (!preg_match('/^\w[\w\-]+\w$/', $approvalCode)) {
+            throw new LocalizedException(__('Invalid approval code'));
+        }
+        $url = $this->getOneTouchApiEndpoint('approval_requests/' . $approvalCode);
+        $response = $this->makeApiRequest($url, [], 'GET');
+        $status = $response['approval_request']['status'];
+        if ($status == 'approved' && !isset($providerInfo['pending_approval'])) {
+            $providerInfo['pending_approval'] =  $approvalCode;
+            $this->customerConfigManager->setProviderConfig((int) $customer->getId(), $this->getCode(), $providerInfo);
         }
 
+        return $status;
+    }
+
+    private function verifyOneTouch(CustomerInterface $customer, array $providerInfo)
+    {
         if (!isset($providerInfo['pending_approval'])) {
             throw new LocalizedException(__('No approval requests for this customer'));
         }
 
         $approvalCode = $providerInfo['pending_approval'];
-
-        if (!preg_match('/^\w[\w\-]+\w$/', $approvalCode)) {
-            throw new LocalizedException(__('Invalid approval code'));
+        $status = $this->validateOneTouch($customer, $providerInfo, $approvalCode);
+        if ($status == 'approved') {
+            unset($providerInfo['pending_approval']);
+            $this->customerConfigManager->setProviderConfig((int) $customer->getId(), $this->getCode(), $providerInfo);
         }
-
-        $url = $this->service->getOneTouchApiEndpoint('approval_requests/' . $approvalCode);
-
-        $times = 10;
-
-        for ($i=0; $i<$times; $i++) {
-
-            $response = $this->makeApiRequest($url, [], 'GET');
-
-            $status = $response['approval_request']['status'];
-            if ($status == 'pending') {
-                // @codingStandardsIgnoreStart
-                sleep(1); // I know... but it is the only option I have here
-                // @codingStandardsIgnoreEnd
-                continue;
-            }
-
-            if ($status == 'approved') {
-                return $status;
-            }
-
-            return $status;
-        }
-
-        return 'retry';
     }
 
     private function makeApiRequest(string $url, $data = [], $type = 'POST')
@@ -325,6 +318,8 @@ class Authy implements EngineInterface
      */
     public function getAdditionalConfig(CustomerInterface $customer): array
     {
-        return ['countryList' => $this->getCountriesList()];
+        $providerInfo = $this->customerConfigManager->getProviderConfig((int) $customer->getId(), $this->getCode());
+        $phoneConfirmed = (isset($providerInfo['phone_confirmed']) ? $providerInfo['phone_confirmed'] : false);
+        return ['countryList' => $this->getCountriesList(), 'phoneConfirmed' => $phoneConfirmed];
     }
 }

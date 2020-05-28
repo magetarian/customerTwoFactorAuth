@@ -42,6 +42,7 @@ define([
             loginAction.registerProvidersCallback(function(providersData, response) {
                 self.renderProviders(providersData, response);
             });
+            return this;
         },
 
         /**
