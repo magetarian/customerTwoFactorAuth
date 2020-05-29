@@ -14,8 +14,9 @@
         "php": "~7.2.0||~7.3.0",
         "magento/framework": "102.0.*",
         "magento/module-customer": "102.0.*",
-        "magento/module-checkout": "100.3.*",
-        "magento/framework-message-queue": "100.3.*",
+        "magento/module-backend": "101.0.*",
+        "magento/module-eav": "102.0.*",
+        "magento/module-store": "101.0.*",
         "msp/twofactorauth": "3.1.*"
     },
     "license": [
@@ -32,7 +33,7 @@
         }
     ],
     "require-dev": {
-        "thesgroup/magento2-testing-framework": "~1.0.0"
+        "thesgroup/magento2-testing-framework": "~1.0.2"
     },
     "autoload": {
         "files": [ "registration.php" ],

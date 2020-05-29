@@ -16,7 +16,14 @@
                 <container name="customer.tfa.additional.info" as="tfa_additional_info" label="TFA Additional Info" htmlTag="div" htmlClass="tfa-additional-info">
                     <block name="two.factor.auth.google" template="Magetarian_CustomerTwoFactorAuth::google/customer_config.phtml">
                         <arguments>
-                            <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Google\Customer</argument>
+                            <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Information</argument>
+                            <argument name="provider_code" xsi:type="const">\MSP\TwoFactorAuth\Model\Provider\Engine\Google::CODE</argument>
+                        </arguments>
+                    </block>
+                    <block name="two.factor.auth.authy" template="Magetarian_CustomerTwoFactorAuth::authy/customer_config.phtml">
+                        <arguments>
+                            <argument name="view_model" xsi:type="object">Magetarian\CustomerTwoFactorAuth\ViewModel\Customer\Information</argument>
+                            <argument name="provider_code" xsi:type="const">\MSP\TwoFactorAuth\Model\Provider\Engine\Authy::CODE</argument>
                         </arguments>
                     </block>
                 </container>

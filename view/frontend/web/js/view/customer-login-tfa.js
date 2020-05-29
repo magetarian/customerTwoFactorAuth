@@ -27,10 +27,11 @@ define([
         initialize: function () {
             this._super();
             let self = this;
-            this.loginButton = $(this.loginFormSelector).find(this.buttonSelector);
 
+            this.loginButton = $(this.loginFormSelector).find(this.buttonSelector);
             $(this.loginFormSelector).on('submit', function(e) {
                 let isValid = $(self.loginFormSelector).valid();
+
                 if (isValid) {
                     e.preventDefault();
                     $(self.loginButton).attr('disabled', true);
@@ -40,6 +41,7 @@ define([
 
                     formDataArray.forEach(function (entry) {
                         let regexMatches = entry.name.match(/\[(.*?)\]/);
+
                         if (regexMatches && regexMatches.length>1) {
                             loginData[regexMatches[1]] = entry.value;
                         } else {
@@ -53,6 +55,7 @@ define([
                     });
                 }
             });
+            return this;
         }
     });
 });

@@ -33,11 +33,13 @@ define([
         /** @inheritdoc */
         initialize: function () {
             this._super();
+            return this;
         },
 
         /**
          * @param {Object}
          */
+        // eslint-disable-next-line no-unused-vars
         activate: function (data) {
             this.isActive(true);
             selectedProvider(this.getCode());
@@ -54,7 +56,7 @@ define([
          * @return {String}
          */
         getName: function () {
-            return this.label
+            return this.label;
         },
 
         /**

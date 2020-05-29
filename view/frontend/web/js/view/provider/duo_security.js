@@ -25,6 +25,7 @@ define([
         },
 
         /** @inheritdoc */
+        // eslint-disable-next-line no-unused-vars
         activate: function (data) {
             duo.init(
                 {
@@ -66,6 +67,7 @@ define([
          */
         verifiedCallback: function (duoForm) {
             let loginForm = $(duoForm).parent().closest('form');
+
             $(duoForm).find('input').each(function () {
                 $(duoForm).parent().append(this);
                 $(duoForm).remove();

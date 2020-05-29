@@ -39,9 +39,11 @@ define([
         initialize: function () {
             this._super();
             let self = this;
+
             loginAction.registerProvidersCallback(function(providersData, response) {
                 self.renderProviders(providersData, response);
             });
+            return this;
         },
 
         /**
@@ -50,6 +52,7 @@ define([
          */
         renderProviders: function (providersData, response) {
             let self = this;
+
             $(this.loginFormSelector).find('.actions-toolbar').hide();
             $.each(response.providers, function(key, providerConfig) {
                 layout([self.createComponent(
