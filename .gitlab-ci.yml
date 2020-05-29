@@ -46,6 +46,15 @@ phpmd:
     script:
         - vendor/bin/phpmd-tests
 
+integrity:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - vendor/bin/integrity-tests
+
 phpunit:
     stage: test
     cache:

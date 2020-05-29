@@ -31,7 +31,8 @@ define([
         authButton: null,
 
         defaults: {
-            template: 'Magetarian_CustomerTwoFactorAuth/provider/authy'
+            template: 'Magetarian_CustomerTwoFactorAuth/provider/authy',
+            tfaCodeFieldSelector: '#tfa_code'
         },
 
         /** @inheritdoc */
@@ -62,6 +63,10 @@ define([
             return this.configured() && this.additionalConfig.phoneConfirmed;
         },
 
+        /**
+         * @param {String} code
+         * @param {String} status
+         */
         validateOneTouch: function (code, status) {
             if (status !== 'approved') {
                 let verifyData = this.collectFormData(this.authButton);
@@ -72,13 +77,15 @@ define([
                     $('body').trigger('processStop');
                 });
             } else {
-                // $(this.authButton).closest("form").find(this)
-                // @todo add tfa code -> approval code
-                // hide while in progress
-                //submit form
+                 $(this.authButton).closest("form").find(this.tfaCodeFieldSelector).val(code);
+                 $(this.authButton).hide();
+                 $(this.authButton).closest("form").submit();
             }
         },
 
+        /**
+         * @param {Number} sec
+         */
         setTimer: function (sec) {
             let self = this;
             if (!this.timer) {
@@ -97,6 +104,10 @@ define([
             return this.additionalConfig.countryList;
         },
 
+        /**
+         * @param {Object} element
+         * @return {Object}
+         */
         collectFormData: function (element) {
             let formData = {},
                 formDataArray = $(element).closest("form").serializeArray();
@@ -111,6 +122,9 @@ define([
             return formData;
         },
 
+        /**
+         * @param {Object} element
+         */
         doRegister: function (element) {
             let registerData = this.collectFormData(element);
             registerData['country'] = this.country();
@@ -122,6 +136,11 @@ define([
             });
         },
 
+        /**
+         * @param {Object} element
+         * @param {String} method
+         * @return {Object}
+         */
         AuthClick: function (element, method) {
             this.method(method);
             this.authButton = element;
@@ -142,7 +161,7 @@ define([
          */
         allowRegisterAction: function () {
             return this.phone().length>1 && !/[^\d]/.test(this.phone()) ? true : false;
-        },
+        }
 
     });
 });

@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace Magetarian\CustomerTwoFactorAuth\Controller\Google;
+namespace Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 
 use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Context;
@@ -21,7 +21,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 
 /**
  * Class ResetPost
- * Ability for a customer to reset Google Authenticator configuration
+ * Ability for a customer to reset tfa configuration
  */
 class ResetPost extends Customer implements HttpPostActionInterface
 {
@@ -57,7 +57,7 @@ class ResetPost extends Customer implements HttpPostActionInterface
         $validFormKey = $this->formKeyValidator->validate($this->getRequest());
         if ($validFormKey) {
             try {
-                $provider = $this->providerPool->getProviderByCode(MspGoogle::CODE);
+                $provider = $this->providerPool->getProviderByCode($this->getRequest()->getParam('provider'));
                 $provider->resetConfiguration((int) $this->customerSession->getCustomerId());
                 $this->messageManager->addSuccessMessage(__('The configuration has been reset.'));
             } catch (\Exception $e) {

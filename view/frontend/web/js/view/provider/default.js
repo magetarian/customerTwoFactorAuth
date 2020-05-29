@@ -55,7 +55,7 @@ define([
          * @return {String}
          */
         getName: function () {
-            return this.label
+            return this.label;
         },
 
         /**

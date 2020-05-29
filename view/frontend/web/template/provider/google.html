@@ -13,7 +13,7 @@
 <!-- ko ifnot: (isConfigured())-->
 <div class="field tfa-auth google-configure" data-bind="visible: isActive()">
     <img class="msp-tfa-google-qr" attr='src: getQrCodeUrl()' />
-    <p><textarea class="msp-tfa-google-secure-code" data-bind='i18n: getSecretCode()'></textarea></p>
+    <p><textarea readonly="true" class="msp-tfa-google-secure-code" data-bind='i18n: getSecretCode()'></textarea></p>
     <p data-bind='i18n: "Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm."'></p>
 </div>
 <!-- /ko -->

@@ -13,21 +13,12 @@ $viewModel = $block->getViewModel();
 $providerCode = $block->getProviderCode();
 ?>
 <?php if ($viewModel->isEnabled($providerCode)):?>
-    <?php $additionalConfig = $viewModel->getAdditionalConfig($providerCode);?>
-    <div class="block block-google">
+    <div class="block block-authy">
         <div class="block-title">
             <strong><?= $block->escapeHtml($viewModel->getProviderName($providerCode)) ?></strong>
         </div>
         <div class="block-content">
             <div class="box box-settings">
-                <div class="box-content">
-                    <img class="msp-tfa-google-qr" src="<?=$block->escapeHtmlAttr($block->getUrl('tfa/google/qr')) ?>"/>
-                    <p>
-
-                        <textarea readonly="true" class="msp-tfa-google-secure-code"><?= $block->escapeHtml($additionalConfig['secretCode']) ?></textarea>
-                    </p>
-                    <p><?= $block->escapeHtml(__('Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.')) ?></p>
-                </div>
                 <form
                     class="form"
                     action="<?= $block->escapeUrl($block->getUrl('tfa/customer/resetPost')) ?>"

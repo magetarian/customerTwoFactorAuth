@@ -20,6 +20,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Authy;
 
+/**
+ * Class RegisterPost
+ * Authy registration for first time usage
+ */
 class RegisterPost extends Action implements HttpPostActionInterface
 {
     /**
@@ -27,6 +31,9 @@ class RegisterPost extends Action implements HttpPostActionInterface
      */
     private $customerAccountManagement;
 
+    /**
+     * @var Json
+     */
     private $json;
 
     /**
@@ -34,8 +41,20 @@ class RegisterPost extends Action implements HttpPostActionInterface
      */
     private $formKey;
 
+    /**
+     * @var Authy
+     */
     private $authy;
 
+    /**
+     * RegisterPost constructor.
+     *
+     * @param Context $context
+     * @param AccountManagementInterface $customerAccountManagement
+     * @param FormKey $formKey
+     * @param Json $json
+     * @param Authy $authy
+     */
     public function __construct(
         Context $context,
         AccountManagementInterface $customerAccountManagement,
@@ -50,6 +69,10 @@ class RegisterPost extends Action implements HttpPostActionInterface
         $this->authy = $authy;
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
+     * @throws LocalizedException
+     */
     public function execute()
     {
         $response = [
@@ -74,7 +97,6 @@ class RegisterPost extends Action implements HttpPostActionInterface
             !$this->getRequest()->isXmlHttpRequest()) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
-
         try {
             $customer = $this->customerAccountManagement->authenticate(
                 $registrationData['username'],
@@ -86,7 +108,6 @@ class RegisterPost extends Action implements HttpPostActionInterface
                 $registrationData['phone'],
                 $registrationData['method']
             );
-
             $response['data']['secondsToExpire'] = $result['seconds_to_expire'];
         } catch (LocalizedException $e) {
             $response['errors'] = true;
