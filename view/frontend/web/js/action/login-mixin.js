@@ -37,15 +37,14 @@ define([
             ).done(function (response) {
                 if (response.errors) {
                     messageContainer.addErrorMessage(response);
-                } else {
-                    if (Object.keys(response.providers).length > 0) {
+                } else if (Object.keys(response.providers).length > 0) {
+                        // eslint-disable-next-line  max-nested-callbacks
                         callbacks.forEach(function (callback) {
                             callback(loginData, response);
                         });
                     } else {
                         return originalAction(loginData, redirectUrl, isGlobal, messageContainer);
                     }
-                }
             }).fail(function () {
                 messageContainer.addErrorMessage({
                     'message': $t('Could not get list of providers. Please try again later')
@@ -54,6 +53,7 @@ define([
         });
 
         wrappedFunction.registerLoginCallback = loginAction.registerLoginCallback;
+
         /**
          * @param {Function} callback
          */

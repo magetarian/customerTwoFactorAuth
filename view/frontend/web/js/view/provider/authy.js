@@ -39,6 +39,7 @@ define([
         initialize: function () {
             this._super();
             let self = this;
+
             if (!this.isConfigured()) {
                 this.currentStep('register');
             } else {
@@ -70,6 +71,7 @@ define([
         validateOneTouch: function (code, status) {
             if (status !== 'approved') {
                 let verifyData = this.collectFormData(this.authButton);
+
                 verifyData['method'] = this.method();
                 verifyData['code'] = code;
                 $('body').trigger('processStart');
@@ -88,10 +90,12 @@ define([
          */
         setTimer: function (sec) {
             let self = this;
+
             if (!this.timer) {
                 this.secondsToExpire(sec);
                 this.timer = setInterval(function() {
                     var newSecondsToExpire = self.secondsToExpire() - 1;
+
                     self.secondsToExpire(newSecondsToExpire <= 0 ? clearInterval(self.timer) : newSecondsToExpire);
                 }, 1000);
             }
@@ -111,8 +115,10 @@ define([
         collectFormData: function (element) {
             let formData = {},
                 formDataArray = $(element).closest("form").serializeArray();
+
             formDataArray.forEach(function (entry) {
                 let regexMatches = entry.name.match(/\[(.*?)\]/);
+
                 if (regexMatches && regexMatches.length>1) {
                     formData[regexMatches[1]] = entry.value;
                 } else {
@@ -127,6 +133,7 @@ define([
          */
         doRegister: function (element) {
             let registerData = this.collectFormData(element);
+
             registerData['country'] = this.country();
             registerData['phone'] = this.phone();
             registerData['method'] = this.method();
@@ -149,6 +156,7 @@ define([
                 return this;
             }
             let verifyData = this.collectFormData(element);
+
             verifyData['method'] = this.method();
             $('body').trigger('processStart');
             verifyAction(verifyData).always(function () {

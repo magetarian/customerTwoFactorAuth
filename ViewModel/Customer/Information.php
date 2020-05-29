@@ -74,14 +74,6 @@ class Information implements ArgumentInterface
     }
 
     /**
-     * @return int
-     */
-    private function getCustomerId(): int
-    {
-        return (int) $this->customerSession->getCustomerId();
-    }
-
-    /**
      * @param string $providerCode
      *
      * @return ProviderInterface

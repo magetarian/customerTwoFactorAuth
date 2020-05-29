@@ -39,6 +39,7 @@ define([
         /**
          * @param {Object}
          */
+        // eslint-disable-next-line no-unused-vars
         activate: function (data) {
             this.isActive(true);
             selectedProvider(this.getCode());
