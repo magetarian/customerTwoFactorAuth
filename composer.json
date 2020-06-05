@@ -3,7 +3,6 @@
     "description": "TFA customer module for Magento 2",
     "homepage": "https://github.com/magetarian/customerTwoFactorAuth",
     "type": "magento2-module",
-    "version": "1.0.0",
     "repositories": [
         {
             "type": "composer",

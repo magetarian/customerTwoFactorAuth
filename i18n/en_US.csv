@@ -1,9 +1,40 @@
-"2FA Configuration","2FA Configuration"
-"You saved the 2FA providers.","You saved the 2FA providers."
-"We can't save the 2FA providers.","We can't save the 2FA providers."
-"Two Factor Authentication Providers","Two Factor Authentication Providers"
+"Reset TFA","Reset TFA"
+"The customer tfa configration has been reset.","The customer tfa configration has been reset."
+"Something went wrong while resetting customer tfa configuration.","Something went wrong while resetting customer tfa configuration."
+"Invalid login or password.","Invalid login or password."
+"Two Factor Authentication","Two Factor Authentication"
+"You saved the TFA providers.","You saved the TFA providers."
+"We can't save the TFA providers.","We can't save the TFA providers."
+"The configuration has been reset.","The configuration has been reset."
+"We can't reset the configuration.","We can't reset the configuration."
+"Invalid code format","Invalid code format"
+"Missing customer information","Missing customer information"
+"Unsupported method","Unsupported method"
+"Missing country information","Missing country information"
+"Login request","Login request"
+"Invalid approval code","Invalid approval code"
+"No approval requests for this customer","No approval requests for this customer"
+"Invalid authy webservice response","Invalid authy webservice response"
+message,message
+"Unknown provider %1","Unknown provider %1"
+"Login using two factor authentication, please.","Login using two factor authentication, please."
+"The two factor authentication failed. Please try again.","The two factor authentication failed. Please try again."
+"Login successful.","Login successful."
+Reset,Reset
 None,None
 Save,Save
-"There are no two factor authorization providers configured.","There are no two factor authorization providers configured."
-"Enable Two Factor Auth for Customers","Enable Two Factor Auth for Customers"
-"Force providers","Force providers"
+"There are no two factor authentication providers configured.","There are no two factor authentication providers configured."
+"Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.","Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm."
+"Login using ","Login using "
+Continue,Continue
+Confirm,Confirm
+"Could not register at Authy. Please try again later","Could not register at Authy. Please try again later"
+"Could not authenticate using Authy. Please try again later","Could not authenticate using Authy. Please try again later"
+"Could not get list of providers. Please try again later","Could not get list of providers. Please try again later"
+Customers,Customers
+"All Customers","All Customers"
+Actions,Actions
+"Reset Customer TFA","Reset Customer TFA"
+"Force Two Factor Auth for Customers","Force Two Factor Auth for Customers"
+"Enable This Provider For Customers","Enable This Provider For Customers"
+TFA,TFA

@@ -64,6 +64,9 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      * @param array|null $config
      *
      * @return mixed|void
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\State\InputMismatchException
      */
     public function setProviderConfig(int $customerId, string $providerCode, ?array $config)
     {
@@ -99,14 +102,17 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      * @param int $customerId
      * @param array $config
      *
+     * @return $this
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\State\InputMismatchException
      */
     private function setCustomerProvidersConfiguration(int $customerId, array $config)
     {
         $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTFAAttributes::CONFIG, [$config]);
         $this->customer = $this->customerRepository->save($this->getCustomer($customerId));
+        return $this;
     }
 
     /**
