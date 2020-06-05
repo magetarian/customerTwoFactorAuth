@@ -63,9 +63,10 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      * @param string $providerCode
      * @param array|null $config
      *
-     * @return mixed|void
+     * @return $this|mixed
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\State\InputMismatchException
      */
     public function setProviderConfig(int $customerId, string $providerCode, ?array $config)
@@ -80,6 +81,7 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
         }
 
         $this->setCustomerProvidersConfiguration($customerId, $providersConfig);
+        return $this;
     }
 
     /**
