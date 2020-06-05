@@ -68,6 +68,8 @@ class ResetPost extends Customer implements HttpPostActionInterface
             } catch (\Exception $e) {
                 $this->messageManager->addExceptionMessage($e, __('We can\'t reset the configuration.'));
             }
+        } else {
+            $this->messageManager->addErrorMessage(__('We can\'t reset the configuration.'));
         }
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath('*/customer/configuration');

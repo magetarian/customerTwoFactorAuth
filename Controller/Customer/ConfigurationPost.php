@@ -73,6 +73,8 @@ class ConfigurationPost extends Customer implements HttpPostActionInterface
             } catch (\Exception $e) {
                 $this->messageManager->addExceptionMessage($e, __('We can\'t save the TFA providers.'));
             }
+        } else {
+            $this->messageManager->addErrorMessage(__('We can\'t save the TFA providers.'));
         }
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath('*/*/configuration');

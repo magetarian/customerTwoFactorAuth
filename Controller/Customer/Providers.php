@@ -97,7 +97,7 @@ class Providers extends Action implements HttpPostActionInterface
         $loginData = [];
         try {
             $loginData = $this->json->unserialize($this->getRequest()->getContent());
-        } catch (\Zend_Json_Exception $e) {
+        } catch (\InvalidArgumentException $e) {
             return $resultRaw->setHttpResponseCode($httpBadRequestCode);
         }
 
