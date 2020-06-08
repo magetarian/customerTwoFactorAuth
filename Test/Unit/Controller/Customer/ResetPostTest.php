@@ -20,6 +20,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
+use Magetarian\CustomerTwoFactorAuth\Controller\Customer\ResetPost;
 
 /**
  * Class ResetPostTest

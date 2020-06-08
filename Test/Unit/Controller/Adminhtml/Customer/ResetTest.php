@@ -18,6 +18,7 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
+use Magetarian\CustomerTwoFactorAuth\Controller\Adminhtml\Customer\Reset;
 
 /**
  * Class ResetTest

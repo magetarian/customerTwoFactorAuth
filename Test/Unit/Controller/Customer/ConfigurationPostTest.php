@@ -21,6 +21,7 @@ use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Message\ManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magetarian\CustomerTwoFactorAuth\Controller\Customer\ConfigurationPost;
 
 /**
  * Class ConfigurationPostTest

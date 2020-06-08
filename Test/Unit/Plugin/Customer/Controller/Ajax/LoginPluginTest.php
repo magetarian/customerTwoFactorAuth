@@ -10,13 +10,22 @@ declare(strict_types=1);
 namespace Magetarian\CustomerTwoFactorAuth\Test\Unit\Plugin\Customer\Controller\Ajax;
 
 use Magento\Customer\Api\AccountManagementInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Json\Helper\Data;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerProvidersManagerInterface;
+use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
+use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\DataObjectFactory;
+use Magento\Framework\DataObject;
+use Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Ajax\LoginPlugin;
+use Magento\Customer\Controller\Ajax\Login;
+use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Controller\Result\Raw;
+use Magento\Framework\Controller\Result\Json;
 
 class LoginPluginTest extends TestCase
 {
@@ -36,9 +45,188 @@ class LoginPluginTest extends TestCase
 
     private $customerProvidersManager;
 
-    public function testAroundExecute()
+    /**
+     * @dataProvider dataProviderExecute
+     */
+    public function testAroundExecute(bool $result, array $customerProviders, bool $verify)
     {
+        $isProceedCalled = false;
+        $subject =  $this->getMockBuilder(Login::class)
+                        ->disableOriginalConstructor()
+                        ->getMock();
+        $request =  $this->getMockBuilder(RequestInterface::class)
+                         ->disableOriginalConstructor()
+                         ->setMethods(['getContent', 'getMethod', 'isXmlHttpRequest'])
+                         ->getMockForAbstractClass();
+        $customer = $this->getMockBuilder(CustomerInterface::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $provider = $this->getMockBuilder(ProviderInterface::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $engine = $this->getMockBuilder(EngineInterface::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $dataObject = $this->getMockBuilder(DataObject::class)
+                       ->disableOriginalConstructor()
+                       ->getMock();
+        $resultJson = $this->getMockBuilder(Json::class)
+                           ->disableOriginalConstructor()
+                           ->getMock();
+        $this->jsonHelper
+            ->expects($this->atLeastOnce())
+            ->method('jsonDecode')
+            ->willReturn(['username'=> 'test', 'password' => 'test']);
+        $customer->expects($this->atLeastOnce())->method('getId')->willReturn(1);
+        $this->customerAccountManagement->expects($this->atLeastOnce())->method('authenticate')->willReturn($customer);
+        $this->customerProvidersManager
+            ->expects($this->atLeastOnce())
+            ->method('getCustomerProviders')
+            ->willReturn($customerProviders);
+        $this->dataObjectFactory->expects($this->any())->method('create')->willReturn($dataObject);
+        if (!count($customerProviders)) {
+            $engine->expects($this->atLeastOnce())->method('verify')->willReturn($verify);
+            $provider->expects($this->atLeastOnce())->method('getEngine')->willReturn($engine);
+            $this->providerPool->expects($this->atLeastOnce())->method('getProviderByCode')->willReturn($provider);
+        }
+        $request->expects($this->atLeastOnce())->method('getContent')->willReturn('test');
+        $request->expects($this->atLeastOnce())->method('getMethod')->willReturn('POST');
+        $request->expects($this->atLeastOnce())->method('isXmlHttpRequest')->willReturn(true);
+        $subject->expects($this->atLeastOnce())->method('getRequest')->willReturn($request);
+        if (!$result) {
+            $resultJson->expects($this->atLeastOnce())->method('setData')->willReturn($resultJson);
+            $this->resultFactory->expects($this->atLeastOnce())->method('create')->willReturn($resultJson);
+        }
+        // @SuppressWarnings(PHPMD.UnusedFormalParameter)
+        $proceed = function () use (&$isProceedCalled) {
+            $isProceedCalled = true;
+        };
 
+        $this->object->aroundExecute(
+            $subject,
+            $proceed
+        );
+
+        $this->assertEquals($result, $isProceedCalled);
+        if (!$result) {
+            $this->assertEquals($resultJson, $this->object->aroundExecute($subject, $proceed));
+        }
+    }
+
+    public function dataProviderExecute(): array
+    {
+        return [
+            [true , [], true],
+            [false , ['test'], true],
+            [false , [], false],
+            [true , [], false],
+        ];
+    }
+
+    public function testAroundExecuteJsonException()
+    {
+        $isProceedCalled = false;
+        $subject =  $this->getMockBuilder(Login::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $request =  $this->getMockBuilder(RequestInterface::class)
+                         ->disableOriginalConstructor()
+                         ->setMethods(['getContent'])
+                         ->getMockForAbstractClass();
+        $resultRaw = $this->getMockBuilder(Raw::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
+        $this->jsonHelper
+            ->expects($this->atLeastOnce())
+            ->method('jsonDecode')
+            ->willThrowException(new \Exception('test'));
+        $this->customerAccountManagement->expects($this->never())->method('authenticate');
+        $resultRaw->expects($this->atLeastOnce())->method('setHttpResponseCode')->willReturn($resultRaw);
+        $this->resultFactory->expects($this->atLeastOnce())->method('create')->willReturn($resultRaw);
+        $subject->expects($this->atLeastOnce())->method('getRequest')->willReturn($request);
+        // @SuppressWarnings(PHPMD.UnusedFormalParameter)
+        $proceed = function () use (&$isProceedCalled) {
+            $isProceedCalled = true;
+        };
+
+        $this->object->aroundExecute(
+            $subject,
+            $proceed
+        );
+
+        $this->assertFalse($isProceedCalled);
+        $this->assertEquals($resultRaw, $this->object->aroundExecute($subject, $proceed));
+    }
+
+    public function testAroundExecuteNotPost()
+    {
+        $isProceedCalled = false;
+        $subject =  $this->getMockBuilder(Login::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $request =  $this->getMockBuilder(RequestInterface::class)
+                         ->disableOriginalConstructor()
+                         ->setMethods(['getContent', 'getMethod'])
+                         ->getMockForAbstractClass();
+        $resultRaw = $this->getMockBuilder(Raw::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
+        $this->jsonHelper
+            ->expects($this->atLeastOnce())
+            ->method('jsonDecode')
+            ->willReturn(['username'=> 'test', 'password' => 'test']);
+        $this->customerAccountManagement->expects($this->never())->method('authenticate');
+        $resultRaw->expects($this->atLeastOnce())->method('setHttpResponseCode')->willReturn($resultRaw);
+        $this->resultFactory->expects($this->atLeastOnce())->method('create')->willReturn($resultRaw);
+        $request->expects($this->atLeastOnce())->method('getMethod')->willReturn('GET');
+        $subject->expects($this->atLeastOnce())->method('getRequest')->willReturn($request);
+        // @SuppressWarnings(PHPMD.UnusedFormalParameter)
+        $proceed = function () use (&$isProceedCalled) {
+            $isProceedCalled = true;
+        };
+
+        $this->object->aroundExecute(
+            $subject,
+            $proceed
+        );
+
+        $this->assertFalse($isProceedCalled);
+        $this->assertEquals($resultRaw, $this->object->aroundExecute($subject, $proceed));
+    }
+
+    public function testAroundExecuteException()
+    {
+        $isProceedCalled = false;
+        $subject =  $this->getMockBuilder(Login::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $request =  $this->getMockBuilder(RequestInterface::class)
+                         ->disableOriginalConstructor()
+                         ->setMethods(['getContent', 'getMethod', 'isXmlHttpRequest'])
+                         ->getMockForAbstractClass();
+        $this->jsonHelper
+            ->expects($this->atLeastOnce())
+            ->method('jsonDecode')
+            ->willReturn(['username'=> 'test', 'password' => 'test']);
+        $request->expects($this->atLeastOnce())->method('getContent')->willReturn('test');
+        $request->expects($this->atLeastOnce())->method('getMethod')->willReturn('POST');
+        $request->expects($this->atLeastOnce())->method('isXmlHttpRequest')->willReturn(true);
+        $subject->expects($this->atLeastOnce())->method('getRequest')->willReturn($request);
+        $this->customerAccountManagement
+            ->expects($this->atLeastOnce())
+            ->method('authenticate')
+            ->willThrowException(new \Exception('test'));
+        // @SuppressWarnings(PHPMD.UnusedFormalParameter)
+        $proceed = function () use (&$isProceedCalled) {
+            $isProceedCalled = true;
+        };
+
+        $this->object->aroundExecute(
+            $subject,
+            $proceed
+        );
+
+        $this->assertTrue($isProceedCalled);
     }
 
     protected function setUp()

@@ -16,6 +16,7 @@ use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Page\Config;
 use Magento\Framework\View\Page\Title;
+use Magetarian\CustomerTwoFactorAuth\Controller\Customer\Configuration;
 
 /**
  * Class ConfigurationTest

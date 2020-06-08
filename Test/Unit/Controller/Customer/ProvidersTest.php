@@ -26,6 +26,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\Controller\Result\Json as ResultJson;
+use Magetarian\CustomerTwoFactorAuth\Controller\Customer\Providers;
 
 /**
  * Class ProvidersTest

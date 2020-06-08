@@ -13,6 +13,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magetarian\CustomerTwoFactorAuth\Model\Provider;
 
 /**
  * Class ProviderTest

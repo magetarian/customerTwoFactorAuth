@@ -12,6 +12,7 @@ namespace Magetarian\CustomerTwoFactorAuth\Test\Unit\Model\Config;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 
 /**
  * Class ConfigProviderTest

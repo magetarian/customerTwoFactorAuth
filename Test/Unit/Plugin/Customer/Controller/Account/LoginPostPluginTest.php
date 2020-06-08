@@ -17,6 +17,8 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\DataObjectFactory;
+use Magetarian\CustomerTwoFactorAuth\Plugin\Customer\Controller\Account\LoginPostPlugin;
+use Magento\Customer\Controller\Account\LoginPost;
 
 class LoginPostPluginTest extends TestCase
 {
@@ -38,7 +40,20 @@ class LoginPostPluginTest extends TestCase
 
     public function testAroundExecute()
     {
-
+//        $isProceedCalled = false;
+//        $object =  $this->getMockBuilder(LoginPost::class)
+//                        ->disableOriginalConstructor()
+//                        ->getMock();
+//        // @SuppressWarnings(PHPMD.UnusedFormalParameter)
+//        $proceed = function () use (&$isProceedCalled) {
+//            $isProceedCalled = true;
+//        };
+//
+//        $this->object->aroundExecute(
+//            $object,
+//            $proceed
+//        );
+//        $this->assertTrue($isProceedCalled);
     }
 
     protected function setUp()

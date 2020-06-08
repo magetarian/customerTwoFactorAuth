@@ -18,6 +18,7 @@ use Magento\Framework\Controller\ResultFactory;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Google;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magetarian\CustomerTwoFactorAuth\Controller\Google\Qr;
 
 /**
  * Class QrTest

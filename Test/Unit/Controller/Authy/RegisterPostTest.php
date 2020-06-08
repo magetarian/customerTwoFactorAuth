@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\Result\Raw;
+use Magetarian\CustomerTwoFactorAuth\Controller\Authy\RegisterPost;
 use Magento\Framework\Controller\Result\Json as ResultJson;
 
 /**

@@ -22,6 +22,7 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Authy;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magetarian\CustomerTwoFactorAuth\Controller\Authy\VerifyPost;
 use Magento\Framework\Controller\Result\Json as ResultJson;
 
 /**

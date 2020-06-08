@@ -13,6 +13,7 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
+use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\EnabledProviders;
 
 /**
  * Class EnabledProvidersTest
