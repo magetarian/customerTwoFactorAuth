@@ -39,31 +39,23 @@ class Provider implements ProviderInterface
     private $customerConfigManager;
 
     /**
-     * @var bool
-     */
-    private $canReset;
-
-    /**
      * Provider constructor.
      *
      * @param EngineInterface $engine
      * @param CustomerConfigManagerInterface $customerConfigManager
      * @param $code
      * @param $name
-     * @param bool $canReset
      */
     public function __construct(
         EngineInterface $engine,
         CustomerConfigManagerInterface $customerConfigManager,
         $code,
-        $name,
-        $canReset = true
+        $name
     ) {
         $this->engine = $engine;
         $this->customerConfigManager = $customerConfigManager;
         $this->code = $code;
         $this->name = $name;
-        $this->canReset = $canReset;
     }
 
     /**
@@ -120,9 +112,11 @@ class Provider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * @param $customerId
+     *
+     * @return array|null
      */
-    public function getConfiguration($customerId)
+    private function getConfiguration($customerId)
     {
         return $this->customerConfigManager->getProviderConfig($customerId, $this->getCode());
     }

@@ -37,6 +37,15 @@ eslint:
     script:
         - vendor/bin/js-tests
 
+phpstan:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - vendor/bin/phpstan-tests
+
 phpmd:
     stage: test
     cache:
@@ -63,4 +72,4 @@ phpunit:
             - vendor/
     script:
         - docker-php-ext-enable xdebug
-        - vendor/bin/phpunit-tests
+        - vendor/bin/phpunit-tests 95

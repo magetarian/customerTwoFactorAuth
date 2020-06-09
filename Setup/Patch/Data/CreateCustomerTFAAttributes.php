@@ -70,13 +70,16 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
     }
 
     /**
-     * {@inheritdoc}
+     * @return CreateCustomerTFAAttributes|void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Zend_Validate_Exception
      */
     public function apply()
     {
         $this->moduleDataSetup->getConnection()->startSetup();
         $this->createCustomerAttributes();
         $this->moduleDataSetup->getConnection()->endSetup();
+        return $this;
     }
 
     /**

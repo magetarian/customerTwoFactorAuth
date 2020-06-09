@@ -40,6 +40,6 @@ class ConfigProvider
      */
     public function isTfaForced(): bool
     {
-        return $this->scopeConfig->isSetFlag(static::XML_PATH_CUSTOMER_FORCE_TFA, ScopeInterface::SCOPE_WEBSITE);
+        return (bool) $this->scopeConfig->isSetFlag(static::XML_PATH_CUSTOMER_FORCE_TFA, ScopeInterface::SCOPE_WEBSITE);
     }
 }

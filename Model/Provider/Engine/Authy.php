@@ -321,10 +321,6 @@ class Authy implements EngineInterface
      */
     private function verifyOneTouch(CustomerInterface $customer, array $providerInfo)
     {
-        if (!isset($providerInfo[static::CONFIG_PENDING_APPROVAL_KEY])) {
-            throw new LocalizedException(__('No approval requests for this customer'));
-        }
-
         $approvalCode = $providerInfo[static::CONFIG_PENDING_APPROVAL_KEY];
         $status = $this->validateOneTouch($customer, $providerInfo, $approvalCode);
         if ($status == 'approved') {

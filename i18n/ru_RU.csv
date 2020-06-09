@@ -1,0 +1,40 @@
+"Reset TFA","Сбросить TFA"
+"The customer tfa configration has been reset.","Настройки tfa были сброшены."
+"Something went wrong while resetting customer tfa configuration.","Произошла ошибка во время сбрасывания tfa."
+"Invalid login or password.","Неверный логин или пароль."
+"Two Factor Authentication","Двухэтапная аутентификация"
+"You saved the TFA providers.","Способы TFA сохранены."
+"We can't save the TFA providers.","Невозможно сохранить TFA способы."
+"The configuration has been reset.","Настройки были сброшены."
+"We can't reset the configuration.","Произошла ошибка во время сбрасывания настроек."
+"Invalid code format","Неверный формат кода"
+"Missing customer information","Нехватает информации о пользователе"
+"Unsupported method","Выбранный метод не поддерживается"
+"Missing country information","Нехватает информации о стране"
+"Login request","Запрос входа"
+"Invalid approval code","Неверный код подтверждения."
+"No approval requests for this customer","Для данного пользователя нет запросов подтверждения"
+"Invalid authy webservice response","Неверный ответ authy"
+message,сообщение
+"Unknown provider %1","Неизвенстный способ %1"
+"Login using two factor authentication, please.","Пожалуйста войдите с использованием двухэтапной аутентификации."
+"The two factor authentication failed. Please try again.","Двухэтапная аутентификация некорректная. Пожалуйста попробуйте снова."
+"Login successful.","Вход выполнен успешно."
+Reset,Сбросить
+None,Нету
+Save,Сохранить
+"There are no two factor authentication providers configured.","Нет доступных сопособов двухэтапной аутентификации."
+"Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.","Отсканируйте или скопируйте&amp; этот код в приложение аутентикатора для подтверждения."
+"Login using ","Войти используя "
+Continue,Продолжить
+Confirm,Подтвердить
+"Could not register at Authy. Please try again later","Невозможно зарегистрировать Authy. Пожалуйста попробуйте снова."
+"Could not authenticate using Authy. Please try again later","Невозможно аутентифицировать пользователя используя Authy. Пожалуйста попробуйте снова."
+"Could not get list of providers. Please try again later","Невозможно получить способы аутентикации. Пожалуйста попробуйте снова."
+Customers,Пользователи
+"All Customers","Все Пользователи"
+Actions,Действия
+"Reset Customer TFA","Сбросить TFA"
+"Force Two Factor Auth for Customers","Обязательно использовать двухэтапную аутентификацию для пользователей"
+"Enable This Provider For Customers","Включить способ для пользователей"
+TFA,TFA
