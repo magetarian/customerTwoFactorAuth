@@ -13,6 +13,7 @@ The module adds ability for customers login using 2FA.
 - Authy
 - Duo Security
 
+![](https://github.com/sashas777/assets/raw/master/tfa.gif)
 
 ## Installation
 
