@@ -70,6 +70,9 @@ phpunit:
         key: $CI_COMMIT_SHA
         paths:
             - vendor/
+    artifacts:
+        reports:
+            junit: clover.xml
     script:
         - docker-php-ext-enable xdebug
         - vendor/bin/phpunit-tests 95

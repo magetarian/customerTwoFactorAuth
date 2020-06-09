@@ -3,10 +3,16 @@
 [![Total Downloads](https://poser.pugx.org/magetarian/module-customer-two-factor-auth/downloads)](https://packagist.org/packages/magetarian/module-customer-two-factor-auth)
 [![Latest Unstable Version](https://poser.pugx.org/magetarian/module-customer-two-factor-auth/v/unstable)](https://packagist.org/packages/magetarian/module-customer-two-factor-auth)
 [![License](https://poser.pugx.org/magetarian/module-customer-two-factor-auth/license)](https://packagist.org/packages/magetarian/module-customer-two-factor-auth)
-[![Pipeline Status](https://gitlab.com/sashas777/customerTwoFactorAuth/badges/master/pipeline.svg)](https://gitlab.com/sashas777/customerTwoFactorAuth/-/commits/master)
-[![Coverage Report](https://gitlab.com/sashas777/customerTwoFactorAuth/badges/master/coverage.svg)](https://gitlab.com/sashas777/customerTwoFactorAuth/-/commits/master)
+[![Pipeline Status](https://gitlab.com/magetarian/customerTwoFactorAuth/badges/master/pipeline.svg)](https://gitlab.com/magetarian/customerTwoFactorAuth/-/commits/master)
+[![Coverage Report](https://gitlab.com/magetarian/customerTwoFactorAuth/badges/master/coverage.svg)](https://gitlab.com/magetarian/customerTwoFactorAuth/-/commits/master)
 
 The module adds ability for customers login using 2FA.
+
+## Supported Providers
+- Google Authenticator 
+- Authy
+- Duo Security
+
 
 ## Installation
 
