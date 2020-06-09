@@ -123,7 +123,7 @@ class AuthyTest extends TestCase
                        'approval_request' => ['uuid' => '123', 'status' => 'approved'],
                    ]);
         $this->curlFactory->expects($this->atLeastOnce())->method('create')->willReturn($curl);
-        $this->assertEquals($result,  $this->object->requestToken($customer, $method, $approvalCode));
+        $this->assertEquals($result, $this->object->requestToken($customer, $method, $approvalCode));
     }
 
     /**

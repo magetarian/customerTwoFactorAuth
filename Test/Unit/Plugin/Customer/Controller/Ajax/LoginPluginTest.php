@@ -27,30 +27,51 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\Result\Json;
 
+/**
+ * Class LoginPluginTest
+ * Test for LoginPlugin class
+ */
 class LoginPluginTest extends TestCase
 {
 
     /** @var LoginPlugin object */
     private $object;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
     private $customerAccountManagement;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
     private $resultFactory;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
     private $providerPool;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
     private $jsonHelper;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
     private $dataObjectFactory;
 
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
     private $customerProvidersManager;
 
     /**
      * @dataProvider dataProviderExecute
      */
-    public function testAroundExecute(bool $result, array $customerProviders, bool $verify)
+    public function testAroundExecute(bool $isProceedCalled, array $customerProviders, bool $verify)
     {
-        $isProceedCalled = false;
         $subject =  $this->getMockBuilder(Login::class)
                         ->disableOriginalConstructor()
                         ->getMock();
@@ -93,7 +114,7 @@ class LoginPluginTest extends TestCase
         $request->expects($this->atLeastOnce())->method('getMethod')->willReturn('POST');
         $request->expects($this->atLeastOnce())->method('isXmlHttpRequest')->willReturn(true);
         $subject->expects($this->atLeastOnce())->method('getRequest')->willReturn($request);
-        if (!$result) {
+        if (!$isProceedCalled) {
             $resultJson->expects($this->atLeastOnce())->method('setData')->willReturn($resultJson);
             $this->resultFactory->expects($this->atLeastOnce())->method('create')->willReturn($resultJson);
         }
@@ -101,28 +122,33 @@ class LoginPluginTest extends TestCase
         $proceed = function () use (&$isProceedCalled) {
             $isProceedCalled = true;
         };
-
         $this->object->aroundExecute(
             $subject,
             $proceed
         );
-
-        $this->assertEquals($result, $isProceedCalled);
-        if (!$result) {
+        if ($isProceedCalled) {
+            $this->assertTrue($isProceedCalled);
+        }
+        if (!$isProceedCalled) {
             $this->assertEquals($resultJson, $this->object->aroundExecute($subject, $proceed));
         }
     }
 
+    /**
+     * @return array|array[]
+     */
     public function dataProviderExecute(): array
     {
         return [
             [true , [], true],
             [false , ['test'], true],
             [false , [], false],
-            [true , [], false],
         ];
     }
 
+    /**
+     *
+     */
     public function testAroundExecuteJsonException()
     {
         $isProceedCalled = false;
@@ -158,6 +184,9 @@ class LoginPluginTest extends TestCase
         $this->assertEquals($resultRaw, $this->object->aroundExecute($subject, $proceed));
     }
 
+    /**
+     *
+     */
     public function testAroundExecuteNotPost()
     {
         $isProceedCalled = false;
@@ -194,6 +223,9 @@ class LoginPluginTest extends TestCase
         $this->assertEquals($resultRaw, $this->object->aroundExecute($subject, $proceed));
     }
 
+    /**
+     *
+     */
     public function testAroundExecuteException()
     {
         $isProceedCalled = false;
@@ -229,6 +261,9 @@ class LoginPluginTest extends TestCase
         $this->assertTrue($isProceedCalled);
     }
 
+    /**
+     *
+     */
     protected function setUp()
     {
         $this->providerPool = $this->getMockBuilder(ProviderPoolInterface::class)
