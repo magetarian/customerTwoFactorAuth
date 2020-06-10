@@ -1,0 +1,40 @@
+"Reset TFA","TFA को रीसेट करें"
+"The customer tfa configration has been reset.","ग्राहक tfa विन्यास रीसेट कर दिया गया है."
+"Something went wrong while resetting customer tfa configuration.","क्लाइंट tfa कॉन्फ़िगरेशन रीसेट करते समय कुछ गलत हो गया."
+"Invalid login or password.","अवैध लॉगइन या पासवर्ड."
+"Two Factor Authentication","दो तरीकों से प्रमाणीकरण"
+"You saved the TFA providers.","आपके TFA प्रदाताओं को बचाया."
+"We can't save the TFA providers.","हम TFA प्रदाताओं को नहीं बचा सकते."
+"The configuration has been reset.","कॉन्फ़िगरेशन रीसेट कर दिया गया है."
+"We can't reset the configuration.","हम कॉन्फ़िगरेशन को रीसेट नहीं कर सकते."
+"Invalid code format","अमान्य कोड प्रारूप"
+"Missing customer information","गुम ग्राहक जानकारी"
+"Unsupported method","असमर्थित विधि"
+"Missing country information","गुम देश की जानकारी"
+"Login request","लॉगिन अनुरोध"
+"Invalid approval code","अमान्य अनुमोदन कोड"
+"Invalid authy webservice response","अमान्य स्कीम वेब सेवा प्रतिक्रिया"
+message,संदेश
+"Unknown provider %1","अज्ञात प्रदाता %1"
+"Login using two factor authentication, please.","कृपया दो कारक प्रमाणीकरण का उपयोग करके लॉगिन करें."
+"The two factor authentication failed. Please try again.","दो कारक प्रमाणीकरण विफल रहा। कृपया पुन: प्रयास करें।"
+"Login successful.","सफलतापूर्ण प्रवेश."
+test,परीक्षा
+Reset,रीसेट
+None,कोई नहीं
+Save,सहेजें
+"There are no two factor authentication providers configured.","कोई दो कारक प्रमाणीकरण प्रदाता कॉन्फ़िगर नहीं हैं."
+"Scan or copy&amp;paste this code with your authenticator app and insert your code to confirm.","इस कोड को अपने प्रमाणक ऐप के साथ स्कैन या कॉपी करें और पुष्टि करने के लिए अपना कोड डालें."
+"Login using ","Login using "
+Continue,जारी रखें
+Confirm,पुष्टि करें
+"Could not register at Authy. Please try again later","ऑटि में पंजीकरण नहीं हो सका। बाद में पुन: प्रयास करें"
+"Could not authenticate using Authy. Please try again later","ऑटि का उपयोग करके प्रमाणित नहीं किया जा सका। बाद में पुन: प्रयास करें"
+"Could not get list of providers. Please try again later","प्रदाताओं की सूची नहीं मिल सकी। बाद में पुन: प्रयास करें"
+Customers,ग्राहकों
+"All Customers","सभी ग्राहक"
+Actions,क्रिया
+"Reset Customer TFA","ग्राहक TFA को रीसेट करें"
+"Force Two Factor Auth for Customers","ग्राहकों के लिए फोर्स टू फैक्टर प्रामाणिक"
+"Enable This Provider For Customers","इस प्रदाता को ग्राहकों के लिए सक्षम करें"
+TFA,टीएफए
