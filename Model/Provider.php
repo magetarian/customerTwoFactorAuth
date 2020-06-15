@@ -97,7 +97,7 @@ class Provider implements ProviderInterface
     /**
      * @inheritdoc
      */
-    public function resetConfiguration($customerId): ProviderInterface
+    public function resetConfiguration(int $customerId): ProviderInterface
     {
         $this->customerConfigManager->setProviderConfig($customerId, $this->getCode(), null);
         return $this;
