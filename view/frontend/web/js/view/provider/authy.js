@@ -71,15 +71,16 @@ define([
          * @param {String} status
          */
         validateOneTouch: function (code, status) {
-            if (status == 'approved') {
+            if (status === 'approved') {
                 $(this.authButton).closest("form").find(this.tfaCodeFieldSelector).val(code);
                 $(this.authButton).hide();
                 $(this.authButton).closest("form").submit();
-            } else if (status == 'denied') {
+            } else if (status === 'denied') {
                 messageList.addErrorMessage({ message: 'The authentication request denied.' });
                 $('body').trigger('processStop');
-            } else if (status == 'pending') {
+            } else if (status === 'pending') {
                 let verifyData = this.collectFormData(this.authButton);
+
                 verifyData['method'] = this.method();
                 verifyData['code'] = code;
                 $('body').trigger('processStart');

@@ -51,6 +51,7 @@ define([
         getSelectedProviderCode: function () {
             return selectedProvider();
         },
+
         /**
          * @return {String}
          */

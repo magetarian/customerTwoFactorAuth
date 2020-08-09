@@ -113,7 +113,7 @@ class ProviderTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->engine = $this->getMockBuilder(EngineInterface::class)
                                 ->disableOriginalConstructor()

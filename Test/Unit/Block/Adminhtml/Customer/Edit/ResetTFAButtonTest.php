@@ -85,7 +85,7 @@ class ResetTFAButtonTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->registry = $this->getMockBuilder(Registry::class)
                                  ->disableOriginalConstructor()

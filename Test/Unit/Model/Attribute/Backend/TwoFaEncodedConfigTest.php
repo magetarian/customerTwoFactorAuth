@@ -95,7 +95,7 @@ class TwoFaEncodedConfigTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->encryptor = $this->getMockBuilder(EncryptorInterface::class)
                                    ->disableOriginalConstructor()

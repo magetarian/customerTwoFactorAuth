@@ -110,7 +110,7 @@ class ProvidersTest extends TestCase
         $this->customerAccountManagement->expects($this->atLeastOnce())->method('authenticate')->willReturn($customer);
         $provider->expects($this->atLeastOnce())->method('getCode')->willReturn('test');
         $provider->expects($this->atLeastOnce())->method('getName')->willReturn('test');
-        $provider->expects($this->atLeastOnce())->method('isConfigured')->willReturn(1);
+        $provider->expects($this->atLeastOnce())->method('isConfigured')->willReturn(true);
         $providerEngine->expects($this->atLeastOnce())->method('getAdditionalConfig')->willReturn([]);
         $provider->expects($this->atLeastOnce())->method('getEngine')->willReturn($providerEngine);
         $this->customerProvidersManager
@@ -213,7 +213,7 @@ class ProvidersTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->context = $this->getMockBuilder(Context::class)
                               ->disableOriginalConstructor()

@@ -66,11 +66,12 @@ class LoginPostPluginTest extends TestCase
      */
     private $customerProvidersManager;
 
-    /**
-     * @dataProvider dataProviderExecute
-     */
-    public function testAroundExecute(bool $isProceedCalled, array $customerProviders, bool $verify)
+    public function testAroundExecute()
     {
+        $isProceedCalled = true;
+        $customerProviders = [];
+        $verify = true;
+
         $subject =  $this->getMockBuilder(LoginPost::class)
                         ->disableOriginalConstructor()
                         ->getMock();
@@ -95,17 +96,16 @@ class LoginPostPluginTest extends TestCase
                            ->getMock();
         $request->expects($this->atLeastOnce())->method('isPost')->willReturn(true);
         $request->expects($this->any())->method('getParams')->willReturn(['test']);
-        $request->expects($this->at(1))
+        $request->expects($this->exactly(3))
                 ->method('getPost')
-                ->willReturn(['username'=> 'test', 'password' => 'test']);
-        $request->expects($this->at(2))
-                ->method('getPost')
-                ->willReturn('test');
-        if (!count($customerProviders)) {
-            $request->expects($this->at(3))
-                    ->method('getPost')
-                    ->willReturn('test');
-        }
+            ->will($this->returnValueMap(
+                [
+                    ["login", ['username'=> 'test', 'password' => 'test']],
+                    ["tfa_code", '123'],
+                    ["provider_code", 'test']
+                ]
+            ));
+
         $request->expects($this->atLeastOnce())->method('isPost')->willReturn(true);
         $subject->expects($this->atLeastOnce())->method('getRequest')->willReturn($request);
         $customer->expects($this->atLeastOnce())->method('getId')->willReturn(1);
@@ -152,18 +152,90 @@ class LoginPostPluginTest extends TestCase
         }
     }
 
-    /**
-     * @return array|array[]
-     */
-    public function dataProviderExecute(): array
+    public function testAroundExecutePostTest()
     {
-        return [
-            [true , [], true],
-            [false , ['test'], true],
-            [false , [], false],
-        ];
-    }
+        $isProceedCalled = false;
+        $customerProviders = ['test'];
+        $verify = true;
+        $subject =  $this->getMockBuilder(LoginPost::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $customer = $this->getMockBuilder(CustomerInterface::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $request =  $this->getMockBuilder(RequestInterface::class)
+                         ->disableOriginalConstructor()
+                         ->setMethods(['isPost', 'getPost', 'getParams'])
+                         ->getMockForAbstractClass();
+        $redirect =  $this->getMockBuilder(Redirect::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
+        $provider = $this->getMockBuilder(ProviderInterface::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $engine = $this->getMockBuilder(EngineInterface::class)
+                       ->disableOriginalConstructor()
+                       ->getMock();
+        $dataObject = $this->getMockBuilder(DataObject::class)
+                           ->disableOriginalConstructor()
+                           ->getMock();
+        $request->expects($this->atLeastOnce())->method('isPost')->willReturn(true);
+        $request->expects($this->any())->method('getParams')->willReturn(['test']);
 
+        $request->expects($this->any())
+                ->method('getPost')
+                ->will($this->returnValueMap(
+                    [
+                        ["login", ['username'=> 'test', 'password' => 'test']],
+                        ["tfa_code", ''],
+                        ["provider_code", 'test']
+                    ]
+                ));
+        $request->expects($this->atLeastOnce())->method('isPost')->willReturn(true);
+        $subject->expects($this->atLeastOnce())->method('getRequest')->willReturn($request);
+        $customer->expects($this->atLeastOnce())->method('getId')->willReturn(1);
+        $this->customerAccountManagement->expects($this->atLeastOnce())->method('authenticate')->willReturn($customer);
+        $this->customerProvidersManager
+            ->expects($this->atLeastOnce())
+            ->method('getCustomerProviders')
+            ->willReturn($customerProviders);
+        if (count($customerProviders)) {
+            $this->messageManager->expects($this->atLeastOnce())->method('addWarningMessage');
+            $this->messageManager->expects($this->never())->method('addErrorMessage');
+        } elseif (!$verify) {
+            $this->messageManager->expects($this->atLeastOnce())->method('addErrorMessage');
+            $this->messageManager->expects($this->never())->method('addWarningMessage');
+        } else {
+            $this->messageManager->expects($this->never())->method('addWarningMessage');
+            $this->messageManager->expects($this->never())->method('addErrorMessage');
+        }
+        if (!count($customerProviders)) {
+            $engine->expects($this->atLeastOnce())->method('verify')->willReturn($verify);
+            $provider->expects($this->atLeastOnce())->method('getEngine')->willReturn($engine);
+            $this->providerPool->expects($this->atLeastOnce())->method('getProviderByCode')->willReturn($provider);
+        }
+        if (!$isProceedCalled) {
+            $redirect->expects($this->atLeastOnce())->method('setPath')->willReturn($redirect);
+        } else {
+            $redirect->expects($this->never())->method('setPath');
+        }
+        $this->dataObjectFactory->expects($this->any())->method('create')->willReturn($dataObject);
+        $this->resultRedirectFactory->expects($this->atLeastOnce())->method('create')->willReturn($redirect);
+        // @SuppressWarnings(PHPMD.UnusedFormalParameter)
+        $proceed = function () use (&$isProceedCalled) {
+            $isProceedCalled = true;
+        };
+        $this->object->aroundExecute(
+            $subject,
+            $proceed
+        );
+        if ($isProceedCalled) {
+            $this->assertTrue($isProceedCalled);
+        }
+        if (!$isProceedCalled) {
+            $this->assertEquals($redirect, $this->object->aroundExecute($subject, $proceed));
+        }
+    }
 
     /**
      *
@@ -231,7 +303,7 @@ class LoginPostPluginTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->providerPool = $this->getMockBuilder(ProviderPoolInterface::class)
                                    ->disableOriginalConstructor()

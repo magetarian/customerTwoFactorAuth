@@ -64,12 +64,35 @@ class CustomerProvidersManagerTest extends TestCase
         $result = [$provider1, $provider2];
 
         $customAttribute->expects($this->atLeastOnce())->method('getValue')->willReturn('test,test2');
-        $customer->expects($this->at(0))->method('getCustomAttribute')->willReturn($customAttribute);
-        $customer->expects($this->at(1))->method('getCustomAttribute')->willReturn($customAttribute);
-        $customer->expects($this->at(2))->method('getCustomAttribute')->willReturn(null);
+        $customer->expects($this->atLeastOnce())->method('getCustomAttribute')->willReturn($customAttribute);
         $this->customerRepository->expects($this->atLeastOnce())->method('getById')->willReturn($customer);
         $this->providerPool->expects($this->atLeastOnce())->method('getEnabledProviders')
                                                           ->willReturn([$provider1, $provider2]);
+        $this->configProvider->expects($this->never())->method('isTfaForced');
+
+        $this->assertEquals($result, $this->object->getCustomerProviders(1));
+    }
+
+    /**
+     *
+     */
+    public function testGetCustomerProvidersNoCustomAttributes()
+    {
+        $customer = $this->getMockBuilder(CustomerInterface::class)
+                         ->disableOriginalConstructor()
+                         ->getMock();
+        $provider1 = $this->getMockBuilder(ProviderInterface::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
+        $provider2 = $this->getMockBuilder(ProviderInterface::class)
+                          ->disableOriginalConstructor()
+                          ->getMock();
+        $result = [$provider1, $provider2];
+
+        $customer->expects($this->atLeastOnce())->method('getCustomAttribute')->willReturn(null);
+        $this->customerRepository->expects($this->atLeastOnce())->method('getById')->willReturn($customer);
+        $this->providerPool->expects($this->atLeastOnce())->method('getEnabledProviders')
+                           ->willReturn([$provider1, $provider2]);
         $this->configProvider->expects($this->atLeastOnce())->method('isTfaForced')->willReturn(true);
 
         $this->assertEquals($result, $this->object->getCustomerProviders(1));
@@ -78,7 +101,7 @@ class CustomerProvidersManagerTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->customerRepository = $this->getMockBuilder(CustomerRepositoryInterface::class)
                                          ->disableOriginalConstructor()

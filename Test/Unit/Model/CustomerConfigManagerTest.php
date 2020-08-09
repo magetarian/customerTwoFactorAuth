@@ -89,7 +89,7 @@ class CustomerConfigManagerTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->customerRepository = $this->getMockBuilder(CustomerRepositoryInterface::class)
                                 ->disableOriginalConstructor()

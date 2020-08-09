@@ -63,7 +63,7 @@ class EnabledProvidersTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->providerPool = $this->getMockBuilder(ProviderPoolInterface::class)
                                    ->disableOriginalConstructor()

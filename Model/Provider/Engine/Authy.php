@@ -142,7 +142,6 @@ class Authy implements EngineInterface
             $url = $this->getProtectedApiEndpoint('verify/' . $code . '/' . $providerInfo[static::CONFIG_CUSTOMER_KEY]);
             $this->makeApiRequest($url, [], 'GET');
         }
-
     }
 
     /**

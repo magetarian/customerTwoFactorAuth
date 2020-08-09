@@ -22,6 +22,7 @@ use Magento\TwoFactorAuth\Model\ResourceModel\Country\CollectionFactory as Count
 use Magento\TwoFactorAuth\Model\ResourceModel\Country\Collection;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Authy;
 use Magento\TwoFactorAuth\Api\Data\CountryInterface;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class AuthyTest
@@ -144,8 +145,7 @@ class AuthyTest extends TestCase
     }
 
     /**
-     * @expectedExceptionMessage Test
-     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function testRequestTokenFailedAuthyResponse()
     {
@@ -167,12 +167,13 @@ class AuthyTest extends TestCase
                    ->method('unserialize')
                    ->willReturn(['message' => 'Test', 'success' => false]);
         $this->curlFactory->expects($this->atLeastOnce())->method('create')->willReturn($curl);
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Test');
         $this->object->requestToken($customer, 'onetouch', null);
     }
 
     /**
-     * @expectedExceptionMessage Invalid authy webservice response
-     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function testRequestTokenInvalidAuthyResponse()
     {
@@ -194,12 +195,13 @@ class AuthyTest extends TestCase
                    ->method('unserialize')
                    ->willReturn(false);
         $this->curlFactory->expects($this->atLeastOnce())->method('create')->willReturn($curl);
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Invalid authy webservice response');
         $this->object->requestToken($customer, 'onetouch', null);
     }
 
     /**
-     * @expectedExceptionMessage Invalid approval code
-     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function testRequestTokenInvalidApprovalCode()
     {
@@ -210,24 +212,26 @@ class AuthyTest extends TestCase
             ->expects($this->atLeastOnce())
             ->method('getProviderConfig')
             ->willReturn([Authy::CONFIG_CUSTOMER_KEY=>'test']);
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Invalid approval code');
         $this->object->requestToken($customer, 'onetouch', '   ');
     }
 
     /**
-     * @expectedExceptionMessage Unsupported method
-     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function testRequestTokenIncorrectMethod()
     {
         $customer = $this->getMockBuilder(CustomerInterface::class)
                          ->disableOriginalConstructor()
                          ->getMock();
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Unsupported method');
         $this->object->requestToken($customer, 'test', null);
     }
 
     /**
-     * @expectedExceptionMessage Missing customer information
-     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function testRequestTokenMissingCustomerInformation()
     {
@@ -235,6 +239,8 @@ class AuthyTest extends TestCase
                          ->disableOriginalConstructor()
                          ->getMock();
         $this->customerConfigManager->expects($this->atLeastOnce())->method('getProviderConfig')->willReturn([]);
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Missing customer information');
         $this->object->requestToken($customer, 'sms', null);
     }
 
@@ -344,8 +350,7 @@ class AuthyTest extends TestCase
     }
 
     /**
-     * @expectedExceptionMessage Invalid code format
-     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function testVerifyInvalidCodeFormat()
     {
@@ -356,13 +361,15 @@ class AuthyTest extends TestCase
                          ->disableOriginalConstructor()
                          ->getMock();
         $request->expects($this->atLeastOnce())->method('getData')->willReturn('  ');
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Invalid code format');
         $this->object->verify($customer, $request);
     }
 
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)
                                 ->disableOriginalConstructor()

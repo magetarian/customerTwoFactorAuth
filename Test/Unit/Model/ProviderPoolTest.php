@@ -13,6 +13,7 @@ use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface;
 use Magetarian\CustomerTwoFactorAuth\Model\ProviderPool;
+use Magento\Framework\Exception\NoSuchEntityException;
 
 /**
  * Class ProviderPoolTest
@@ -48,11 +49,12 @@ class ProviderPoolTest extends TestCase
     }
 
     /**
-     * @expectedException \Magento\Framework\Exception\NoSuchEntityException
-     * @expectedExceptionMessage Unknown provider test2
+     * @throws NoSuchEntityException
      */
     public function testGetProviderByCodeException()
     {
+        $this->expectException(NoSuchEntityException::class);
+        $this->expectExceptionMessage('Unknown provider test2');
         $this->object->getProviderByCode('test2');
     }
 
@@ -68,7 +70,7 @@ class ProviderPoolTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->provider = $this->getMockBuilder(ProviderInterface::class)
                              ->disableOriginalConstructor()

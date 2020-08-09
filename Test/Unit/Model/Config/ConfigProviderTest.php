@@ -34,14 +34,13 @@ class ConfigProviderTest extends TestCase
      */
     public function testIsTfaForced()
     {
-        $result = false;
-        $this->assertFalse($result, $this->object->isTfaForced());
+        $this->assertFalse($this->object->isTfaForced());
     }
 
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->scopeConfig = $this->getMockBuilder(ScopeConfigInterface::class)
                                    ->disableOriginalConstructor()

@@ -127,7 +127,7 @@ class ConfigurationTest extends TestCase
     /**
      *
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->customerSession = $this->getMockBuilder(Session::class)
                                ->disableOriginalConstructor()

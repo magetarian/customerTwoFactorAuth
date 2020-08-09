@@ -24,19 +24,12 @@ use OTPHP\TOTPInterface;
 
 /**
  * Class Google
- * Google Athenticator engine
+ * Google Authentication engine
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Google implements EngineInterface
 {
-    /**
-     *
-     */
     const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/google/enabled_customer';
-
-    /**
-     * @var null
-     */
-    private $totp = null;
 
     /**
      * @var CustomerConfigManagerInterface
@@ -187,10 +180,15 @@ class Google implements EngineInterface
         $totp = $this->getTotp($customer);
         $totp->now();
 
+        $window = null;
+        if ($this->scopeConfig->getValue(MagentoGoogle::XML_PATH_OTP_WINDOW)) {
+            $window = (int)$this->scopeConfig->getValue(MagentoGoogle::XML_PATH_OTP_WINDOW);
+        }
+
         return $totp->verify(
             $token,
             null,
-            $config['window'] ?? (int)$this->scopeConfig->getValue(MagentoGoogle::XML_PATH_OTP_WINDOW) ?: null
+            $window
         );
     }
 
