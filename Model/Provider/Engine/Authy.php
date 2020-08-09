@@ -14,11 +14,11 @@ use Magento\Framework\DataObject;
 use Magento\Framework\Exception\LocalizedException;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
-use MSP\TwoFactorAuth\Model\Provider\Engine\Authy as MspAuthy;
-use MSP\TwoFactorAuth\Model\Provider\Engine\Authy\Service as MspAuthyService;
+use Magento\TwoFactorAuth\Model\Provider\Engine\Authy as MagentoAuthy;
+use Magento\TwoFactorAuth\Model\Provider\Engine\Authy\Service as MagentoAuthyService;
 use Magento\Framework\HTTP\Client\CurlFactory;
 use Magento\Framework\Serialize\Serializer\Json;
-use MSP\TwoFactorAuth\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
+use Magento\TwoFactorAuth\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
 
 /**
  * Class Authy
@@ -29,7 +29,7 @@ class Authy implements EngineInterface
     /**
      * Enabled for customer XML Path
      */
-    const XML_PATH_ENABLED_CUSTOMER = 'msp_securitysuite_twofactorauth/authy/enabled_customer';
+    const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/authy/enabled_customer';
 
     /**
      * Key for customer id field
@@ -135,12 +135,14 @@ class Authy implements EngineInterface
         if (!isset($providerInfo[static::CONFIG_CUSTOMER_KEY])) {
             throw new LocalizedException(__('Missing customer information'));
         }
+
         if (isset($providerInfo[static::CONFIG_PENDING_APPROVAL_KEY])) {
             $this->verifyOneTouch($customer, $providerInfo);
         } else {
             $url = $this->getProtectedApiEndpoint('verify/' . $code . '/' . $providerInfo[static::CONFIG_CUSTOMER_KEY]);
             $this->makeApiRequest($url, [], 'GET');
         }
+
     }
 
     /**
@@ -150,7 +152,6 @@ class Authy implements EngineInterface
     public function isEnabled()
     {
         return
-            !!$this->scopeConfig->getValue(MspAuthy::XML_PATH_ENABLED) &&
             !!$this->scopeConfig->getValue(static::XML_PATH_ENABLED_CUSTOMER) &&
             !!$this->getApiKey();
     }
@@ -323,9 +324,12 @@ class Authy implements EngineInterface
     {
         $approvalCode = $providerInfo[static::CONFIG_PENDING_APPROVAL_KEY];
         $status = $this->validateOneTouch($customer, $providerInfo, $approvalCode);
-        if ($status == 'approved') {
+
+        if ($status == 'approved' || $status == 'denied') {
             unset($providerInfo[static::CONFIG_PENDING_APPROVAL_KEY]);
             $this->customerConfigManager->setProviderConfig((int) $customer->getId(), $this->getCode(), $providerInfo);
+        } elseif ($status == 'denied') {
+            throw new LocalizedException(__('Authentication denied.'));
         }
     }
 
@@ -368,7 +372,7 @@ class Authy implements EngineInterface
      */
     private function getApiKey(): ?string
     {
-        return $this->scopeConfig->getValue(MspAuthyService::XML_PATH_API_KEY);
+        return $this->scopeConfig->getValue(MagentoAuthyService::XML_PATH_API_KEY);
     }
 
     /**
@@ -378,7 +382,7 @@ class Authy implements EngineInterface
      */
     private function getProtectedApiEndpoint(string $path): string
     {
-        return MspAuthyService::AUTHY_BASE_ENDPOINT . 'protected/json/' . $path;
+        return MagentoAuthyService::AUTHY_BASE_ENDPOINT . 'protected/json/' . $path;
     }
 
     /**
@@ -388,7 +392,7 @@ class Authy implements EngineInterface
      */
     private function getOneTouchApiEndpoint(string $path): string
     {
-        return MspAuthyService::AUTHY_BASE_ENDPOINT . 'onetouch/json/' . $path;
+        return MagentoAuthyService::AUTHY_BASE_ENDPOINT . 'onetouch/json/' . $path;
     }
 
     /**
@@ -399,7 +403,7 @@ class Authy implements EngineInterface
     {
         $countries = [];
         $countriesList = $this->countryCollectionFactory->create()->addOrder('name', 'asc')->getItems();
-        /** @var \MSP\TwoFactorAuth\Api\Data\CountryInterface $country */
+        /** @var \Magento\TwoFactorAuth\Api\Data\CountryInterface $country */
         foreach ($countriesList as $country) {
             $countries[] = [
                 'dial_code' => $country->getDialCode(),
@@ -414,7 +418,7 @@ class Authy implements EngineInterface
      */
     public function getCode(): string
     {
-        return MspAuthy::CODE;
+        return MagentoAuthy::CODE;
     }
 
     /**

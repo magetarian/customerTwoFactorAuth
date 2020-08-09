@@ -9,15 +9,18 @@ declare(strict_types = 1);
 namespace Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine;
 
 use Base32\Base32;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TwoFactorAuth\Model\Provider\Engine\Google\TotpFactory;
 use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
-use MSP\TwoFactorAuth\Model\Provider\Engine\Google as MspGoogle;
+use Magento\TwoFactorAuth\Model\Provider\Engine\Google as MagentoGoogle;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
+use OTPHP\TOTPInterface;
 
 /**
  * Class Google
@@ -25,7 +28,10 @@ use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
  */
 class Google implements EngineInterface
 {
-    const XML_PATH_ENABLED_CUSTOMER = 'msp_securitysuite_twofactorauth/google/enabled_customer';
+    /**
+     *
+     */
+    const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/google/enabled_customer';
 
     /**
      * @var null
@@ -48,20 +54,28 @@ class Google implements EngineInterface
     private $scopeConfig;
 
     /**
+     * @var TOTPInterfaceFactory
+     */
+    private $totpFactory;
+
+    /**
      * Google constructor.
      *
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $scopeConfig
      * @param CustomerConfigManagerInterface $customerConfigManager
+     * @param TotpFactory $totpFactory
      */
     public function __construct(
         StoreManagerInterface $storeManager,
         ScopeConfigInterface $scopeConfig,
-        CustomerConfigManagerInterface $customerConfigManager
+        CustomerConfigManagerInterface $customerConfigManager,
+        TotpFactory $totpFactory
     ) {
         $this->customerConfigManager = $customerConfigManager;
         $this->storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
+        $this->totpFactory = $totpFactory;
     }
 
     /**
@@ -104,7 +118,8 @@ class Google implements EngineInterface
         // @codingStandardsIgnoreStart
         $qrCode = new QrCode($this->getProvisioningUrl($customer));
         $qrCode->setSize(400);
-        $qrCode->setErrorCorrectionLevel('high');
+        $qrCode->setMargin(0);
+        $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH());
         $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
         $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
         $qrCode->setLabelFontSize(16);
@@ -132,6 +147,7 @@ class Google implements EngineInterface
         // @codingStandardsIgnoreEnd
 
         $totp = $this->getTotp($customer);
+        $totp->setLabel($customer->getEmail());
         $totp->setIssuer($issuer);
 
         return $totp->getProvisioningUri();
@@ -143,24 +159,16 @@ class Google implements EngineInterface
      * @return \OTPHP\TOTP
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getTotp(CustomerInterface $customer)
+    private function getTotp(CustomerInterface $customer): TOTPInterface
     {
-        if ($this->totp === null) {
-            $config = $this->customerConfigManager->getProviderConfig((int) $customer->getId(), $this->getCode());
-
-            if (!isset($config['secret'])) {
-                $config['secret'] = $this->getSecretCode((int) $customer->getId());
-            }
-
-            // @codingStandardsIgnoreStart
-            $this->totp = new \OTPHP\TOTP(
-                $customer->getEmail(),
-                $config['secret']
-            );
-            // @codingStandardsIgnoreEnd
+        $config = $this->customerConfigManager->getProviderConfig((int) $customer->getId(), $this->getCode());
+        if (!isset($config['secret'])) {
+            $config['secret'] = $this->getSecretCode((int) $customer->getId());
         }
 
-        return $this->totp;
+        $totp = $this->totpFactory->create($config['secret']);
+
+        return $totp;
     }
 
     /**
@@ -173,11 +181,17 @@ class Google implements EngineInterface
     public function verify(CustomerInterface $customer, DataObject $request)
     {
         $token = $request->getData('tfa_code');
-
+        if (!$token) {
+            return false;
+        }
         $totp = $this->getTotp($customer);
         $totp->now();
 
-        return $totp->verify($token);
+        return $totp->verify(
+            $token,
+            null,
+            $config['window'] ?? (int)$this->scopeConfig->getValue(MagentoGoogle::XML_PATH_OTP_WINDOW) ?: null
+        );
     }
 
     /**
@@ -186,8 +200,7 @@ class Google implements EngineInterface
      */
     public function isEnabled()
     {
-        return !!$this->scopeConfig->getValue(MspGoogle::XML_PATH_ENABLED) &&
-               !!$this->scopeConfig->getValue(static::XML_PATH_ENABLED_CUSTOMER);
+        return !!$this->scopeConfig->getValue(static::XML_PATH_ENABLED_CUSTOMER);
     }
 
     /**
@@ -195,7 +208,7 @@ class Google implements EngineInterface
      */
     public function getCode(): string
     {
-        return MspGoogle::CODE;
+        return MagentoGoogle::CODE;
     }
 
     /**

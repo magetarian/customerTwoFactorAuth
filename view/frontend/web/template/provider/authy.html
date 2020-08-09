@@ -1,8 +1,3 @@
-<!--
-  ~ @author     Sashas IT Support <support@sashas.org>
-  ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
-  ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
-  -->
 <div class="field tfa-login" data-bind="visible: isButtonVisible()">
     <div class="primary">
         <button type="button" data-bind="css: 'tfa-login-'+getCode(),click: activate.bind($data)" class="action primary" data-code="getCode()">
@@ -10,121 +5,123 @@
         </button>
     </div>
 </div>
-<div class="tfa-auth authy-configure" data-bind="visible: isActive()">
-    <!-- ko ifnot: (isConfigured())-->
-    <fieldset class="register fieldset" visible='currentStep() === "register"'>
-        <p data-bind='i18n: "Please register yourself to Authy."'></p>
-        <div class="field field-tfa-phone-prefix">
-            <label for="tfa_authy_country" class="label">
-                <span data-bind='i18n: "Country"'></span>
-            </label>
-            <div class="control">
-                <select
-                    id="tfa_authy_country"
-                    class="select required-entry"
-                    data-bind="value: country, foreach: getCountries()">
-                    <option data-bind="value: dial_code, text: name"></option>
-                </select>
+<!-- ko if: (getSelectedProviderCode() == getCode())-->
+    <div class="tfa-auth authy-configure" data-bind="visible: isActive()">
+        <!-- ko ifnot: (isConfigured())-->
+        <fieldset class="register fieldset" visible='currentStep() === "register"'>
+            <p data-bind='i18n: "Please register yourself to Authy."'></p>
+            <div class="field field-tfa-phone-prefix">
+                <label for="tfa_authy_country" class="label">
+                    <span data-bind='i18n: "Country"'></span>
+                </label>
+                <div class="control">
+                    <select
+                        id="tfa_authy_country"
+                        class="select required-entry"
+                        data-bind="value: country, foreach: getCountries()">
+                        <option data-bind="value: dial_code, text: name"></option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="field field-tfa-phone required">
-            <label for="tfa_authy_phone" class="label">
-                <span data-bind='i18n: "Phone number"'></span>
-            </label>
-            <div class="control">
-                <input
-                    data-bind="value: phone, mageInit: {'mage/trim-input':{}}"
-                    id="tfa_authy_phone"
-                    class="input-text required-entry validate-greater-than-zero"
-                    type="text"
-                    autocomplete="off"
-                    data-validate="{required:true}"
-                    autofocus
-                    placeholder="Phone number"/>
+            <div class="field field-tfa-phone required">
+                <label for="tfa_authy_phone" class="label">
+                    <span data-bind='i18n: "Phone number"'></span>
+                </label>
+                <div class="control">
+                    <input
+                        data-bind="value: phone, mageInit: {'mage/trim-input':{}}"
+                        id="tfa_authy_phone"
+                        class="input-text required-entry validate-greater-than-zero"
+                        type="text"
+                        autocomplete="off"
+                        data-validate="{required:true}"
+                        autofocus
+                        placeholder="Phone number"/>
+                </div>
             </div>
-        </div>
-        <div class="field field-tfa-method">
-            <label for="tfa_authy_phone_action" class="label">
-                <span data-bind='i18n: "Verification method"'></span>
-            </label>
-            <div class="control">
-                <select
-                    data-bind='value: method'
-                    id="tfa_authy_phone_action"
-                    class="select required-entry">
-                    <option value="sms" selected data-bind='i18n: "Send me an SMS"'></option>
-                    <option value="call" data-bind='i18n: "Call me"'></option>
-                </select>
+            <div class="field field-tfa-method">
+                <label for="tfa_authy_phone_action" class="label">
+                    <span data-bind='i18n: "Verification method"'></span>
+                </label>
+                <div class="control">
+                    <select
+                        data-bind='value: method'
+                        id="tfa_authy_phone_action"
+                        class="select required-entry">
+                        <option value="sms" selected data-bind='i18n: "Send me an SMS"'></option>
+                        <option value="call" data-bind='i18n: "Call me"'></option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="primary">
-            <button type="button" enable="allowRegisterAction()" click="doRegister.bind($data, $element)" class="action primary" name="authy-register" id="authy-register">
-                <span data-bind="i18n: 'Continue'"></span>
-            </button>
-        </div>
-    </fieldset>
-    <!-- /ko -->
-    <!-- ko if: (isConfigured())-->
-    <fieldset class="authentication fieldset" visible='currentStep() === "authentication"'>
-        <p data-bind='i18n: "Verification methods:"'></p>
-        <div class="field field-tfa-onetouch">
-            <button
-                click="AuthClick.bind($data, $element, 'onetouch')"
-                type="button"
-                class="action primary">
-                <span data-bind='i18n: "Use one touch"'></span>
-            </button>
-        </div>
-        <div class="field field-tfa-token">
-            <button
-                click="AuthClick.bind($data, $element, 'token')"
-                type="button"
-                class="action primary">
-                <span data-bind='i18n: "Use authy token"'></span>
-            </button>
-        </div>
-        <p data-bind='i18n: "Emergency methods:"'></p>
-        <div class="field field-tfa-sms">
-            <button
-                click="AuthClick.bind($data, $element, 'sms')"
-                type="button"
-                class="action default">
-                <span data-bind='i18n: "Send me a code via SMS"'></span>
-            </button>
-        </div>
-        <div class="field field-tfa-call">
-            <button
-                click="AuthClick.bind($data, $element, 'call')"
-                type="button"
-                class="action default">
-                <span data-bind='i18n: "Send me a code via phone call"'></span>
-            </button>
-        </div>
-    </fieldset>
-    <!-- /ko -->
-    <fieldset  class="verify fieldset" visible='currentStep() === "verify"'>
-        <p data-bind='i18n: "Expires in " + secondsToExpire()+ " seconds."' visible='secondsToExpire() > 0'></p>
-        <div class="field field-tfa-verify">
-            <label for="tfa_code" class="label">
-                <span data-bind='i18n: "Verification code"'></span>
-            </label>
-            <div class="control">
-                <input
-                    data-bind="mageInit: {'mage/trim-input':{}}"
-                    id="tfa_code"
-                    name="tfa_code"
-                    class="input-text required-entry"
-                    type="text"
-                    autofocus
-                    autocomplete="off"
-                    placeholder="Verification code"/>
+            <div class="primary">
+                <button type="button" enable="allowRegisterAction()" click="doRegister.bind($data, $element)" class="action primary" name="authy-register" id="authy-register">
+                    <span data-bind="i18n: 'Continue'"></span>
+                </button>
             </div>
-        </div>
-        <div class="primary">
-            <button type="submit" class="action primary" name="tfa-login" id="tfa-authy">
-                <span data-bind="i18n: 'Confirm'"></span>
-            </button>
-        </div>
-    </fieldset>
-    <input name="provider_code" data-bind="value: getCode()" id="provider_code" type="hidden" />
-</div>
+        </fieldset>
+        <!-- /ko -->
+        <!-- ko if: (isConfigured())-->
+        <fieldset class="authentication fieldset" visible='currentStep() === "authentication"'>
+            <p data-bind='i18n: "Verification methods:"'></p>
+            <div class="field field-tfa-onetouch">
+                <button
+                    click="AuthClick.bind($data, $element, 'onetouch')"
+                    type="button"
+                    class="action primary">
+                    <span data-bind='i18n: "Use one touch"'></span>
+                </button>
+            </div>
+            <div class="field field-tfa-token">
+                <button
+                    click="AuthClick.bind($data, $element, 'token')"
+                    type="button"
+                    class="action primary">
+                    <span data-bind='i18n: "Use authy token"'></span>
+                </button>
+            </div>
+            <p data-bind='i18n: "Emergency methods:"'></p>
+            <div class="field field-tfa-sms">
+                <button
+                    click="AuthClick.bind($data, $element, 'sms')"
+                    type="button"
+                    class="action default">
+                    <span data-bind='i18n: "Send me a code via SMS"'></span>
+                </button>
+            </div>
+            <div class="field field-tfa-call">
+                <button
+                    click="AuthClick.bind($data, $element, 'call')"
+                    type="button"
+                    class="action default">
+                    <span data-bind='i18n: "Send me a code via phone call"'></span>
+                </button>
+            </div>
+        </fieldset>
+        <!-- /ko -->
+        <fieldset  class="verify fieldset" visible='currentStep() === "verify"'>
+            <p data-bind='i18n: "Expires in " + secondsToExpire()+ " seconds."' visible='secondsToExpire() > 0'></p>
+            <div class="field field-tfa-verify">
+                <label for="tfa_code" class="label">
+                    <span data-bind='i18n: "Verification code"'></span>
+                </label>
+                <div class="control">
+                    <input
+                        data-bind="mageInit: {'mage/trim-input':{}}"
+                        id="tfa_code"
+                        name="tfa_code"
+                        class="input-text required-entry"
+                        type="text"
+                        autofocus
+                        autocomplete="off"
+                        placeholder="Verification code"/>
+                </div>
+            </div>
+            <div class="primary">
+                <button type="submit" class="action primary" name="tfa-login" id="tfa-authy">
+                    <span data-bind="i18n: 'Confirm'"></span>
+                </button>
+            </div>
+        </fieldset>
+        <input name="provider_code" data-bind="value: getSelectedProviderCode()" id="provider_code" type="hidden" />
+    </div>
+<!-- /ko -->

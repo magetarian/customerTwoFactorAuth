@@ -15,7 +15,7 @@ use Magento\Framework\DataObject;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\DuoSecurity;
-use MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity as MspDuoSecurity;
+use Magento\TwoFactorAuth\Model\Provider\Engine\DuoSecurity as MagentoDuoSecurity;
 
 /**
  * Class DuoSecurityTest
@@ -51,7 +51,7 @@ class DuoSecurityTest extends TestCase
      */
     public function testGetCode()
     {
-        $this->assertEquals(MspDuoSecurity::CODE, $this->object->getCode());
+        $this->assertEquals(MagentoDuoSecurity::CODE, $this->object->getCode());
     }
 
     /**

@@ -18,10 +18,10 @@ use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magento\Framework\HTTP\Client\CurlFactory;
 use Magento\Framework\HTTP\Client\Curl;
-use MSP\TwoFactorAuth\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
-use MSP\TwoFactorAuth\Model\ResourceModel\Country\Collection;
+use Magento\TwoFactorAuth\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
+use Magento\TwoFactorAuth\Model\ResourceModel\Country\Collection;
 use Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine\Authy;
-use MSP\TwoFactorAuth\Api\Data\CountryInterface;
+use Magento\TwoFactorAuth\Api\Data\CountryInterface;
 
 /**
  * Class AuthyTest

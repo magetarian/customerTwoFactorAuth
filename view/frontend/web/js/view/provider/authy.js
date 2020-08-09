@@ -10,6 +10,7 @@ define([
     'ko',
     'Magetarian_CustomerTwoFactorAuth/js/action/authy/register',
     'Magetarian_CustomerTwoFactorAuth/js/action/authy/verify',
+    'Magento_Ui/js/model/messageList',
     'Magetarian_CustomerTwoFactorAuth/js/view/provider/default'
 ], function (
     $,
@@ -17,6 +18,7 @@ define([
     ko,
     registerAction,
     verifyAction,
+    messageList,
     Component
 ) {
     'use strict';
@@ -69,9 +71,15 @@ define([
          * @param {String} status
          */
         validateOneTouch: function (code, status) {
-            if (status !== 'approved') {
+            if (status == 'approved') {
+                $(this.authButton).closest("form").find(this.tfaCodeFieldSelector).val(code);
+                $(this.authButton).hide();
+                $(this.authButton).closest("form").submit();
+            } else if (status == 'denied') {
+                messageList.addErrorMessage({ message: 'The authentication request denied.' });
+                $('body').trigger('processStop');
+            } else if (status == 'pending') {
                 let verifyData = this.collectFormData(this.authButton);
-
                 verifyData['method'] = this.method();
                 verifyData['code'] = code;
                 $('body').trigger('processStart');
@@ -79,9 +87,8 @@ define([
                     $('body').trigger('processStop');
                 });
             } else {
-                 $(this.authButton).closest("form").find(this.tfaCodeFieldSelector).val(code);
-                 $(this.authButton).hide();
-                 $(this.authButton).closest("form").submit();
+                messageList.addErrorMessage({ message: 'The authentication status '+status });
+                $('body').trigger('processStop');
             }
         },
 

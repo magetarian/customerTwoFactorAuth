@@ -1,8 +1,3 @@
-<!--
-  ~ @author     Sashas IT Support <support@sashas.org>
-  ~ @copyright  2020  Sashas IT Support Inc. (http://www.extensions.sashas.org)
-  ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
-  -->
 <div class="field tfa-login" data-bind="visible: isButtonVisible()">
     <div class="primary">
         <button type="button" data-bind="css: 'tfa-login-'+getCode(),click: activate.bind($data)" class="action primary" data-code="getCode()">
@@ -10,8 +5,10 @@
         </button>
     </div>
 </div>
-<div class="field tfa-auth google-auth" data-bind="visible: isActive()">
+<div class="field tfa-auth duo-auth" data-bind="visible: isActive()">
     <iframe data-bind="attr: {id: getIframeId()}" class="duo-iframe"></iframe>
-    <input name="provider_code" data-bind="value: getCode()" id="provider_code" type="hidden" />
+    <!-- ko if: (getSelectedProviderCode() == getCode())-->
+    <input name="provider_code" data-bind="value: getSelectedProviderCode()" id="provider_code" type="hidden" />
+    <!-- /ko -->
 </div>
 

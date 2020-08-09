@@ -1,4 +1,4 @@
-image: "sashas777/magento-php:7.3-cli"
+image: "sashas777/magento-php:7.4-cli"
 
 stages:
     - build

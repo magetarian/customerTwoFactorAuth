@@ -48,6 +48,12 @@ define([
         /**
          * @return {String}
          */
+        getSelectedProviderCode: function () {
+            return selectedProvider();
+        },
+        /**
+         * @return {String}
+         */
         getCode: function () {
            return this.code;
         },

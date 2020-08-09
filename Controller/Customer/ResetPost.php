@@ -15,7 +15,6 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
-use MSP\TwoFactorAuth\Model\Provider\Engine\Google as MspGoogle;
 use Magetarian\CustomerTwoFactorAuth\Controller\Customer;
 use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+  ~ @author     The S Group <support@sashas.org>
+  ~ @copyright  2020  Sashas IT Support Inc. (https://www.sashas.org)
+  ~ @license     http://opensource.org/licenses/GPL-3.0  GNU General Public License, version 3 (GPL-3.0)
+  -->
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="child-src">
+            <values>
+                <value id="duosecurity" type="host">*.duosecurity.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="duosecurity" type="host">*.duosecurity.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="duosecurity" type="host">*.duosecurity.com</value>
+            </values>
+        </policy>
+        <policy id="media-src">
+            <values>
+                <value id="duosecurity" type="host">*.duosecurity.com</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="duosecurity" type="host">*.duosecurity.com</value>
+            </values>
+        </policy>
+        <policy id="script-src">
+            <values>
+                <value id="duosecurity" type="host">*.duosecurity.com</value>
+            </values>
+        </policy>
+        <policy id="frame-src">
+            <values>
+                <value id="duosecurity" type="host">*.duosecurity.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

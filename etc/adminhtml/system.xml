@@ -7,7 +7,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="msp_securitysuite_twofactorauth">
+        <section id="twofactorauth">
             <group id="general">
                 <field id="customer_force_tfa" translate="label" type="select" sortOrder="90" showInDefault="1"
                        showInWebsite="1" showInStore="0">

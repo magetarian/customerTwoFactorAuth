@@ -12,7 +12,7 @@ use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\DataObject;
 use Magetarian\CustomerTwoFactorAuth\Api\EngineInterface;
-use MSP\TwoFactorAuth\Model\Provider\Engine\DuoSecurity as MspDuoSecurity;
+use Magento\TwoFactorAuth\Model\Provider\Engine\DuoSecurity as MagentoDuoSecurity;
 
 /**
  * Class DuoSecurity
@@ -23,7 +23,7 @@ class DuoSecurity implements EngineInterface
     /**
      * Enabled for customer XML Path
      */
-    const XML_PATH_ENABLED_CUSTOMER = 'msp_securitysuite_twofactorauth/duo/enabled_customer';
+    const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/duo/enabled_customer';
 
     /**
      * @var ScopeConfigInterface
@@ -46,7 +46,7 @@ class DuoSecurity implements EngineInterface
      */
     public function getApiHostname()
     {
-        return $this->scopeConfig->getValue(MspDuoSecurity::XML_PATH_API_HOSTNAME);
+        return $this->scopeConfig->getValue(MagentoDuoSecurity::XML_PATH_API_HOSTNAME);
     }
 
     /**
@@ -55,7 +55,7 @@ class DuoSecurity implements EngineInterface
      */
     private function getApplicationKey()
     {
-        return $this->scopeConfig->getValue(MspDuoSecurity::XML_PATH_APPLICATION_KEY);
+        return $this->scopeConfig->getValue(MagentoDuoSecurity::XML_PATH_APPLICATION_KEY);
     }
 
     /**
@@ -64,7 +64,7 @@ class DuoSecurity implements EngineInterface
      */
     private function getSecretKey()
     {
-        return $this->scopeConfig->getValue(MspDuoSecurity::XML_PATH_SECRET_KEY);
+        return $this->scopeConfig->getValue(MagentoDuoSecurity::XML_PATH_SECRET_KEY);
     }
 
     /**
@@ -73,7 +73,7 @@ class DuoSecurity implements EngineInterface
      */
     private function getIntegrationKey()
     {
-        return $this->scopeConfig->getValue(MspDuoSecurity::XML_PATH_INTEGRATION_KEY);
+        return $this->scopeConfig->getValue(MagentoDuoSecurity::XML_PATH_INTEGRATION_KEY);
     }
 
     /**
@@ -85,12 +85,12 @@ class DuoSecurity implements EngineInterface
      * @param int $time
      * @return string
      */
-    private function signValues($key, $values, $prefix, $expire, $time)
+    private function signValues(string $key, string $values, string $prefix, int $expire, int $time): string
     {
         $exp = $time + $expire;
         $cookie = $prefix . '|' . base64_encode($values . '|' . $exp);
 
-        $sig = hash_hmac("sha1", $cookie, $key);
+        $sig = hash_hmac('sha1', $cookie, $key);
         return $cookie . '|' . $sig;
     }
 
@@ -102,7 +102,7 @@ class DuoSecurity implements EngineInterface
      * @param int $time
      * @return string|false
      */
-    private function parseValues($key, $val, $prefix, $time)
+    private function parseValues(string $key, string $val, string $prefix, int $time): ?string
     {
         $integrationKey = $this->getIntegrationKey();
 
@@ -110,17 +110,17 @@ class DuoSecurity implements EngineInterface
 
         $parts = explode('|', $val);
         if (count($parts) !== 3) {
-            return false;
+            return null;
         }
-        list($uPrefix, $uB64, $uSig) = $parts;
+        [$uPrefix, $uB64, $uSig] = $parts;
 
-        $sig = hash_hmac("sha1", $uPrefix . '|' . $uB64, $key);
-        if (hash_hmac("sha1", $sig, $key) !== hash_hmac("sha1", $uSig, $key)) {
-            return false;
+        $sig = hash_hmac('sha1', $uPrefix . '|' . $uB64, $key);
+        if (hash_hmac('sha1', $sig, $key) !== hash_hmac('sha1', $uSig, $key)) {
+            return null;
         }
 
         if ($uPrefix !== $prefix) {
-            return false;
+            return null;
         }
 
         // @codingStandardsIgnoreStart
@@ -128,15 +128,15 @@ class DuoSecurity implements EngineInterface
         // @codingStandardsIgnoreEnd
 
         if (count($cookieParts) !== 3) {
-            return false;
+            return null;
         }
-        list($user, $uIkey, $exp) = $cookieParts;
+        [$user, $uIkey, $exp] = $cookieParts;
 
         if ($uIkey !== $integrationKey) {
-            return false;
+            return null;
         }
         if ($timestamp >= (int) $exp) {
-            return false;
+            return null;
         }
 
         return $user;
@@ -147,7 +147,7 @@ class DuoSecurity implements EngineInterface
      * @param CustomerInterface $customer
      * @return string
      */
-    public function getRequestSignature(CustomerInterface $customer)
+    public function getRequestSignature(CustomerInterface $customer): string
     {
         $time = time();
 
@@ -155,15 +155,15 @@ class DuoSecurity implements EngineInterface
         $duoSignature = $this->signValues(
             $this->getSecretKey(),
             $values,
-            MspDuoSecurity::DUO_PREFIX,
-            MspDuoSecurity::DUO_EXPIRE,
+            MagentoDuoSecurity::DUO_PREFIX,
+            MagentoDuoSecurity::DUO_EXPIRE,
             $time
         );
         $appSignature = $this->signValues(
             $this->getApplicationKey(),
             $values,
-            MspDuoSecurity::APP_PREFIX,
-            MspDuoSecurity::APP_EXPIRE,
+            MagentoDuoSecurity::APP_PREFIX,
+            MagentoDuoSecurity::APP_EXPIRE,
             $time
         );
 
@@ -176,14 +176,14 @@ class DuoSecurity implements EngineInterface
      * @param DataObject $request
      * @return bool
      */
-    public function verify(CustomerInterface $customer, DataObject $request)
+    public function verify(CustomerInterface $customer, DataObject $request): bool
     {
         $time = time();
 
         list($authSig, $appSig) = explode(':', $request->getData('tfa_code'));
 
-        $authUser = $this->parseValues($this->getSecretKey(), $authSig, MspDuoSecurity::AUTH_PREFIX, $time);
-        $appUser = $this->parseValues($this->getApplicationKey(), $appSig, MspDuoSecurity::APP_PREFIX, $time);
+        $authUser = $this->parseValues($this->getSecretKey(), $authSig, MagentoDuoSecurity::AUTH_PREFIX, $time);
+        $appUser = $this->parseValues($this->getApplicationKey(), $appSig, MagentoDuoSecurity::APP_PREFIX, $time);
 
         return (($authUser === $appUser) && ($appUser === $customer->getEmail().$customer->getId()));
     }
@@ -195,7 +195,6 @@ class DuoSecurity implements EngineInterface
     public function isEnabled()
     {
         return
-            !!$this->scopeConfig->getValue(MspDuoSecurity::XML_PATH_ENABLED) &&
             !!$this->scopeConfig->getValue(static::XML_PATH_ENABLED_CUSTOMER) &&
             !!$this->getApiHostname() &&
             !!$this->getIntegrationKey() &&
@@ -208,7 +207,7 @@ class DuoSecurity implements EngineInterface
      */
     public function getCode(): string
     {
-        return MspDuoSecurity::CODE;
+        return MagentoDuoSecurity::CODE;
     }
 
     /**
