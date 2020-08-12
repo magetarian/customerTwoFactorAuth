@@ -10,6 +10,7 @@
         }
     ],
     "require": {
+        "php": "~7.3.0||~7.4.0",
         "magento/framework": "103.0.*",
         "magento/module-customer": "103.0.*",
         "magento/module-backend": "102.0.*",
@@ -31,7 +32,7 @@
         }
     ],
     "require-dev": {
-        "thesgroup/magento2-testing-framework": "~1.0.6"
+        "thesgroup/magento2-testing-framework": "~1.1.0"
     },
     "autoload": {
         "files": [ "registration.php" ],

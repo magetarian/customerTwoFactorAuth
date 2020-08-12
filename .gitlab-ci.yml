@@ -46,6 +46,15 @@ phpstan:
     script:
         - vendor/bin/phpstan-tests
 
+integrity:
+    stage: test
+    cache:
+        key: $CI_COMMIT_SHA
+        paths:
+            - vendor/
+    script:
+        - vendor/bin/integrity-tests
+
 phpmd:
     stage: test
     cache:
