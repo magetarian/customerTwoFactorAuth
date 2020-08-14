@@ -52,6 +52,7 @@ define([
                     $('body').trigger('processStart');
                     loginAction(loginData).always(function () {
                         $('body').trigger('processStop');
+                        $(self.loginButton).attr('disabled', false);
                     });
                 }
             });

@@ -9,10 +9,11 @@ declare(strict_types = 1);
 namespace Magetarian\CustomerTwoFactorAuth\Model;
 
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magetarian\CustomerTwoFactorAuth\Api\CustomerConfigManagerInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magetarian\CustomerTwoFactorAuth\Setup\Patch\Data\CreateCustomerTFAAttributes;
-use Magetarian\CustomerTwoFactorAuth\Model\Config\ConfigProvider;
 
 /**
  * Class CustomerConfigManager
@@ -26,6 +27,16 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
     private $customerRepository;
 
     /**
+     * @var EncryptorInterface
+     */
+    private $encryptor;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
      * @var null
      */
     private $customer = null;
@@ -34,11 +45,17 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      * CustomerConfigManager constructor.
      *
      * @param CustomerRepositoryInterface $customerRepository
+     * @param EncryptorInterface $encryptor
+     * @param SerializerInterface $serializer
      */
     public function __construct(
-        CustomerRepositoryInterface $customerRepository
+        CustomerRepositoryInterface $customerRepository,
+        EncryptorInterface $encryptor,
+        SerializerInterface $serializer
     ) {
         $this->customerRepository = $customerRepository;
+        $this->encryptor = $encryptor;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -94,10 +111,10 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
         if (!$this->getCustomer($customerId)->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)) {
             return [];
         }
-
-        return $this->getCustomer($customerId)
-                    ->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)
-                    ->getValue();
+        $config = $this->getCustomer($customerId)
+                       ->getCustomAttribute(CreateCustomerTFAAttributes::CONFIG)
+                       ->getValue();
+        return $this->serializer->unserialize($this->encryptor->decrypt($config));
     }
 
     /**
@@ -112,7 +129,8 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
      */
     private function setCustomerProvidersConfiguration(int $customerId, array $config)
     {
-        $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTFAAttributes::CONFIG, [$config]);
+        $encodedConfig = $this->encryptor->encrypt($this->serializer->serialize($config));
+        $this->getCustomer($customerId)->setCustomAttribute(CreateCustomerTFAAttributes::CONFIG, $encodedConfig);
         $this->customer = $this->customerRepository->save($this->getCustomer($customerId));
         return $this;
     }

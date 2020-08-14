@@ -18,7 +18,6 @@ use Magento\Eav\Model\Entity\Attribute\SetFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchRevertableInterface;
-use Magetarian\CustomerTwoFactorAuth\Model\Attribute\Backend\TwoFaEncodedConfig;
 use Magetarian\CustomerTwoFactorAuth\Model\Config\Source\EnabledProviders;
 
 /**
@@ -162,8 +161,7 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
                 'required'      => false,
                 'position'      => 101,
                 'visible'       => false,
-                'system'        => false,
-                'backend'       => TwoFaEncodedConfig::class
+                'system'        => false
             ]
         );
 

@@ -15,6 +15,8 @@ use Magento\Framework\Api\AttributeInterface;
 use PHPUnit\Framework\TestCase;
 use Magento\Framework\TestFramework\Unit\Helper\ObjectManager;
 use Magetarian\CustomerTwoFactorAuth\Model\CustomerConfigManager;
+use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 
 /**
  * Class CustomerConfigManagerTest
@@ -32,6 +34,16 @@ class CustomerConfigManagerTest extends TestCase
     private $customerRepository;
 
     /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $encryptor;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject
+     */
+    private $serializer;
+
+    /**
      * @dataProvider dataProviderGetProviderConfig
      */
     public function testGetProviderConfig(bool $customAttributeExist, ?array $result)
@@ -43,11 +55,13 @@ class CustomerConfigManagerTest extends TestCase
                                 ->disableOriginalConstructor()
                                 ->getMock();
         if ($customAttributeExist) {
-            $customAttribute->expects($this->atLeastOnce())->method('getValue')->willReturn(['test'=>['config']]);
+            $customAttribute->expects($this->atLeastOnce())->method('getValue')->willReturn('test');
             $customer->expects($this->atLeastOnce())->method('getCustomAttribute')->willReturn($customAttribute);
         } else {
             $customAttribute->expects($this->never())->method('getValue');
         }
+        $this->encryptor->expects($this->any())->method('decrypt')->willReturn('test');
+        $this->serializer->expects($this->any())->method('unserialize')->willReturn(['test'=>['config']]);
         $this->customerRepository->expects($this->atLeastOnce())->method('getById')->willReturn($customer);
         $this->assertEquals($result, $this->object->getProviderConfig(1, 'test'));
     }
@@ -66,7 +80,12 @@ class CustomerConfigManagerTest extends TestCase
         $customAttribute = $this->getMockBuilder(AttributeInterface::class)
                                 ->disableOriginalConstructor()
                                 ->getMock();
-        $customAttribute->expects($this->atLeastOnce())->method('getValue')->willReturn(['test'=>['config']]);
+        $this->encryptor->expects($this->any())->method('decrypt')->willReturn('test');
+        $this->serializer->expects($this->any())->method('unserialize')->willReturn(['test'=>['config']]);
+        $this->encryptor->expects($this->any())->method('encrypt')->willReturn('test');
+        $this->serializer->expects($this->any())->method('serialize')->willReturn('{}');
+
+        $customAttribute->expects($this->atLeastOnce())->method('getValue')->willReturn('test');
         $customer->expects($this->atLeastOnce())->method('getCustomAttribute')->willReturn($customAttribute);
         $customer->expects($this->atLeastOnce())->method('setCustomAttribute');
         $this->customerRepository->expects($this->atLeastOnce())->method('getById')->willReturn($customer);
@@ -94,10 +113,18 @@ class CustomerConfigManagerTest extends TestCase
         $this->customerRepository = $this->getMockBuilder(CustomerRepositoryInterface::class)
                                 ->disableOriginalConstructor()
                                 ->getMock();
+        $this->encryptor = $this->getMockBuilder(EncryptorInterface::class)
+                                         ->disableOriginalConstructor()
+                                         ->getMock();
+        $this->serializer = $this->getMockBuilder(SerializerInterface::class)
+                                         ->disableOriginalConstructor()
+                                         ->getMock();
         $this->object = (new ObjectManager($this))->getObject(
             CustomerConfigManager::class,
             [
-                'customerRepository' => $this->customerRepository
+                'customerRepository' => $this->customerRepository,
+                'encryptor' => $this->encryptor,
+                'serializer' => $this->serializer,
             ]
         );
     }

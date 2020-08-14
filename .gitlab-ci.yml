@@ -75,4 +75,4 @@ phpunit:
             junit: clover.xml
     script:
         - docker-php-ext-enable xdebug
-        - vendor/bin/phpunit-tests 95
+        - vendor/bin/phpunit-tests 90
