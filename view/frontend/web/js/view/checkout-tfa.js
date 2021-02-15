@@ -8,6 +8,7 @@ define([
     'jquery',
     'Magento_Customer/js/action/login',
     'Magento_Checkout/js/model/full-screen-loader',
+    'Magento_Customer/js/view/authentication-popup',
     'mageUtils',
     'uiLayout',
     'uiComponent'
@@ -15,6 +16,7 @@ define([
     $,
     loginAction,
     fullScreenLoader,
+    authenticationPopup,
     utils,
     layout,
     Component
@@ -39,7 +41,7 @@ define([
         initialize: function () {
             this._super();
             let self = this;
-
+            console.log(authenticationPopup);
             loginAction.registerProvidersCallback(function(providersData, response) {
                 self.renderProviders(providersData, response);
             });
@@ -64,6 +66,7 @@ define([
                     }
                 )]);
             });
+            authenticationPopup().isLoading(false);
             this.isVisible(true);
         },
 
