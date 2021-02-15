@@ -41,7 +41,7 @@ define([
         initialize: function () {
             this._super();
             let self = this;
-            console.log(authenticationPopup);
+
             loginAction.registerProvidersCallback(function(providersData, response) {
                 self.renderProviders(providersData, response);
             });

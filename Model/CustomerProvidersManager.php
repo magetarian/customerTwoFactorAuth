@@ -66,12 +66,12 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
         $enabledProviders = $this->providerPool->getEnabledProviders();
         foreach ($enabledProviders as $provider) {
             if ($customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)) {
-                $selectedProvidersArray = [];
-                $selectedProviders = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)
-                                              ->getValue();
-                if ($selectedProviders) {
-                    $selectedProvidersArray = explode(',', $selectedProviders);
-                }
+//                $selectedProvidersArray = [];
+//                $selectedProviders = $customer->getCustomAttribute(CreateCustomerTFAAttributes::PROVIDERS)
+//                                              ->getValue();
+//                if ($selectedProviders) {
+//                    $selectedProvidersArray = explode(',', $selectedProviders);
+//                }
 
                 $customerProviders[] = $provider;
             } elseif ($this->configProvider->isTfaForced()) {
