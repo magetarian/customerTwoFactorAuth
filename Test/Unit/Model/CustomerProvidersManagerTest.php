@@ -63,8 +63,8 @@ class CustomerProvidersManagerTest extends TestCase
                                ->getMock();
         $result = [$provider1, $provider2];
 
-        $customAttribute->expects($this->atLeastOnce())->method('getValue')->willReturn('test,test2');
-        $customer->expects($this->atLeastOnce())->method('getCustomAttribute')->willReturn($customAttribute);
+        $customAttribute->expects($this->any())->method('getValue')->willReturn('test,test2');
+        $customer->expects($this->any())->method('getCustomAttribute')->willReturn($customAttribute);
         $this->customerRepository->expects($this->atLeastOnce())->method('getById')->willReturn($customer);
         $this->providerPool->expects($this->atLeastOnce())->method('getEnabledProviders')
                                                           ->willReturn([$provider1, $provider2]);
