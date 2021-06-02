@@ -14,9 +14,21 @@ define([
     'use strict';
 
     return function (loginAction) {
-        let callbacks = [];
+        const providersCallback = [];
+        const loginCallback = [];
 
-        let wrappedFunction =  wrapper.wrap(loginAction, function (
+        /**
+         * @param {Function[]} callbacks
+         * @param {Object} loginData
+         * @param {Object|undefined} response
+         */
+        const invokeCallbacks = function (callbacks, loginData, response) {
+            callbacks.forEach(function (callback) {
+                callback(loginData, response);
+            });
+        };
+
+        let wrappedFunction = wrapper.wrap(loginAction, function (
             originalAction,
             loginData,
             redirectUrl,
@@ -37,28 +49,37 @@ define([
             ).done(function (response) {
                 if (response.errors) {
                     messageContainer.addErrorMessage(response);
+                    invokeCallbacks(loginCallback, loginData, response);
                 } else if (Object.keys(response.providers).length > 0) {
-                        // eslint-disable-next-line  max-nested-callbacks
-                        callbacks.forEach(function (callback) {
-                            callback(loginData, response);
-                        });
-                    } else {
-                        return originalAction(loginData, redirectUrl, isGlobal, messageContainer);
-                    }
+                    invokeCallbacks(providersCallback, loginData, response);
+                } else {
+                    return originalAction(loginData, redirectUrl, isGlobal, messageContainer);
+                }
             }).fail(function () {
                 messageContainer.addErrorMessage({
                     'message': $t('Could not get list of providers. Please try again later')
                 });
+                invokeCallbacks(loginCallback, loginData, undefined);
             });
         });
 
-        wrappedFunction.registerLoginCallback = loginAction.registerLoginCallback;
+        /**
+         * @param {Function} callback
+         */
+        wrappedFunction.registerLoginCallback = function (callback) {
+            /*
+             * Store the login callbacks so that they can be invoked later in cases
+             * where the original Action is not called
+             */
+            loginCallback.push(callback);
+            loginAction.registerLoginCallback(callback);
+        };
 
         /**
          * @param {Function} callback
          */
         wrappedFunction.registerProvidersCallback = function (callback) {
-            callbacks.push(callback);
+            providersCallback.push(callback);
         };
 
         return wrappedFunction;
