@@ -73,6 +73,7 @@ class Google implements EngineInterface
 
     /**
      * Generate random secret
+     *
      * @return string
      */
     private function generateSecret()
@@ -83,6 +84,7 @@ class Google implements EngineInterface
 
     /**
      * Get the secret code used for Google Authentication
+     *
      * @param int $customerId
      * @return string|null
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -101,6 +103,7 @@ class Google implements EngineInterface
 
     /**
      * Render TFA QrCode for a customer
+     *
      * @param CustomerInterface $customer
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -127,6 +130,7 @@ class Google implements EngineInterface
 
     /**
      * Get TFA provisioning URL for a customer
+     *
      * @param CustomerInterface $customer
      * @return string
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -148,6 +152,7 @@ class Google implements EngineInterface
 
     /**
      * Get TOTP object
+     *
      * @param CustomerInterface $customer
      * @return \OTPHP\TOTP
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -166,6 +171,7 @@ class Google implements EngineInterface
 
     /**
      * Return true on token validation
+     *
      * @param CustomerInterface $customer
      * @param DataObject $request
      * @return bool
@@ -194,6 +200,7 @@ class Google implements EngineInterface
 
     /**
      * Return true if this provider has been enabled by admin
+     *
      * @return boolean
      */
     public function isEnabled()
@@ -202,6 +209,8 @@ class Google implements EngineInterface
     }
 
     /**
+     * Get code
+     *
      * @return string
      */
     public function getCode(): string
@@ -210,6 +219,8 @@ class Google implements EngineInterface
     }
 
     /**
+     * Get additional config
+     *
      * @param CustomerInterface $customer
      *
      * @return array|null[]|string[]

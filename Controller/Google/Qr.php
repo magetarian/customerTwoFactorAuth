@@ -58,6 +58,8 @@ class Qr extends Action implements HttpGetActionInterface
     }
 
     /**
+     * Generate QR code
+     *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
      * @throws \Endroid\QrCode\Exception\ValidationException
      * @throws \Magento\Framework\Exception\LocalizedException

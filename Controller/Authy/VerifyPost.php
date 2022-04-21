@@ -70,8 +70,10 @@ class VerifyPost extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Verify authy
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
+     * @return \Magento\Framework\App\ResponseInterface
      * @throws LocalizedException
      */
     public function execute()

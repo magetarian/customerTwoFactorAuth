@@ -54,6 +54,8 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
     }
 
     /**
+     * Get customer providers
+     *
      * @param int $customerId
      *
      * @return array
@@ -82,6 +84,8 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
     }
 
     /**
+     * Get Customer
+     *
      * @param $customerId
      *
      * @return CustomerInterface

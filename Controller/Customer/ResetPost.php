@@ -54,6 +54,8 @@ class ResetPost extends Customer implements HttpPostActionInterface
     }
 
     /**
+     * Reset customer providers
+     *
      * @return ResponseInterface|ResultInterface
      */
     public function execute()

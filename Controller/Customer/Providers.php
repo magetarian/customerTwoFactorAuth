@@ -78,8 +78,10 @@ class Providers extends Action implements HttpPostActionInterface
     }
 
     /**
+     * Get customer providers
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
+     * @return \Magento\Framework\App\ResponseInterface
      * @throws LocalizedException
      */
     public function execute()

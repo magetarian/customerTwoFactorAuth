@@ -17,30 +17,35 @@ interface ProviderInterface
 {
     /**
      * Return true if this provider has been enabled by admin
+     *
      * @return boolean
      */
     public function isEnabled(): bool;
 
     /**
      * Get provider engine
+     *
      * @return \Magetarian\CustomerTwoFactorAuth\EngineInterface
      */
     public function getEngine(): EngineInterface;
 
     /**
      * Get provider code
+     *
      * @return string
      */
     public function getCode(): string;
 
     /**
      * Get provider name
+     *
      * @return string
      */
     public function getName(): string;
 
     /**
      * Reset provider configuration
+     *
      * @param int $customerId
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface
      */
@@ -48,6 +53,7 @@ interface ProviderInterface
 
     /**
      * Return true if this provider has been configured
+     *
      * @param int $customerId
      * @return bool
      */

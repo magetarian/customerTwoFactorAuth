@@ -81,6 +81,8 @@ class LoginPlugin
     }
 
     /**
+     * Plugin for ajax login
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @param Login $subject

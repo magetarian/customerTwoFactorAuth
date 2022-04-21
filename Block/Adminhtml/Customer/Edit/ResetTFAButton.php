@@ -42,6 +42,8 @@ class ResetTFAButton extends GenericButton implements ButtonProviderInterface
     }
 
     /**
+     * Get buttons data
+     *
      * @return array
      */
     public function getButtonData()
@@ -62,6 +64,8 @@ class ResetTFAButton extends GenericButton implements ButtonProviderInterface
     }
 
     /**
+     * Check if provider active
+     *
      * @return bool
      */
     private function isProviderActive(): bool
@@ -70,6 +74,8 @@ class ResetTFAButton extends GenericButton implements ButtonProviderInterface
     }
 
     /**
+     * Get reset url
+     *
      * @return string
      */
     public function getResetUrl()

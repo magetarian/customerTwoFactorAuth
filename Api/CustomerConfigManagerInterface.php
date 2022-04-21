@@ -14,6 +14,8 @@ namespace Magetarian\CustomerTwoFactorAuth\Api;
 interface CustomerConfigManagerInterface
 {
     /**
+     * Get provider config
+     *
      * @param int $customerId
      * @param string $providerCode
      *
@@ -22,6 +24,8 @@ interface CustomerConfigManagerInterface
     public function getProviderConfig(int $customerId, string $providerCode): ?array;
 
     /**
+     * Set provider config
+     *
      * @param int $customerId
      * @param string $providerCode
      * @param array|null $config

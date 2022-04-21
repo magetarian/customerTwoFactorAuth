@@ -18,12 +18,14 @@ interface EngineInterface
 {
     /**
      * Return true if this provider has been enabled by admin
+     *
      * @return boolean
      */
     public function isEnabled();
 
     /**
      * Return true on token validation
+     *
      * @param CustomerInterface $customer
      * @param DataObject $request
      * @return bool
@@ -31,11 +33,15 @@ interface EngineInterface
     public function verify(CustomerInterface $customer, DataObject $request);
 
     /**
+     * Get code
+     *
      * @return string
      */
     public function getCode(): string;
 
     /**
+     * Get additional config
+     *
      * @param CustomerInterface $customer
      *
      * @return array

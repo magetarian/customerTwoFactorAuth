@@ -79,6 +79,8 @@ class LoginPostPlugin
     }
 
     /**
+     * Plugin for account login
+     *
      * @param LoginPost $subject
      * @param callable $proceed
      *

@@ -14,6 +14,8 @@ namespace Magetarian\CustomerTwoFactorAuth\Api;
 interface CustomerProvidersManagerInterface
 {
     /**
+     * Get customer providers
+     *
      * @param int $customerId
      *
      * @return array

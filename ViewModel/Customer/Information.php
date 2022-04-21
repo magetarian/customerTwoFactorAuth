@@ -44,6 +44,8 @@ class Information implements ArgumentInterface
     }
 
     /**
+     * Verify if enabled
+     *
      * @return bool
      */
     public function isEnabled(string $providerCode): bool
@@ -52,6 +54,8 @@ class Information implements ArgumentInterface
     }
 
     /**
+     * Get provider name
+     *
      * @return string
      */
     public function getProviderName(string $providerCode): string
@@ -60,6 +64,8 @@ class Information implements ArgumentInterface
     }
 
     /**
+     * Get additional configuration
+     *
      * @param string $providerCode
      *
      * @return array
@@ -74,6 +80,8 @@ class Information implements ArgumentInterface
     }
 
     /**
+     * Get prbider by code
+     *
      * @param string $providerCode
      *
      * @return ProviderInterface

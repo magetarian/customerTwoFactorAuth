@@ -43,14 +43,14 @@ class Provider implements ProviderInterface
      *
      * @param EngineInterface $engine
      * @param CustomerConfigManagerInterface $customerConfigManager
-     * @param $code
-     * @param $name
+     * @param string $code
+     * @param string $name
      */
     public function __construct(
         EngineInterface $engine,
         CustomerConfigManagerInterface $customerConfigManager,
-        $code,
-        $name
+        string $code,
+        string $name
     ) {
         $this->engine = $engine;
         $this->customerConfigManager = $customerConfigManager;
@@ -60,6 +60,7 @@ class Provider implements ProviderInterface
 
     /**
      * Return true if this provider has been enabled by admin
+     *
      * @return boolean
      */
     public function isEnabled(): bool
@@ -69,6 +70,7 @@ class Provider implements ProviderInterface
 
     /**
      * Get provider engine
+     *
      * @return EngineInterface
      */
     public function getEngine():  EngineInterface
@@ -78,6 +80,7 @@ class Provider implements ProviderInterface
 
     /**
      * Get provider code
+     *
      * @return string
      */
     public function getCode(): string
@@ -87,6 +90,7 @@ class Provider implements ProviderInterface
 
     /**
      * Get provider name
+     *
      * @return string
      */
     public function getName(): string
@@ -95,7 +99,9 @@ class Provider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * Reset configuration
+     *
+     * @inheritDoc
      */
     public function resetConfiguration(int $customerId): ProviderInterface
     {
@@ -104,7 +110,9 @@ class Provider implements ProviderInterface
     }
 
     /**
-     * @inheritdoc
+     * Check if configured
+     *
+     * @inheritDoc
      */
     public function isConfigured(int $customerId): bool
     {
@@ -112,6 +120,8 @@ class Provider implements ProviderInterface
     }
 
     /**
+     * Get configuration
+     *
      * @param $customerId
      *
      * @return array|null

@@ -29,12 +29,12 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
     /**
      *  Providers Attribute Code
      */
-    const PROVIDERS        = 'tfa_providers';
+    public const PROVIDERS        = 'tfa_providers';
 
     /**
      * Configuration Attribute Code
      */
-    const CONFIG           = 'tfa_encoded_config';
+    public const CONFIG           = 'tfa_encoded_config';
 
     /**
      * @var ModuleDataSetupInterface
@@ -82,7 +82,7 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
     }
 
     /**
-     *
+     * @inheritDoc
      */
     public function revert()
     {
@@ -101,7 +101,7 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getAliases()
     {
@@ -109,7 +109,7 @@ class CreateCustomerTFAAttributes implements DataPatchInterface, PatchRevertable
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public static function getDependencies()
     {

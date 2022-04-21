@@ -70,7 +70,9 @@ class RegisterPost extends Action implements HttpPostActionInterface
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\Result\Raw|\Magento\Framework\Controller\ResultInterface
+     * Register authy
+     *
+     * @return \Magento\Framework\App\ResponseInterface
      * @throws LocalizedException
      */
     public function execute()

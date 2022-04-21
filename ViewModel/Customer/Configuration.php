@@ -52,6 +52,8 @@ class Configuration implements ArgumentInterface
     }
 
     /**
+     * Verify is the provider enabled
+     *
      * @return bool
      */
     public function isEnabled(): bool
@@ -60,6 +62,8 @@ class Configuration implements ArgumentInterface
     }
 
     /**
+     * Get list of enabled providers
+     *
      * @return array
      */
     public function getEnabledProviders(): array
@@ -71,6 +75,8 @@ class Configuration implements ArgumentInterface
     }
 
     /**
+     * Get list of selected providers
+     *
      * @return array
      */
     public function getSelectedProviders(): array

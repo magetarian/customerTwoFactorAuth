@@ -25,7 +25,7 @@ class Reset extends Action implements HttpGetActionInterface
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magetarian_CustomerTwoFactorAuth::reset_tfa';
+    public const ADMIN_RESOURCE = 'Magetarian_CustomerTwoFactorAuth::reset_tfa';
 
     /**
      * @var ProviderPoolInterface
@@ -47,7 +47,9 @@ class Reset extends Action implements HttpGetActionInterface
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface
+     * Reset controller
+     *
+     * @return \Magento\Framework\App\ResponseInterface
      */
     public function execute()
     {

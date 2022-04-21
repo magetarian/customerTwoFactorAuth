@@ -35,6 +35,8 @@ class ProviderPool implements ProviderPoolInterface
     }
 
     /**
+     * Get providers
+     *
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[]
      */
     public function getProviders(): array
@@ -43,6 +45,8 @@ class ProviderPool implements ProviderPoolInterface
     }
 
     /**
+     * Get list of enabled providers
+     *
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[]
      */
     public function getEnabledProviders(): array
@@ -58,6 +62,7 @@ class ProviderPool implements ProviderPoolInterface
     }
 
     /**
+     * Get provider by code
      * @param string $code
      *
      * @return ProviderInterface

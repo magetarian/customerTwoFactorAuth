@@ -86,7 +86,7 @@ class AddCustomerTFAToAdmin implements DataPatchInterface, PatchRevertableInterf
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getAliases()
     {
@@ -94,7 +94,7 @@ class AddCustomerTFAToAdmin implements DataPatchInterface, PatchRevertableInterf
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public static function getDependencies()
     {

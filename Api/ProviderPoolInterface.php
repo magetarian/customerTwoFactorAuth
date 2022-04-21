@@ -14,18 +14,21 @@ interface ProviderPoolInterface
 {
     /**
      * Get a list of providers
+     *
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[]
      */
     public function getProviders(): array;
 
     /**
      * Get a list of enabled providers
+     *
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface[]
      */
     public function getEnabledProviders(): array;
 
     /**
      * Get provider by code
+     *
      * @param string $code
      * @return \Magetarian\CustomerTwoFactorAuth\Api\ProviderInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
