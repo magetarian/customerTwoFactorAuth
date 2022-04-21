@@ -272,7 +272,7 @@ class Authy implements EngineInterface
      *
      * @param CustomerInterface $customer
      * @param array $providerInfo
-     * @param $approvalCode
+     * @param string $approvalCode
      *
      * @return array
      * @throws LocalizedException
@@ -420,7 +420,7 @@ class Authy implements EngineInterface
     }
 
     /**
-     * Get a country list
+     * Get country list
      *
      * return array
      */
