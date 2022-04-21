@@ -422,7 +422,7 @@ class Authy implements EngineInterface
     /**
      * Get country list
      *
-     * return array
+     * @return array
      */
     private function getCountriesList(): array
     {
