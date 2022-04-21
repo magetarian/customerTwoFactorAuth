@@ -63,6 +63,7 @@ class ProviderPool implements ProviderPoolInterface
 
     /**
      * Get provider by code
+     *
      * @param string $code
      *
      * @return ProviderInterface

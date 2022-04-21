@@ -29,22 +29,22 @@ class Authy implements EngineInterface
     /**
      * Enabled for customer XML Path
      */
-    const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/authy/enabled_customer';
+    public const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/authy/enabled_customer';
 
     /**
      * Key for customer id field
      */
-    const CONFIG_CUSTOMER_KEY = 'customer';
+    public const CONFIG_CUSTOMER_KEY = 'customer';
 
     /**
      * Key for phone confirmation field
      */
-    const CONFIG_PHONE_CONFIRMED_KEY = 'phone_confirmed';
+    public const CONFIG_PHONE_CONFIRMED_KEY = 'phone_confirmed';
 
     /**
      * Key for customer approval field
      */
-    const CONFIG_PENDING_APPROVAL_KEY = 'pending_approval';
+    public const CONFIG_PENDING_APPROVAL_KEY = 'pending_approval';
 
     /**
      * @var ScopeConfigInterface
@@ -95,6 +95,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Verify
+     *
      * @param CustomerInterface $customer
      * @param DataObject $request
      *
@@ -124,6 +126,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Auth
+     *
      * @param CustomerInterface $customer
      * @param array $providerInfo
      * @param string $code
@@ -146,6 +150,7 @@ class Authy implements EngineInterface
 
     /**
      * Return true if this provider has been enabled by admin
+     *
      * @return boolean
      */
     public function isEnabled()
@@ -156,6 +161,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Request a token
+     *
      * @param CustomerInterface $customer
      * @param string $method
      * @param string|null $approvalCode
@@ -184,6 +191,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Verify and enroll
+     *
      * @param CustomerInterface $customer
      * @param array|null $providerInfo
      * @param string $code
@@ -219,6 +228,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Request Enroll
+     *
      * @param CustomerInterface $customer
      * @param string $country
      * @param string $phoneNumber
@@ -257,6 +268,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Request one touch
+     *
      * @param CustomerInterface $customer
      * @param array $providerInfo
      * @param $approvalCode
@@ -290,6 +303,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Validate One touch
+     *
      * @param CustomerInterface $customer
      * @param array $providerInfo
      * @param string $approvalCode
@@ -314,6 +329,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Verify One touch
+     *
      * @param CustomerInterface $customer
      * @param array $providerInfo
      *
@@ -333,6 +350,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Api request
+     *
      * @param string $url
      * @param array $data
      * @param string $type
@@ -367,6 +386,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Get api key
+     *
      * @return string|null
      */
     private function getApiKey(): ?string
@@ -375,6 +396,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Get api endpoint
+     *
      * @param string $path
      *
      * @return string
@@ -385,6 +408,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Get one touch api
+     *
      * @param string $path
      *
      * @return string
@@ -396,6 +421,7 @@ class Authy implements EngineInterface
 
     /**
      * Get a country list
+     *
      * return array
      */
     private function getCountriesList(): array
@@ -413,6 +439,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Get code
+     *
      * @return string
      */
     public function getCode(): string
@@ -421,6 +449,8 @@ class Authy implements EngineInterface
     }
 
     /**
+     * Get additional config
+     *
      * @param CustomerInterface $customer
      *
      * @return array

@@ -101,7 +101,7 @@ class Provider implements ProviderInterface
     /**
      * Reset configuration
      *
-     * @inheritDoc
+     * @param int $customerId
      */
     public function resetConfiguration(int $customerId): ProviderInterface
     {
@@ -112,7 +112,7 @@ class Provider implements ProviderInterface
     /**
      * Check if configured
      *
-     * @inheritDoc
+     * @param int $customerId
      */
     public function isConfigured(int $customerId): bool
     {
@@ -122,7 +122,7 @@ class Provider implements ProviderInterface
     /**
      * Get configuration
      *
-     * @param $customerId
+     * @param int $customerId
      *
      * @return array|null
      */

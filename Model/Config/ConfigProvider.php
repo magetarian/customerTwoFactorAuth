@@ -17,7 +17,7 @@ use Magento\Store\Model\ScopeInterface;
  */
 class ConfigProvider
 {
-    const XML_PATH_CUSTOMER_FORCE_TFA = 'twofactorauth/general/customer_force_tfa';
+    public const XML_PATH_CUSTOMER_FORCE_TFA = 'twofactorauth/general/customer_force_tfa';
 
     /**
      * @var ScopeConfigInterface
@@ -36,6 +36,8 @@ class ConfigProvider
     }
 
     /**
+     * Is TFA forced
+     *
      * @return bool
      */
     public function isTfaForced(): bool

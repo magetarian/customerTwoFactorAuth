@@ -86,7 +86,7 @@ class CustomerProvidersManager implements CustomerProvidersManagerInterface
     /**
      * Get Customer
      *
-     * @param $customerId
+     * @param int $customerId
      *
      * @return CustomerInterface
      * @throws \Magento\Framework\Exception\LocalizedException

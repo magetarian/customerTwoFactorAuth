@@ -6,7 +6,7 @@
 [![Pipeline Status](https://gitlab.com/magetarian/customerTwoFactorAuth/badges/master/pipeline.svg)](https://gitlab.com/magetarian/customerTwoFactorAuth/-/commits/master)
 [![Coverage Report](https://gitlab.com/magetarian/customerTwoFactorAuth/badges/master/coverage.svg)](https://gitlab.com/magetarian/customerTwoFactorAuth/-/commits/master)
 
-The module adds ability for customers login using TFA.
+The module add ability for customers to login using TFA.
 
 ## Supported Providers
 - Google Authenticator 

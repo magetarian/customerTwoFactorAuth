@@ -19,8 +19,16 @@ use Magetarian\CustomerTwoFactorAuth\Api\ProviderPoolInterface;
 class EnabledProviders extends AbstractSource implements OptionSourceInterface
 {
 
+    /**
+     * @var ProviderPoolInterface
+     */
     protected $providerPool;
 
+    /**
+     * Constructor
+     *
+     * @param ProviderPoolInterface $providerPool
+     */
     public function __construct(
         ProviderPoolInterface $providerPool
     ) {
@@ -38,6 +46,8 @@ class EnabledProviders extends AbstractSource implements OptionSourceInterface
     }
 
     /**
+     * Get all options
+     *
      * @return array
      */
     public function getAllOptions(): array
@@ -54,6 +64,8 @@ class EnabledProviders extends AbstractSource implements OptionSourceInterface
     }
 
     /**
+     * Get enabled providers
+     *
      * @return array
      */
     private function getEnabledProviders(): array

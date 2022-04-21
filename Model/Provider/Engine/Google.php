@@ -29,7 +29,7 @@ use OTPHP\TOTPInterface;
  */
 class Google implements EngineInterface
 {
-    const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/google/enabled_customer';
+    public const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/google/enabled_customer';
 
     /**
      * @var CustomerConfigManagerInterface

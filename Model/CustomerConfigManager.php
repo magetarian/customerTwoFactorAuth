@@ -59,6 +59,8 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
     }
 
     /**
+     * Get provider config
+     *
      * @param int $customerId
      * @param string $providerCode
      *
@@ -76,6 +78,8 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
     }
 
     /**
+     * Set provider config
+     *
      * @param int $customerId
      * @param string $providerCode
      * @param array|null $config
@@ -102,6 +106,8 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
     }
 
     /**
+     * Get providers configuration
+     *
      * @param int $customerId
      *
      * @return array
@@ -118,6 +124,8 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
     }
 
     /**
+     * Set providers configuration
+     *
      * @param int $customerId
      * @param array $config
      *
@@ -136,6 +144,8 @@ class CustomerConfigManager implements CustomerConfigManagerInterface
     }
 
     /**
+     * Get customer
+     *
      * @param int $customerId
      *
      * @return CustomerInterface

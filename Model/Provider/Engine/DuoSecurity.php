@@ -23,7 +23,7 @@ class DuoSecurity implements EngineInterface
     /**
      * Enabled for customer XML Path
      */
-    const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/duo/enabled_customer';
+    public const XML_PATH_ENABLED_CUSTOMER = 'twofactorauth/duo/enabled_customer';
 
     /**
      * @var ScopeConfigInterface
@@ -42,6 +42,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Get API hostname
+     *
      * @return string
      */
     public function getApiHostname()
@@ -51,6 +52,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Get application key
+     *
      * @return string
      */
     private function getApplicationKey()
@@ -60,6 +62,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Get secret key
+     *
      * @return string
      */
     private function getSecretKey()
@@ -69,6 +72,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Get integration key
+     *
      * @return string
      */
     private function getIntegrationKey()
@@ -78,6 +82,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Sign values
+     *
      * @param string $key
      * @param string $values
      * @param string $prefix
@@ -96,6 +101,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Parse signed values and return username
+     *
      * @param string $key
      * @param string $val
      * @param string $prefix
@@ -144,6 +150,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Get request signature
+     *
      * @param CustomerInterface $customer
      * @return string
      */
@@ -172,6 +179,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Return true on token validation
+     *
      * @param CustomerInterface $customer
      * @param DataObject $request
      * @return bool
@@ -190,6 +198,7 @@ class DuoSecurity implements EngineInterface
 
     /**
      * Return true if this provider has been enabled by admin
+     *
      * @return boolean
      */
     public function isEnabled()
@@ -203,6 +212,8 @@ class DuoSecurity implements EngineInterface
     }
 
     /**
+     * Get code
+     *
      * @return string
      */
     public function getCode(): string
@@ -211,6 +222,8 @@ class DuoSecurity implements EngineInterface
     }
 
     /**
+     * Get additional config
+     *
      * @param CustomerInterface $customer
      *
      * @return array
