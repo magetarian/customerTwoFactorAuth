@@ -16,7 +16,7 @@
         "magento/module-backend": "~102.0",
         "magento/module-eav": "~102.1",
         "magento/module-store": "~101.1",
-        "endroid/qr-code": *,
+        "endroid/qr-code": "^4.4",
         "magento/module-two-factor-auth": "~1.0||~1.1"
     },
     "license": [
