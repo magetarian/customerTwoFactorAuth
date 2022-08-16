@@ -9,7 +9,9 @@ declare(strict_types = 1);
 namespace Magetarian\CustomerTwoFactorAuth\Model\Provider\Engine;
 
 use Base32\Base32;
-use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Color\Color;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
 use Magento\Customer\Api\Data\CustomerInterface;
@@ -115,17 +117,16 @@ class Google implements EngineInterface
         $qrCode = new QrCode($this->getProvisioningUrl($customer));
         $qrCode->setSize(400);
         $qrCode->setMargin(0);
-        $qrCode->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH()); //@phpstan-ignore-line
-        $qrCode->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0, 'a' => 0]);
-        $qrCode->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255, 'a' => 0]);
-        $qrCode->setLabelFontSize(16);
-        $qrCode->setEncoding('UTF-8');
+        $qrCode->setErrorCorrectionLevel(new ErrorCorrectionLevelHigh());
+        $qrCode->setForegroundColor(new Color(0, 0, 0, 0));
+        $qrCode->setBackgroundColor(new Color(255, 255, 255, 0));
+        $qrCode->setEncoding(new Encoding('UTF-8'));
 
         $writer = new PngWriter();
-        $pngData = $writer->writeString($qrCode);
+        $pngData = $writer->write($qrCode);
         // @codingStandardsIgnoreEnd
 
-        return $pngData;
+        return $pngData->getString();
     }
 
     /**
