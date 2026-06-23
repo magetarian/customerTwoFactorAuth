@@ -18,7 +18,7 @@
 message,сообщение
 "Unknown provider %1","Неизвенстный способ %1"
 "Login using two factor authentication, please.","Пожалуйста войдите с использованием двухэтапной аутентификации."
-"The two factor authentication failed. Please try again.","Двухэтапная аутентификация некорректная. Пожалуйста попробуйте снова."
+"The two factor authentication failed. Refresh the page and try again, please.","Код авторизации не корректный. Обнеовите страницу и попробуйте снова."
 "Login successful.","Вход выполнен успешно."
 Reset,Сбросить
 None,Нету

@@ -18,7 +18,7 @@
 message,message
 "Unknown provider %1","Unknown provider %1"
 "Login using two factor authentication, please.","Login using two factor authentication, please."
-"The two factor authentication failed. Please try again.","The two factor authentication failed. Please try again."
+"The two factor authentication failed. Refresh the page and try again, please.","The two factor authentication failed. Refresh the page and try again, please."
 "Login successful.","Login successful."
 Reset,Reset
 None,None

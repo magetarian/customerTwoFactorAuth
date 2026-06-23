@@ -17,7 +17,7 @@
 message,संदेश
 "Unknown provider %1","अज्ञात प्रदाता %1"
 "Login using two factor authentication, please.","कृपया दो कारक प्रमाणीकरण का उपयोग करके लॉगिन करें."
-"The two factor authentication failed. Please try again.","दो कारक प्रमाणीकरण विफल रहा। कृपया पुन: प्रयास करें।"
+"The two factor authentication failed. Refresh the page and try again, please.","दो कारक प्रमाणीकरण विफल रहा। कृपया पुन: प्रयास करें।"
 "Login successful.","सफलतापूर्ण प्रवेश."
 test,परीक्षा
 Reset,रीसेट

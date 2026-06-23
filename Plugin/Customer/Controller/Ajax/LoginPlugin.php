@@ -140,7 +140,7 @@ class LoginPlugin
             if (!$providerEngine->verify($customer, $verification)) {
                 $response = [
                     'errors' => true,
-                    'message' => __('The two factor authentication failed. Please try again.')
+                    'message' => __('The two factor authentication failed. Refresh the page and try again, please.')
                 ];
                 return $resultJson->setData($response);
             }
